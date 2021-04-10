@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context="com.kamaii.customer.ui.activity.SignUpActivity">
+
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/laytoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dip"
+        android:background="@color/linearbackground"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="30.0dip"
+            android:gravity="center"
+            android:text="Sucessfully register"
+            android:textColor="@color/white"
+            android:textSize="20.0dip" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_below="@+id/laytoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/RRsncbar"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:visibility="visible"
+                android:id="@+id/ivLogo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="@string/webknight_infosystem"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/otpverification" />
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_below="@+id/ivLogo"
+                android:text="You are register with Customer is sucessfully done."
+                android:textColor="@color/green"
+                android:textSize="20.0dip" />
+
+           <!-- <com.kamaii.fabcustomer.utils.CustomTextViewBold
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_below="@+id/ivLogo"
+                android:text="Verify Mobile No"
+                android:textColor="@color/green"
+                android:textSize="20.0dip" />-->
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_below="@+id/ivLogo"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/otp_message"
+                android:textColor="@color/colorPrimary" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <com.kamaii.customer.utils.CustomEditText
+                    android:id="@+id/edtotp1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/otpfield"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:padding="15dp"
+                    android:singleLine="true" />
+
+                <com.kamaii.customer.utils.CustomEditText
+                    android:id="@+id/edtotp2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/otpfield"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:padding="15dp"
+                    android:singleLine="true" />
+
+                <com.kamaii.customer.utils.CustomEditText
+                    android:id="@+id/edtotp3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/otpfield"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:padding="15dp"
+                    android:singleLine="true" />
+
+                <com.kamaii.customer.utils.CustomEditText
+                    android:id="@+id/edtotp4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/otpfield"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:padding="15dp"
+                    android:singleLine="true" />
+                <com.kamaii.customer.utils.CustomEditText
+                    android:id="@+id/edtotp5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/otpfield"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:imeOptions="actionDone"
+                    android:padding="15dp"
+                    android:singleLine="true" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_horizontal"
+                android:layout_margin="15dp"
+                android:orientation="horizontal">
+                <com.kamaii.customer.utils.CustomButton
+                    android:id="@+id/CBsignIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_selector2"
+                    android:text="Verify"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="@dimen/text_size_22"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+    <RelativeLayout
+        android:id="@+id/RRsncbarr"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"></RelativeLayout>
+</RelativeLayout>
+</layout>

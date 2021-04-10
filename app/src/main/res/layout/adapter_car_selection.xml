@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/car_selection_background"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_marginBottom="7dp"
+    android:background="@drawable/cab_flow_circuler_border"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <!--<androidx.cardview.widget.CardView
+        android:id="@+id/IVartistCard"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#00FFFFFF"
+        android:layout_margin="1.5dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="0dp">-->
+
+        <RelativeLayout
+            android:id="@+id/IVartistCardRelative"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="0dp">
+
+            <ImageView
+                android:id="@+id/artistVehicleImageView"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:background="@drawable/imageview_backgroung"
+                android:scaleType="fitXY"
+                android:src="@drawable/dafault_product" />
+        </RelativeLayout>
+    <!--</androidx.cardview.widget.CardView>-->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="5dp"
+        android:layout_toLeftOf="@id/priceData"
+        android:layout_toEndOf="@id/IVartistCardRelative"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/txtservicename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="5dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+
+        <com.kamaii.customer.utils.CustomTextView
+            android:id="@+id/txtvechile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtservicename"
+            android:layout_marginTop="1dp"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="14dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/priceData"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/finalproducttext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+    </LinearLayout>
+</RelativeLayout>

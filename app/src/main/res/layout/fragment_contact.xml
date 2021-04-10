@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <androidx.cardview.widget.CardView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        tools:cardElevation="0dp"
+        android:background="@drawable/custom_top_radious_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp"
+            android:padding="10dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/contact_frag" />
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Need Any Help ?"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold">
+
+                </com.kamaii.customer.utils.CustomTextViewBold>
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:text="you can always reach out to us anytime on"
+                    android:textSize="12dp">
+
+                </com.kamaii.customer.utils.CustomTextViewBold>
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="us anytime on"
+                    android:textSize="12dp"
+                    android:visibility="gone">
+
+                </com.kamaii.customer.utils.CustomTextViewBold>
+
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/wa_adapter_relative"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                android:layout_marginRight="10dp"
+                android:background="#AD8A8A8A" />
+
+
+            <LinearLayout
+                android:id="@+id/cardchat"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/whatsapp_img" />
+
+                <com.kamaii.customer.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="2dp"
+                    android:text="Click to live chat on WhatsApp"
+                    android:textColor="@color/black"
+                    android:textSize="14dp"
+                    android:textStyle="bold">
+
+                </com.kamaii.customer.utils.CustomTextView>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/wa_adapter_relative"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#AD8A8A8A" />
+
+            <LinearLayout
+                android:id="@+id/cardemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/mail_img" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <com.kamaii.customer.utils.CustomTextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="support@kamaii.in"
+                        android:textColor="@color/black"
+                        android:textSize="14dp"
+                        android:textStyle="bold">
+
+                    </com.kamaii.customer.utils.CustomTextView>
+
+                    <com.kamaii.customer.utils.CustomTextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Click here to drop on Email"
+                        android:textSize="14dp">
+
+                    </com.kamaii.customer.utils.CustomTextView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/wa_adapter_relative"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#AD8A8A8A" />
+
+            <LinearLayout
+                android:id="@+id/cardcall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/phone_img" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <com.kamaii.customer.utils.CustomTextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="9909998404"
+                        android:textColor="@color/black"
+                        android:textSize="14dp"
+                        android:textStyle="bold">
+
+                    </com.kamaii.customer.utils.CustomTextView>
+
+                    <com.kamaii.customer.utils.CustomTextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Click here to Call"
+                        android:textSize="14dp">
+
+                    </com.kamaii.customer.utils.CustomTextView>
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/wa_adapter_relative"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#AD8A8A8A" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

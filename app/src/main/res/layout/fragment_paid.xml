@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rlSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/NameTV"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="0dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/vendor_search"
+        android:gravity="center_vertical">
+
+        <com.kamaii.customer.utils.CustomEditText
+            android:id="@+id/svSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/vendor_search_background"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="@dimen/dimen_10dp"
+            android:focusedByDefault="false"
+            android:gravity="center_vertical"
+            android:hint="@string/search_by_vendor"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/dimen_10dp"
+            android:paddingTop="7dp"
+            android:paddingRight="@dimen/dimen_10dp"
+            android:paddingBottom="7dp"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:paddingLeft="3dp"
+            android:visibility="gone"
+            app:defaultQueryHint="Search"
+            app:iconifiedByDefault="false"
+            app:theme="@style/AppSearchView">
+
+
+        </androidx.appcompat.widget.SearchView>
+    </RelativeLayout>
+
+<!--
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:visibility=""
+        android:background="@color/white">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/search_back"
+            app:cardCornerRadius="5dp">
+
+
+            <androidx.appcompat.widget.SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/search_back"
+                android:focusable="false"
+                android:paddingLeft="3dp"
+                app:defaultQueryHint="@string/search_by_invoice"
+                app:iconifiedByDefault="false"
+                app:theme="@style/AppSearchView">
+
+
+            </androidx.appcompat.widget.SearchView>
+        </androidx.cardview.widget.CardView>
+
+
+    </RelativeLayout>
+-->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlSearch">
+
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/RVhistorylist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/tvNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_history_found"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="0dp">
+
+    <RelativeLayout
+        android:id="@+id/rel_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="7dp"
+        android:paddingEnd="7dp"
+        android:paddingBottom="@dimen/dimen_10dp">
+
+        <ImageView
+            android:id="@+id/iv_bottom_foster"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="center"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/viewchck"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/iv_bottom_foster"
+            android:background="#F8FAFB" />
+
+        <LinearLayout
+            android:id="@+id/child_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/viewchck"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_size_12"
+                android:orientation="vertical">
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/tvProductName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_toStartOf="@id/layquankm"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="asasasasas"
+                    android:textColor="#173143"
+                    android:textSize="@dimen/text_size_16"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/jkl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvProductName">
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text=""
+                        android:textColor="#e0215a"
+                        android:textSize="@dimen/text_size_15" />
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:padding="2dp"
+                        android:text=""
+                        android:textSize="13dp"
+                        android:visibility="gone" />
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text=""
+                        android:textColor="@color/black_off"
+                        android:textSize="10dp" />
+
+
+                </LinearLayout>
+
+                <com.kamaii.customer.utils.CustomTextView
+                    android:id="@+id/tvPriceDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/jkl"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:text=""
+                    android:textColor="@color/dark_blue_color"
+                    android:textSize="@dimen/text_size_12" />
+
+                <CheckBox
+                    android:id="@+id/cbSelect"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="3dp"
+                    android:button="@drawable/customcheckbox"
+                    android:checked="false"
+                    android:visibility="gone" />
+
+
+                <LinearLayout
+                    android:id="@+id/layquankm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="3dp"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/quentity_linear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center"
+                        android:background="@drawable/qty_border">
+
+                        <LinearLayout
+                            android:id="@+id/img_minus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/dimen_5dp">
+
+                            <ImageView
+                                android:layout_width="27dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="6dp"
+                                android:src="@drawable/minus"
+                                android:tint="#363635" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/quentity_linear_child"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical">
+
+                            <com.kamaii.customer.utils.CustomTextViewBold
+                                android:id="@+id/tvservicequantity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_horizontal"
+                                android:inputType="number"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="5dp"
+                                android:paddingRight="10dp"
+                                android:text=""
+                                android:textColor="#363635"
+                                android:textSize="@dimen/text_size_15"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/img_plus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:paddingRight="@dimen/dimen_5dp">
+
+                            <ImageView
+                                android:layout_width="27dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="6dp"
+                                android:src="@drawable/plus"
+                                android:tint="#e0215a" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/price_relative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/layquankm"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <com.kamaii.customer.utils.CustomTextView
+                        android:id="@+id/tvDiscountPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/total_count"
+                        android:text=""
+                        android:textColor="#99A0A7"
+                        android:textSize="14dp" />
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/total_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:text=""
+                        android:textColor="#173143"
+                        android:textSize="14dp" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

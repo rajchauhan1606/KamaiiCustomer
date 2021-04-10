@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_card_relative_background">
+
+            <ImageView
+                android:id="@+id/iv_bottom_foster"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_below="@id/iv_bottom_foster">
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/tvProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Khakhra"
+                    android:textSize="14dp"/>
+
+                <LinearLayout
+                    android:id="@+id/recycle_child_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvProductName">
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="88"
+                        android:textSize="14dp"/>
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvDiscountPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="176"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+                <com.kamaii.customer.utils.CustomTextView
+                    android:id="@+id/tvdesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:layout_below="@+id/recycle_child_linear"
+                    android:text="eferfre"/>
+
+                <CheckBox
+                    android:id="@+id/cbSelect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

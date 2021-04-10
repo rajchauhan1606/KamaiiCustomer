@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_10dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_card_relative_background">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@drawable/refer_background">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp">
+
+                        <com.kamaii.customer.utils.CustomTextViewBold
+                            android:id="@+id/txttotalreferamount"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
+
+                    </LinearLayout>
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Total Refer Amount"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/add_refer_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_centerInParent="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/custom_circuler_background">
+
+                        <com.kamaii.customer.utils.CustomTextViewBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:gravity="center"
+                            android:text="Add Refer Friend"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+                <!--
+                                <RelativeLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="right">
+
+                                    <Button
+                                        android:id="@+id/add_refer_btn"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="40dp"
+                                        android:text="Add Refer Friend"
+                                        android:backgroundTint="@color/white"
+                                        android:textColor="#0CBF7F"
+                                        android:paddingLeft="@dimen/dimen_10dp"
+                                        android:paddingRight="@dimen/dimen_10dp"
+                                        android:background="@drawable/custom_circuler_background"
+                                        android:layout_marginRight="@dimen/dimen_5dp"
+                                        android:layout_centerVertical="true"/>
+                                </RelativeLayout>-->
+            </FrameLayout>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/rlSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/NameTV"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="0dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/vendor_search"
+        android:gravity="center_vertical">
+
+        <com.kamaii.customer.utils.CustomEditText
+            android:id="@+id/svSearch_refer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/vendor_search_background"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="@dimen/dimen_10dp"
+            android:focusedByDefault="false"
+            android:gravity="center_vertical"
+            android:hint="@string/search_by_vendor"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/dimen_10dp"
+            android:paddingTop="7dp"
+            android:paddingRight="@dimen/dimen_10dp"
+            android:paddingBottom="7dp"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:paddingLeft="3dp"
+            android:visibility="gone"
+            app:defaultQueryHint="Search"
+            app:iconifiedByDefault="false"
+            app:theme="@style/AppSearchView">
+
+
+        </androidx.appcompat.widget.SearchView>
+    </RelativeLayout>
+
+<!--
+    <com.kamaii.customer.utils.CustomEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/search_back"
+        android:drawableRight="@drawable/ic_baseline_search_18"
+        android:gravity="center_vertical"
+        android:hint="Search referred friend"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/dimen_10dp"
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingRight="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_5dp"
+        android:textSize="16sp" />
+-->
+    <!--<androidx.appcompat.widget.SearchView
+        android:id="@+id/svSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        app:defaultQueryHint="Search"
+        app:iconifiedByDefault="false"
+        app:theme="@style/AppSearchView"
+        android:background="@drawable/custom_relative_color_background">
+-->
+
+    <!--    </androidx.appcompat.widget.SearchView>-->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlSearch"
+        android:background="@drawable/relative_upper_radious_background">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvrefercustomer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/tvNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No Data Found"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

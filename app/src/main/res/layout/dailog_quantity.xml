@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/dialog_back_white"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:id="@+id/ctvbTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="start|center_vertical"
+                android:text="Add Quantity"
+                android:textColor="@color/dark_blue_color"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/tvNoPass"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:gravity="start|center_vertical"
+                android:src="@drawable/ic_baseline_close_24" />
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+
+            <EditText
+                android:id="@+id/etquanity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_underline"
+                android:focusableInTouchMode="true"
+                android:inputType="number"
+                android:paddingBottom="5dp"
+                android:singleLine="true"
+                android:text="100"
+                android:textColor="@color/pink_text_color" />
+
+            <LinearLayout
+                android:id="@+id/layfddf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llrozorpay"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="7dp">
+
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/llltxtamount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/pink_text_color"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="@string/cancel1"
+                android:textColor="@color/pink_text_color"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/pink_text_color"
+                android:visibility="gone" />
+
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:id="@+id/tvYesPass"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:background="@drawable/login_custom_button"
+                android:gravity="center"
+                android:paddingStart="100dp"
+                android:paddingEnd="100dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

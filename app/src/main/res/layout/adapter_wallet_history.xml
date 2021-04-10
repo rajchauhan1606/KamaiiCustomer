@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_5dp"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/wa_adapter_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/wallet_png" />
+
+
+
+        <LinearLayout
+            android:id="@+id/laybb"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/ivImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.kamaii.customer.utils.CustomTextView
+                android:layout_gravity="center"
+                android:id="@+id/tvPaidReceive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Paid For Order"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:layout_marginLeft="3dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/tvAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="- 5.00"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+
+        <com.kamaii.customer.utils.CustomTextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/laybb"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/ivImage"
+            android:text="24 Nov 2018"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_below="@+id/wa_adapter_relative"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="#AD8A8A8A"/>
+</RelativeLayout>

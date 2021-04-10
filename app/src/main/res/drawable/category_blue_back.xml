@@ -1,0 +1,25 @@
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+        <solid android:color="@color/colorPrimary" />
+        <stroke
+            android:width="1px"
+            android:color="@color/colorPrimary" />
+        &lt;!&ndash; Round Corners &ndash;&gt;
+        <corners android:radius="10dp"></corners>
+
+
+
+</shape>-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="#ffffff" />
+    <stroke
+        android:width="1px"
+        android:color="#ffffff" />
+    <!-- Round Corners -->
+    <corners android:radius="10dp"></corners>
+
+
+</shape>

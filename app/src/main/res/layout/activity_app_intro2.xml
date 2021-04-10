@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/activity_foster"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true">
+
+
+            <androidx.viewpager.widget.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/viewPagerIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/LLsign"
+                    android:layout_centerInParent="true"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:id="@+id/viewPagerCountDots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_centerInParent="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal" />
+
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/LLsign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dimen_10dp">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:padding="@dimen/dimen_10dp">
+
+                        <ImageView
+                            android:id="@+id/one_dot"
+                            android:layout_width="20dp"
+                            android:layout_height="@dimen/text_size_15"
+                            android:visibility="gone"
+                            android:contentDescription="@string/webknight_infosystem"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/dot1_unselected" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="@dimen/text_size_15"
+                            android:visibility="gone"
+                            android:contentDescription="@string/webknight_infosystem"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/one_dot"
+                            android:src="@drawable/dot2_selected" />
+
+                        <com.kamaii.customer.utils.CustomTextViewBold
+                            android:id="@+id/skip_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip"
+                            android:textSize="@dimen/text_size_16"
+                            android:layout_centerVertical="true"/>
+                        <Button
+                            android:id="@+id/btnnext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dimen_30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/dimen_10dp"
+                            android:textColor="@color/white"
+                            android:text="@string/next"
+                            android:backgroundTint="@color/intro_btn"
+                            android:background="@drawable/background_relative_curved" />
+
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+
+                android:id="@+id/RRsncbarrrr"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"></RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

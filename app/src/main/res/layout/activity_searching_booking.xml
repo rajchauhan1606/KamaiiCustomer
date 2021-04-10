@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.SearchingBookingActivity">
+    <com.mapbox.mapboxsdk.maps.MapView
+
+        xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+        android:layout_above="@+id/bottomlayout"
+        android:id="@+id/mapppp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/action_bar_menus"
+        mapbox:mapbox_cameraZoom="15"/>
+
+    <pl.bclogic.pulsator4droid.library.PulsatorLayout
+        android:gravity="center"
+        android:id="@+id/pulsator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:pulse_count="4"
+        app:pulse_duration="4000"
+        app:pulse_repeat="0"
+        app:pulse_color="@color/colorAccentnew"
+        app:pulse_startFromScratch="false"
+        app:pulse_interpolator="Linear">
+    </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+
+
+</FrameLayout>

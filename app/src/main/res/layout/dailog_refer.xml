@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/dialog_back_white"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/ctvbTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="start|center_vertical"
+                    android:text="Refer Friends"
+                    android:textColor="@color/dark_blue_color"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/tvCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center"
+                    android:gravity="start|center_vertical"
+                    android:src="@drawable/ic_baseline_close_24" />
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <com.kamaii.customer.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter Name"
+                    android:textColor="@color/dark_blue_color" />
+
+                <com.kamaii.customer.utils.CustomEditText
+                    android:id="@+id/etName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/edittext_underline"
+                    android:focusableInTouchMode="true"
+                    android:inputType="text"
+                    android:paddingBottom="5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/pink_text_color" />
+
+                <com.kamaii.customer.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Enter Mobile Number"
+                    android:textColor="@color/dark_blue_color" />
+
+                <com.kamaii.customer.utils.CustomEditText
+                    android:id="@+id/etmobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/edittext_underline"
+                    android:focusableInTouchMode="true"
+                    android:hint=""
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:paddingBottom="5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/pink_text_color" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/pink_text_color"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text="@string/cancel1"
+                    android:textColor="@color/pink_text_color"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/pink_text_color"
+                    android:visibility="gone" />
+
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/tvAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/login_custom_button"
+                    android:gravity="center"
+                    android:paddingStart="100dp"
+                    android:paddingEnd="100dp"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

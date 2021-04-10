@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rel_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:weightSum="1"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="0dp">
+
+    <TextView
+        android:id="@+id/tmp_recycle_txtview"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:background="#d8d8d8" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="@dimen/text_size_15"
+        android:layout_marginRight="5dp"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:id="@+id/tvProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:text=""
+                android:textColor="#173143"
+                android:textSize="@dimen/text_size_16"
+                android:textStyle="bold" />
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:id="@+id/tvvehiclenumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text=""
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_12"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="3dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text=""
+                        android:textColor="#e0215a"
+                        android:textSize="@dimen/text_size_15" />
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvService_charge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text=""
+                        android:textSize="10dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/tvtotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="10dp"
+                    android:visibility="gone" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/layquankm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+
+                        <com.kamaii.customer.utils.CustomTextViewBold
+                            android:id="@+id/tvquantitydays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center"
+                            android:text="Quantity"
+                            android:textSize="12dp"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/qty_border"
+                            android:weightSum="3">
+
+                            <LinearLayout
+                                android:id="@+id/minus_linear_child"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:paddingLeft="@dimen/dimen_5dp">
+
+                                <ImageView
+                                    android:id="@+id/img_minus"
+                                    android:layout_width="27dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:padding="6dp"
+                                    android:src="@drawable/minus"
+                                    android:tint="#363535" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/quentity_linear_child"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical">
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/tvquantity"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center_vertical"
+                                    android:gravity="center_horizontal"
+                                    android:inputType="number"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="10dp"
+                                    android:text=""
+                                    android:textColor="#363535"
+                                    android:textSize="@dimen/text_size_15"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/plus_linear_child"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:paddingRight="@dimen/dimen_5dp">
+
+                                <ImageView
+                                    android:id="@+id/img_plus"
+                                    android:layout_width="27dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:padding="6dp"
+                                    android:src="@drawable/plus"
+                                    android:tint="#e0215a" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/price_relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_marginRight="@dimen/dimen_5dp"
+                android:orientation="horizontal">
+
+                <com.kamaii.customer.utils.CustomTextView
+                    android:id="@+id/price_stripe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/total_count"
+                    android:text=""
+                    android:textColor="#99A0A7"
+                    android:textSize="14dp" />
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/total_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:text=""
+                    android:textColor="#173143"
+                    android:textSize="14dp" />
+            </RelativeLayout>
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+
+                android:id="@+id/tvroundtrip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/button_pressed_55"
+                android:paddingLeft="7dp"
+                android:paddingTop="2dp"
+                android:paddingRight="7dp"
+                android:paddingBottom="2dp"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="9dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <com.kamaii.customer.utils.CustomTextView
+                    android:id="@+id/tvmore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:text="Description"
+                    android:textColor="@color/textcolor"
+                    android:textSize="@dimen/text_size_12" />
+
+                <ImageView
+                    android:id="@+id/arrow_desc"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/tvdesc"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="8dp"
+                    android:src="@drawable/forward_arrow" />
+            </LinearLayout>
+
+            <com.kamaii.customer.utils.CustomTextView
+                android:id="@+id/tvdesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:text=""
+                android:textSize="@dimen/text_size_12"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/laydelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/img_delete_cart_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+

@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.ViewMapTrackingActivity">
+
+
+    <RelativeLayout
+        android:id="@+id/action_bar_menus"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/llBack"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/imgback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/webknight_infosystem"
+                android:src="@drawable/back"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/tvHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Tracking Booking"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+
+
+    </RelativeLayout>
+    <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="1"
+        android:layout_below="@+id/action_bar_menus"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomlayout"
+         >
+    </fragment>-->
+
+
+    <FrameLayout
+        android:layout_weight="1"
+        android:layout_below="@+id/action_bar_menus"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+
+
+
+
+        <com.google.android.gms.maps.MapView
+            android:layout_above="@+id/bottomlayout"
+            android:layout_weight="1"
+            android:layout_below="@+id/action_bar_menus"
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.google.android.gms.maps.MapView>
+
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/relanimation"
+            android:background="@color/colorAccentnew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <pl.bclogic.pulsator4droid.library.PulsatorLayout
+                android:gravity="center"
+                android:id="@+id/pulsator"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:pulse_count="4"
+                app:pulse_duration="4000"
+                app:pulse_repeat="0"
+                app:pulse_color="@color/background"
+                app:pulse_startFromScratch="false"
+                app:pulse_interpolator="Linear">
+            </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+
+            android:visibility="visible"
+            android:id="@+id/laykmdistance"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <TextView
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/txtkm"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="">
+
+            </TextView>
+            <TextView
+                android:layout_marginRight="8dp"
+                android:id="@+id/txtdistancetime"
+                android:gravity="right"
+                android:layout_gravity="center_vertical|right"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="">
+
+            </TextView>
+
+        </LinearLayout>
+
+        <RelativeLayout
+           android:visibility="gone"
+            android:id="@+id/relcancel"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/Cancel_msg"
+                android:textSize="14sp" />
+
+
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+
+    <ScrollView
+        android:background="@color/white"
+        android:layout_weight="1"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
+                <LinearLayout
+
+                    android:layout_gravity="center"
+                    android:id="@+id/llSt"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/llStatus"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/ivStatus"
+                        android:contentDescription="@string/webknight_infosystem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:textColor="@color/black"
+                        android:layout_marginTop="4dp"
+                        android:id="@+id/tvStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@+id/rv_cart"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/light_gray"></View>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <com.kamaii.customer.utils.CustomTextViewBold
+                            android:layout_marginTop="5dp"
+                            android:text=""
+                            android:textSize="17dp"
+                            android:textColor="@color/colorPrimary"
+                            android:id="@+id/txtservicename"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        </com.kamaii.customer.utils.CustomTextViewBold>
+
+
+                        <com.kamaii.customer.utils.CustomTextView
+                            android:textSize="13dp"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:id="@+id/txtvechile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        </com.kamaii.customer.utils.CustomTextView>
+                        <com.kamaii.customer.utils.CustomTextView
+                            android:textSize="13dp"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:id="@+id/txtvendorname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        </com.kamaii.customer.utils.CustomTextView>
+
+
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_marginRight="10dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/single_logo"
+                        android:contentDescription="@string/webknight_infosystem"
+                        android:id="@+id/imgvendonrimage"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp">
+
+                    </ImageView>
+
+
+                </LinearLayout>
+
+
+                <FrameLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/laycallcancel"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/laycall"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:background="@drawable/button_light_gray"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+
+
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="6dp"
+                                android:layout_below="@+id/llDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:singleLine="true"
+                                    android:text="Contact"
+                                    android:textSize="12sp" />
+
+
+
+
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+
+                            android:id="@+id/laycancel"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:background="@drawable/button_light_gray"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+
+
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="6dp"
+                                android:layout_below="@+id/llDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:singleLine="true"
+                                    android:text="Cancel Ride"
+                                    android:textSize="12sp" />
+
+
+
+
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:visibility="gone"
+                       android:id="@+id/layshare"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/btnshare"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:background="@drawable/button_light_gray"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="6dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:singleLine="true"
+                                    android:text="Share Booking Details"
+                                    android:textSize="12sp" />
+
+
+
+
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+                </FrameLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_margin="10dp"
+                        android:padding="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="4dp">
+                        <LinearLayout
+                            android:layout_below="@+id/llDate"
+                            android:id="@+id/llTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:padding="5dp"
+                                android:layout_below="@+id/llDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+
+                                <ImageView
+                                    android:layout_gravity="center"
+                                    android:layout_width="20dp"
+                                    android:contentDescription="@string/webknight_infosystem"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/gps">
+
+                                </ImageView>
+
+
+
+
+                                <ImageView
+                                    android:id="@+id/imgone"
+                                    android:tint="@color/colorPrimary"
+                                    android:layout_gravity="center"
+                                    android:layout_width="30dp"
+                                    android:contentDescription="@string/webknight_infosystem"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/line">
+
+                                </ImageView>
+                                <ImageView
+                                    android:id="@+id/imgtwo"
+                                    android:layout_gravity="center"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@string/webknight_infosystem"
+                                    android:src="@drawable/location">
+
+                                </ImageView>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:padding="5dp"
+                                android:layout_below="@+id/llDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <com.kamaii.customer.utils.CustomTextView
+                                    android:id="@+id/etAddressSelectsource"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:singleLine="true"
+                                    android:text=""
+                                    android:textSize="12sp" />
+
+
+
+                                <com.kamaii.customer.utils.CustomTextView
+                                    android:gravity="center"
+                                    android:layout_marginTop="28dp"
+                                    android:id="@+id/etAddressSelectdesti"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:singleLine="true"
+                                    android:text=""
+                                    android:textSize="12sp" />
+
+
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+
+
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:layout_marginLeft="23dp"
+                                    android:id="@+id/totalamount"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:singleLine="true"
+                                    android:text=""
+                                    android:textSize="14sp" />
+
+
+
+                            <View
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:layout_below="@+id/rv_cart"
+                                android:background="@color/light_gray"></View>
+
+
+                            <LinearLayout
+                                android:layout_marginBottom="3dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginLeft="17dp"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:src="@drawable/rupees"
+                                    android:layout_width="30dp"
+                                    android:contentDescription="@string/webknight_infosystem"
+                                    android:layout_height="30dp">
+
+                                </ImageView>
+
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/txtptype"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:singleLine="true"
+                                        android:text=""
+                                        android:textSize="12sp" />
+
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/txtptypemsg"
+                                        android:textStyle="bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:singleLine="true"
+                                        android:text=""
+                                        android:textSize="10sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+
+
+
+                        </LinearLayout>
+
+
+
+
+                </LinearLayout>
+            </LinearLayout>
+    </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/imgback1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/webknight_infosystem"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        app:backgroundTint="@color/white"
+        app:elevation="2dp" />
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:contentDescription="@string/webknight_infosystem"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <com.kamaii.customer.utils.CustomTextViewBold
+        android:id="@+id/tvHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Tracking Booking"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+
+    <!--</RelativeLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/relmap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".ui.activity.TrackingActivity" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relanimation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <pl.bclogic.pulsator4droid.library.PulsatorLayout
+                    android:id="@+id/pulsator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    app:pulse_color="@color/background2"
+                    app:pulse_count="4"
+                    app:pulse_duration="4000"
+                    app:pulse_interpolator="Linear"
+                    app:pulse_repeat="0"
+                    app:pulse_startFromScratch="false">
+
+                </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relcancel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="150dp"
+                    android:layout_marginEnd="30dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/Cancel_msg"
+                    android:textColor="@color/red"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_sos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_10dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_sos"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:contentDescription="@string/webknight_infosystem"
+                    android:src="@drawable/sos"
+                    android:visibility="gone">
+
+                </ImageView>
+            </RelativeLayout>
+            <!-- Adding bottom sheet after main content -->
+
+            <!-- &lt;!&ndash; Bottom Sheet Content &ndash;&gt;
+             <include layout="@layout/layout_tracking_detail_dialog" />-->
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/layout_tracking_detail_dialog" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "692209259571",
+    "firebase_url": "https://kamaii-customer.firebaseio.com",
+    "project_id": "kamaii-customer",
+    "storage_bucket": "kamaii-customer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692209259571:android:646d1c6c5f58a32697bf46",
+        "android_client_info": {
+          "package_name": "com.kamaii.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692209259571-3s0qvr7cqvaoidf6acb5pg8vc2fc7qhh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoqzh4InrUVJIYeOndQ4nWOcGi-7zX9D0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692209259571-3s0qvr7cqvaoidf6acb5pg8vc2fc7qhh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

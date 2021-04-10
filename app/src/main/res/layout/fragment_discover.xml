@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="#ffffff"
+            android:elevation="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_30dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/NameTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/text_size_20"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivfilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:padding="6dp"
+                android:src="@drawable/ic_filter"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+    -->
+    <RelativeLayout
+        android:id="@+id/master_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/dimen_10dp">
+
+
+        <ImageView
+            android:id="@id/img_back"
+            android:layout_width="wrap_content"
+            android:layout_height="?actionBarSize"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_baseline_arrow_back_24" />
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/NameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="?actionBarSize"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@id/img_back"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/dark_blue_color"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+
+        <ImageView
+            android:id="@+id/ivfilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_filter"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/NameTV"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/vendor_search"
+            android:gravity="center_vertical">
+
+            <com.kamaii.customer.utils.CustomEditText
+                android:id="@+id/svSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/vendor_search_background"
+                android:drawableLeft="@drawable/ic_search"
+                android:drawablePadding="@dimen/dimen_10dp"
+                android:focusedByDefault="false"
+                android:gravity="center_vertical"
+                android:hint="@string/search_by_vendor"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/dimen_10dp"
+                android:paddingTop="7dp"
+                android:paddingRight="@dimen/dimen_10dp"
+                android:paddingBottom="7dp"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:paddingLeft="3dp"
+                android:visibility="gone"
+                app:defaultQueryHint="Search"
+                app:iconifiedByDefault="false"
+                app:theme="@style/AppSearchView">
+
+
+            </androidx.appcompat.widget.SearchView>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/subrelative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/master_relative"
+        android:background="#f2f2f3"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp">
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/total_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text=""
+            android:textColor="#173143"
+            android:textSize="@dimen/text_size_15" />
+
+        <LinearLayout
+            android:id="@+id/laychat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/filter_button_white_curved_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:visibility="invisible">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_20dp"
+                android:src="@drawable/ic_filter" />
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="7dp"
+                android:singleLine="true"
+                android:text="Sort / Filter"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/subrelative"
+        android:layout_marginTop="-10dp">
+
+        <com.kamaii.customer.utils.CustomEditText
+            android:id="@+id/etSearchFilter"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_35dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/edittext_cate_background"
+            android:drawableLeft="@drawable/ic_baseline_search_18"
+            android:drawablePadding="@dimen/dimen_5dp"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:hint="@string/search_by_name"
+            android:padding="@dimen/dimen_5dp"
+            android:paddingLeft="@dimen/dimen_20dp"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/etSearchFilter">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDiscover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rectangle_sub_cate"
+                tools:listitem="@layout/adapterdiscover">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
+
+    <com.kamaii.customer.utils.CustomTextViewBold
+        android:id="@+id/tvNotFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Coming Soon"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
+
+
+    <RelativeLayout
+        android:id="@+id/layloader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backcolottt"
+        android:visibility="gone">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_margin="35dp"
+                android:src="@drawable/seachicon">
+
+            </ImageView>
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:text="Searching For Car"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
+
+            <ImageView
+
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:src="@drawable/logotwo">
+
+            </ImageView>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

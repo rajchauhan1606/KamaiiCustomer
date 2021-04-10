@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="0dp">
+
+
+    <RelativeLayout
+        android:id="@+id/rel_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/iv_bottom_foster"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="center"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/viewchck"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/iv_bottom_foster"
+            android:background="#F8FAFB" />
+
+        <LinearLayout
+            android:id="@+id/child_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/viewchck"
+            android:orientation="horizontal"
+            android:paddingLeft="7dp"
+            android:paddingTop="7dp"
+            android:paddingRight="7dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/tvProductName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/layquankm"
+                    android:ellipsize="end"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:text=""
+                    android:textColor="#173143"
+                    android:textSize="@dimen/text_size_16"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/layquankm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/quentity_linear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center"
+                        android:background="@drawable/qty_border">
+
+                        <LinearLayout
+                            android:id="@+id/img_minus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/dimen_5dp">
+
+                            <ImageView
+                                android:layout_width="27dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="6dp"
+                                android:src="@drawable/minus"
+                                android:tint="#363635" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/quentity_linear_child"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical">
+
+                            <com.kamaii.customer.utils.CustomTextViewBold
+                                android:id="@+id/tvservicequantity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_horizontal"
+                                android:inputType="number"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="5dp"
+                                android:paddingRight="10dp"
+                                android:text=""
+                                android:textColor="#363635"
+                                android:textSize="@dimen/text_size_15"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/img_plus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:paddingRight="@dimen/dimen_5dp">
+
+                            <ImageView
+                                android:layout_width="27dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="6dp"
+                                android:src="@drawable/plus"
+                                android:tint="#e0215a" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvProductName">
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text=""
+                        android:textColor="#e0215a"
+                        android:textSize="@dimen/text_size_15" />
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvDiscountPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:padding="2dp"
+                        android:text=""
+                        android:textSize="13dp" />
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text=""
+                        android:textColor="@color/black_off"
+                        android:textSize="10dp" />
+
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvroundtrip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/button_pressed_55"
+                        android:gravity="center"
+                        android:paddingLeft="7dp"
+                        android:paddingRight="7dp"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="9dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/cbSelect"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="3dp"
+                    android:button="@drawable/customcheckbox"
+                    android:checked="false"
+                    android:visibility="gone" />
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:orientation="vertical">
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/tvService_charge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text=""
+            android:textSize="10dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/first_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/child_linear"
+            android:gravity="center_vertical"
+            android:paddingLeft="9dp"
+            android:paddingRight="7dp">
+
+            <ImageView
+                android:id="@+id/ratingbar"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="-2dp"
+                android:isIndicator="true"
+                android:numStars="1"
+                android:rating="5"
+                android:src="@drawable/ic_star"
+                android:theme="@style/RatingBar" />
+
+            <com.kamaii.customer.utils.CustomTextViewBold
+                android:id="@+id/service_rating_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:gravity="center_vertical"
+                android:paddingTop="2dp"
+                android:text=""
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textColor="#173143"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/second_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/first_linear"
+            android:orientation="vertical"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp">
+
+            <com.kamaii.customer.utils.CustomTextView
+                android:id="@+id/short_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#173143"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/second_linear"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp">
+
+            <!--<com.kamaii.customer.utils.CustomTextView
+                android:id="@+id/tvdesc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="5dp"
+                android:text=""
+                android:textSize="@dimen/text_size_12" />-->
+            <!--  <RelativeLayout
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1">
+
+                  <com.kamaii.customer.utils.ExpandableTextView
+                      android:id="@+id/tvdesc"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerVertical="true"
+                      android:ellipsize="end"
+                      android:paddingLeft="2dp"
+                      android:paddingRight="2dp"
+                      android:paddingBottom="5dp"
+                      android:text=""
+                      android:textSize="@dimen/text_size_12" />
+
+                  <ImageView
+                      android:id="@+id/arrow_desc"
+                      android:layout_width="15dp"
+                      android:layout_height="15dp"
+                      android:layout_centerVertical="true"
+                      android:layout_marginStart="5dp"
+                      android:layout_toEndOf="@id/tvdesc"
+                      android:src="@drawable/forward_arrow" />
+              </RelativeLayout>-->
+
+            <LinearLayout
+                android:id="@+id/descptionreadmore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingBottom="7dp">
+
+                <LinearLayout
+                    android:id="@+id/read_more_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/dimen_10dp">
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:id="@+id/tvdesc2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="5dp"
+                        android:text="Read More"
+                        android:textColor="#363535"
+                        android:textSize="12dp" />
+
+                    <ImageView
+                        android:id="@+id/arrow_desc"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@id/tvdesc"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                </LinearLayout>
+
+                <com.kamaii.customer.utils.CustomTextView
+                    android:id="@+id/tvdesc23"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:text=""
+                    android:textColor="#173143"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:gravity="center">
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>
