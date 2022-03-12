@@ -67,7 +67,7 @@
     <string name="reject_msg">Are you sure you want to reject the application?</string>
     <string name="confirm_msg">Are you sure you want to confirm the application?</string>
     <string name="complete_msg">Are you sure you want to complete the application?</string>
-    <string name="km">km from you</string>
+    <string name="km">kms</string>
     <string name="job_id">Job Id:</string>
     <string name="open">Open</string>
     <string name="not_edit_job">You can\'t edit this job because Service Provider have already applied</string>
@@ -105,7 +105,8 @@
     <string name="applied_job">Applicants</string>
     <string name="search_by_artist">Search by Service Provider</string>
     <string name="search_by_name">Search for food</string>
-    <string name="search_by_vendor">Search</string>
+    <string name="search_by_vendor">Search Partners</string>
+    <string name="search_by_item">Search Item</string>
     <string name="no_application_found">No Application Found</string>
     <string name="book_now">BOOK NOW</string>
     <string name="quick_chat">Quick Chat</string>
@@ -191,7 +192,7 @@
     <string name="select">Select</string>
     <string name="no_appointment_found">No Appointment Found</string>
     <string name="no_category_found">No Category Found</string>
-    <string name="no_sub_category_found">No Data Found</string>
+    <string name="no_sub_category_found">No service available for your location.</string>
     <string name="service_not_available">This service is not available at your location.</string>
     <string name="nearby">Nearby</string>
     <string name="discover">Discover</string>
@@ -233,7 +234,8 @@
     <string name="terms_of_use">Terms of use</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="and">and</string>
-    <string name="booking_date">Order Date</string>
+    <string name="booking_date">Expected Delivery Date and Time</string>
+    <string name="service_provider_name">Service Provider Name</string>
     <string name="booking_address">Order Address</string>
     <string name="view_invoice">View Invoice</string>
     <string name="no_cate_found">No Category Found</string>
@@ -276,6 +278,7 @@ Etc.\n\nBy using this application you do not need to go any other place, this is
 
 
     <string name="shareone">I will share with my Order details of the journey.</string>
+    <string name="shareone2">This is  my Order details of the journey.</string>
     <string name="sharetwo">*More Details:*</string>
     <string name="sharethree">*Name*:</string>
     <string name="sharefour">*Service Details*:</string>
@@ -290,7 +293,7 @@ Etc.\n\nBy using this application you do not need to go any other place, this is
 
     <string name="twintyfour2">Get quick resolution on queries related to kamaii </string>
     <string name="cashback2">View your scratchcards, points &amp; other offers </string>
-    <string name="_2_add_money_extra_charges">2% Add Money Extra Charges</string>
+    <string name="_2_add_money_extra_charges">Add Money Extra Charges</string>
     <string name="_1000">+ ₹ 1000</string>
     <string name="_1500">+ ₹ 1500</string>
     <string name="_2000">+ ₹ 2000</string>
@@ -299,12 +302,16 @@ Etc.\n\nBy using this application you do not need to go any other place, this is
     <string name="profile">Profile</string>
     <string name="searchword">Search</string>
     <string name="more_items_txt1">More items from this provider</string>
-    <string name="houseno">House no. / Flat no. / Floor / Building</string>
+    <string name="houseno">House No. / Flat No. / Floor / Building / Society Name</string>
     <string name="enter_society_name">Landmark / Entry gate / Street</string>
     <string name="select_an_address">Select an Address</string>
     <string name="your_location">Your Location</string>
     <string name="confirm_location_amp_proceed">Confirm Location &amp; Proceed</string>
     <string name="webknight_infosystem">WebKnight Infosystem</string>
-
+    <string name="scratchcard_prize_txt">\"You\'ve won a scratch card!\"</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="help">Help</string>
+    <string name="save_address">Save Address</string>
 
 </resources>

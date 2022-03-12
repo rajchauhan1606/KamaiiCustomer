@@ -11,10 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
@@ -110,3 +112,51 @@ public class SliderAdapter extends PagerAdapter {
         return view.equals(object);
     }
 }
+/* cyclic adapter
+public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderViewholder> {
+
+    private ArrayList<SiderModel> images;
+    private LayoutInflater inflater;
+    private Context context;
+    private FragmentManager fragmentManager;
+
+    public SliderAdapter(Context context, ArrayList<SiderModel> images, FragmentManager fragmentManager) {
+        this.context = context;
+        this.images = images;
+        this.fragmentManager = fragmentManager;
+        inflater = LayoutInflater.from(context);
+
+        Log.e("Sliderimagesize", "" + images.size());
+    }
+
+    @NonNull
+    @Override
+    public SliderViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View view = LayoutInflater.from(context).inflate(R.layout.slide,parent,false);
+        return new SliderViewholder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull SliderViewholder holder, int position) {
+
+        Glide.with(context).load(images.get(position).getSlider_image()).into(holder.image);
+    }
+
+    @Override
+    public int getItemCount() {
+        return images.size();
+    }
+
+    class SliderViewholder extends RecyclerView.ViewHolder {
+
+        ImageView image;
+        public SliderViewholder(@NonNull View itemView) {
+            super(itemView);
+
+            image = itemView.findViewById(R.id.image);
+        }
+    }
+
+}
+*/

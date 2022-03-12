@@ -49,7 +49,7 @@ import retrofit2.Retrofit;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-public class NotificationActivity extends Fragment implements  SwipeRefreshLayout.OnRefreshListener {
+public class NotificationActivity extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private String TAG = NotificationActivity.class.getSimpleName();
     private RecyclerView RVnotification;
@@ -71,10 +71,14 @@ public class NotificationActivity extends Fragment implements  SwipeRefreshLayou
         view = inflater.inflate(R.layout.activity_notification, container, false);
         prefrence = SharedPrefrence.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        getActivity().findViewById(R.id.ivLogo).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.notification));
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
         baseActivity.base_recyclerview.setVisibility(View.GONE);
 
-        progressDialog=new ProgressDialog(getActivity());
+        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
         setUiAction(view);
@@ -105,8 +109,7 @@ public class NotificationActivity extends Fragment implements  SwipeRefreshLayou
         });
     }
 
-    public void clearnotification()
-    {
+    public void clearnotification() {
 
 
         progressDialog.show();
@@ -126,14 +129,10 @@ public class NotificationActivity extends Fragment implements  SwipeRefreshLayou
                         JSONObject object = new JSONObject(s);
 
 
-
-
-
                         String message = object.getString("message");
                         int sstatus = object.getInt("status");
 
-                        if (sstatus==1)
-                        {
+                        if (sstatus == 1) {
 
                             try {
                                 getNotification();
@@ -145,13 +144,12 @@ public class NotificationActivity extends Fragment implements  SwipeRefreshLayou
                             }
 
 
-                        }else {
+                        } else {
                             Toast.makeText(getActivity(), message,
                                     LENGTH_LONG).show();
                         }
 
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(), "Try again. Server is not responding.",
                                 LENGTH_LONG).show();
 

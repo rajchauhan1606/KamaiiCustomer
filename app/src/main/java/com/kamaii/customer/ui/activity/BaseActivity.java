@@ -11,9 +11,11 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -26,11 +28,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -60,6 +65,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -95,6 +109,7 @@ import com.kamaii.customer.ui.models.AddressModel;
 import com.kamaii.customer.utils.CustomTextView;
 import com.kamaii.customer.utils.CustomTextViewBold;
 import com.kamaii.customer.utils.CustomTypeFaceSpan;
+import com.kamaii.customer.utils.ExpandableHeightGridView;
 import com.kamaii.customer.utils.FontCache;
 import com.kamaii.customer.utils.GlobalUtils;
 import com.kamaii.customer.utils.ProjectUtils;
@@ -105,6 +120,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -142,6 +158,7 @@ import static com.kamaii.customer.interfacess.Consts.TRACK_SOURCE_CUSTOMER_LONGI
 import static com.kamaii.customer.interfacess.Consts.TRACK_SUB_ID;
 import static com.kamaii.customer.interfacess.Consts.TRACK_SUB_LEVEL_ID;
 import static com.kamaii.customer.interfacess.Consts.TRACK_VEHICLE_NUMBER;
+import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 public class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -154,6 +171,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     public NavigationView navigationView;
     public RelativeLayout header;
     public DrawerLayout drawer;
+    CountDownTimer cT;
+
     public View navHeader;
     public ImageView menuLeftIV, ivFilter, ivnotiication, ivaboutus;
     public RelativeLayout ivmainsearchLayout, ivmaincartLayout;
@@ -181,20 +200,46 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     private Handler mHandler;
     private static final float END_SCALE = 0.8f;
     InputMethodManager inputManager;
+    private static int AUTOCOMPLETE_REQUEST_CODE_TWO = 2;
+    Dialog timaConfirmationDialog;
 
     private boolean shouldLoadHomeFragOnBackPress = true;
     public CustomTextViewBold headerNameTV;
     private Location mylocation;
-    private GoogleApiClient googleApiClient;
+    public GoogleApiClient googleApiClient;
     private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     private CircleImageView img_profile;
     public CustomTextViewBold tvName, cart_count;
     private CustomTextView tvEmail, tvOther, tvEnglish;
     private LinearLayout llProfileClick;
-    String type = "";
+    String notification_type = "";
     public static ArrayList<AddressModel> addressModelArrayList = new ArrayList<>();
     boolean first_time_login = false;
+    public Spinner area_spinner;
+    RelativeLayout customer_location_relative;
+    CustomTextViewBold customer_location_txt;
+    public String customer_live_address;
+    public double customer_live_lat = 0.0;
+    public double customer_live_long = 0.0;
+    double searched_latitude = 0.0;
+    double searched_longitude = 0.0;
+    private static final String API_KEY = "AIzaSyCIpO2XuPQr8HDOg92EU0pRkP0G9rKvFoY";
+    CategoryFragment categoryFragment;
+    boolean address_flag = false;
+    ImageView confirm_IVartist;
+    CustomTextViewBold confirm_partner_name,
+            estimated_delivery_time,
+            rewise_date,
+            order_place_date,
+            deliveryby_date,
+            order_mode_date, add_time_tvYesPro, txtarivaltimer, add_time_tvNoPro;
+    String booking_id = "";
+    String confirm_timer = "";
+    String confirm_dialog = "";
+    HashMap<String, String> paramsDecline = new HashMap<>();
+    HashMap<String, String> updatetimeparams = new HashMap<>();
+    HashMap<String, String> confirmtimeparams = new HashMap<>();
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -202,6 +247,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         TextSizeFix.adjustFontScale(getResources().getConfiguration(), 1.0f, BaseActivity.this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+        Places.initialize(getApplicationContext(), API_KEY);
+        PlacesClient placesClient = Places.createClient(this);
+        List<Place.Field> fields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.NAME);
+
         findViewById(R.id.ivmainsearchLayout).setVisibility(View.GONE);
         findViewById(R.id.ivmaincartLayout).setVisibility(View.GONE);
         mContext = BaseActivity.this;
@@ -215,13 +264,30 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
         first_time_login = getIntent().getBooleanExtra("first_time_login", false);
 
+        if (getIntent().hasExtra(Consts.SCREEN_TAG)) {
+            notification_type = getIntent().getStringExtra(Consts.SCREEN_TAG);
+
+            Log.e("confirm_dialog", "" + notification_type);
+
+        }
         /*if (first_time_login) {
             getMyFirstWalletReward();
         }*/
         getreward();
         setUpGClient();
+
+        if (prefrence.getValue(Consts.LONGITUDE) != null) {
+
+            Log.e("SEARCHED_ADDRESS", " lati oncreate " + prefrence.getValue(Consts.LATITUDE));
+            Log.e("SEARCHED_ADDRESS", " longi oncreate  " + prefrence.getValue(Consts.LONGITUDE));
+        }
+
+
         frame = (FrameLayout) findViewById(R.id.frame);
         cart_count = findViewById(R.id.cart_count);
+        customer_location_relative = findViewById(R.id.customer_location_relative_header);
+        customer_location_txt = findViewById(R.id.customer_location_txt);
+        area_spinner = findViewById(R.id.area_spinner);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         contentView = findViewById(R.id.content);
@@ -245,6 +311,25 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         tvOther = navHeader.findViewById(R.id.tvOther);
         llProfileClick = navHeader.findViewById(R.id.llProfileClick);
 
+        timaConfirmationDialog = new Dialog(BaseActivity.this, R.style.Theme_Dialog);
+        timaConfirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        timaConfirmationDialog.requestWindowFeature((Window.FEATURE_NO_TITLE));
+        timaConfirmationDialog.setContentView(R.layout.delivery_time_confirmation_dialog);
+        //  timaConfirmationDialog.getWindow().setLayout(650, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+        timaConfirmationDialog.setCancelable(false);
+
+        confirm_partner_name = timaConfirmationDialog.findViewById(R.id.confirm_partner_name);
+        estimated_delivery_time = timaConfirmationDialog.findViewById(R.id.estimated_delivery_time);
+        rewise_date = timaConfirmationDialog.findViewById(R.id.rewise_date);
+        order_place_date = timaConfirmationDialog.findViewById(R.id.order_place_date);
+        deliveryby_date = timaConfirmationDialog.findViewById(R.id.deliveryby_date);
+        order_mode_date = timaConfirmationDialog.findViewById(R.id.order_mode_date);
+        confirm_IVartist = timaConfirmationDialog.findViewById(R.id.confirm_IVartist);
+        add_time_tvYesPro = timaConfirmationDialog.findViewById(R.id.add_time_tvYesPro);
+        add_time_tvNoPro = timaConfirmationDialog.findViewById(R.id.add_time_tvNoPro);
+        txtarivaltimer = timaConfirmationDialog.findViewById(R.id.txtarivaltimer);
+
+        getTimeConfirmDialog();
 
         llProfileClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,6 +347,19 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
+        customer_location_relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentt = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                        .setCountry("IN")
+                        .build(BaseActivity.this);
+
+                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(ViewAddressActivity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                startActivityForResult(intentt, AUTOCOMPLETE_REQUEST_CODE_TWO);
+            }
+        });
         tvEnglish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -284,18 +382,24 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(img_profile);
         tvEmail.setText(userDTO.getEmail_id());
-       // tvName.setText(getResources().getString(R.string.app_name));
+        // tvName.setText(getResources().getString(R.string.app_name));
         tvName.setText(userDTO.getName());
 
         navItemIndex = 0;
         CURRENT_TAG = TAG_MAIN;
         if (savedInstanceState == null) {
-            if (type != null) {
-                if (type.equals(Consts.RIDER_HAS_PICKUP_ORDER)) {
+            if (notification_type != null) {
+                if (notification_type.equals(Consts.RIDER_HAS_PICKUP_ORDER)) {
 
                     Intent intent = new Intent(getApplicationContext(), TrackingActivity.class);
                     intent.putExtra("flag123", true);
                     startActivity(intent);
+                } else if (notification_type.equals(Consts.TIME_CONFIRM_DIALOG_NOTIFICATION)) {
+
+                    loadHomeFragment(new CategoryFragment(), CURRENT_TAG);
+
+                    showDeliveryTimeDialog();
+
                 } else {
                     loadHomeFragment(new CategoryFragment(), CURRENT_TAG);
                 }
@@ -359,6 +463,146 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         ivFilter.setVisibility(View.GONE);
     }
 
+
+    public void getTimeConfirmDialog() {
+
+        confirmtimeparams.put(Consts.USER_ID, userDTO.getUser_id());
+
+        new HttpsRequest(Consts.GET_DELIVERY_CONFIRM_API, confirmtimeparams, BaseActivity.this).stringPost(TAG, new Helper() {
+            @Override
+            public void backResponse(boolean flag, String msg, JSONObject response) {
+                if (flag) {
+
+
+                    try {
+                        Log.e("confirm_data", "" + response.toString());
+                        String order_placed = response.getString("order_placed");
+                        String delivered_by = response.getString("delivered_by");
+                        String revised_time = response.getString("revised_time");
+                        String order_mode = response.getString("order_mode");
+                        String remain_time = response.getString("remain_time");
+                        String partner_logo = response.getString("partner_logo");
+                        String partner_name = response.getString("partnername");
+                        booking_id = response.getString("booking_id");
+                        confirm_timer = response.getString("dialog_show_remain_time");
+
+
+                        Glide.with(BaseActivity.this).load(Uri.parse(partner_logo)).placeholder(R.drawable.dafault_product).into(confirm_IVartist);
+                        confirm_partner_name.setText(partner_name);
+                        estimated_delivery_time.setText(remain_time);
+                        rewise_date.setText(revised_time);
+                        order_place_date.setText(order_placed);
+                        deliveryby_date.setText(delivered_by);
+                        order_mode_date.setText(order_mode);
+
+                        int timer = Integer.parseInt(confirm_timer);
+
+                        Log.e("tracker_timer", "5");
+
+                        cT = new CountDownTimer(timer, 1000) {
+
+                            public void onTick(long millisUntilFinished) {
+
+                                Log.e("tracker_timer", "6");
+
+                                int va = (int) ((millisUntilFinished % 60000) / 1000);
+                                Log.e("tracker_timer", "show_timer:-- " + va);
+
+                                txtarivaltimer.setText("" + String.format("%02d", va));
+
+                            }
+
+                            public void onFinish() {
+
+                                add_time_tvYesPro.performClick();
+                            }
+                        };
+                        cT.start();
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    /*footersilderarraylist = new ArrayList<>();
+
+                    Type getpetDTO = new TypeToken<List<FooterSliderModel>>() {
+                    }.getType();
+                    footersilderarraylist = (ArrayList<FooterSliderModel>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+
+                    Log.e("FOOTER", "" + footersilderarraylist.toString());*/
+
+                } else {
+
+                }
+            }
+        });
+    }
+
+    private void showDeliveryTimeDialog() {
+
+        timaConfirmationDialog.show();
+        add_time_tvNoPro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                decline(userDTO.getUser_id(), booking_id, "2");
+                timaConfirmationDialog.dismiss();
+                loadHomeFragment(new CategoryFragment(), CURRENT_TAG);
+
+            }
+        });
+
+        add_time_tvYesPro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                updatetimeparams.put(Consts.BOOKING_ID, booking_id);
+
+                Log.e("confirm_data", " booking id: -- " + updatetimeparams.toString());
+                new HttpsRequest(Consts.CONFIRM_TIME_UPDATION_API, updatetimeparams, BaseActivity.this).stringPost(TAG, new Helper() {
+                    @Override
+                    public void backResponse(boolean flag, String msg, JSONObject response) {
+                        if (flag) {
+                            timaConfirmationDialog.dismiss();
+                            getTimeConfirmDialog();
+                            loadHomeFragment(new CategoryFragment(), CURRENT_TAG);
+                            Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public void decline(String userId, String bookingId, String declineby) {
+
+        paramsDecline.put(Consts.USER_ID, userDTO.getUser_id());
+        paramsDecline.put(Consts.BOOKING_ID, bookingId);
+        String decl = declineby;
+        paramsDecline.put("jjjj", decl);
+        paramsDecline.put("decline_by", "2");
+        paramsDecline.put("passvalue", "0");
+        paramsDecline.put(Consts.DECLINE_REASON, "Busy");
+
+        new HttpsRequest(Consts.DECLINE_BOOKING_API, paramsDecline, BaseActivity.this).stringPost(TAG, new Helper() {
+            @Override
+            public void backResponse(boolean flag, String msg, JSONObject response) {
+                if (flag) {
+                    Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+                }
+
+
+            }
+        });
+    }
+
     private void getCurruntBooking() {
         prefrence = SharedPrefrence.getInstance(BaseActivity.this);
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
@@ -403,6 +647,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                                 CurruntBookingListAdapter adapter = new CurruntBookingListAdapter(BaseActivity.this, CurruntRunningBookingList);
                                 base_recyclerview.setLayoutManager(new LinearLayoutManager(BaseActivity.this));
                                 base_recyclerview.setAdapter(adapter);
+                                //   base_recyclerview.setExpanded(true);
                                 //  showData();
 
                             } catch (Exception e) {
@@ -638,7 +883,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                     case R.id.nav_home:
                         ivFilter.setVisibility(View.GONE);
                         ivmainsearchLayout.setVisibility(View.VISIBLE);
-                        ivmaincartLayout.setVisibility(View.VISIBLE);
+                        ivmaincartLayout.setVisibility(View.INVISIBLE);
                         navItemIndex = 0;
                         CURRENT_TAG = TAG_MAIN;
                         fragmentTransaction.replace(R.id.frame, new CategoryFragment());
@@ -984,6 +1229,43 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE_TWO) {
+            if (resultCode == RESULT_OK) {
+
+
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                customer_location_txt.setText(place.getAddress());
+                Log.e("SEARCHED_ADDRESS", "" + place.getName() + place.getAddress());
+                searched_latitude = place.getLatLng().latitude;
+                Log.e("SEARCHED_ADDRESS", " lati " + searched_latitude);
+                searched_longitude = place.getLatLng().longitude;
+                Log.e("SEARCHED_ADDRESS", " longi " + searched_longitude);
+
+                prefrence.setValue(Consts.LATITUDE, searched_latitude + "");
+                prefrence.setValue(Consts.LONGITUDE, searched_longitude + "");
+
+                parms.put(Consts.USER_ID, userDTO.getUser_id());
+                parms.put(Consts.ROLE, "2");
+                parms.put(Consts.LATITUDE, searched_latitude + "");
+                parms.put(Consts.LONGITUDE, searched_longitude + "");
+
+                Log.e("UPDATE_LOCATION", "123");
+                updateLocation();
+
+
+                loadHomeFragment(new CategoryFragment(), CURRENT_TAG);
+
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+            }
+            return;
+        }
+
     }
 
     @Override
@@ -1006,33 +1288,46 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onLocationChanged(Location location) {
         mylocation = location;
         if (mylocation != null) {
-            Double latitude = mylocation.getLatitude();
-            Double longitude = mylocation.getLongitude();
-            prefrence.setValue(Consts.LATITUDE, latitude + "");
-            prefrence.setValue(Consts.LONGITUDE, longitude + "");
+            if (!address_flag) {
 
 
-            parms.put(Consts.USER_ID, userDTO.getUser_id());
-            parms.put(Consts.ROLE, "2");
-            parms.put(Consts.LATITUDE, latitude + "");
-            parms.put(Consts.LONGITUDE, longitude + "");
-            Geocoder geocoder = new Geocoder(BaseActivity.this, Locale.getDefault());
-            try {
-                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                Address obj = addresses.get(0);
-                String add = obj.getAddressLine(0);
-                add = add + "\n" + obj.getCountryName();
-                add = add + "\n" + obj.getCountryCode();
-                add = add + "\n" + obj.getAdminArea();
-                add = add + "\n" + obj.getPostalCode();
-                add = add + "\n" + obj.getSubAdminArea();
-                add = add + "\n" + obj.getLocality();
-                add = add + "\n" + obj.getSubThoroughfare();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Double latitude = mylocation.getLatitude();
+                Double longitude = mylocation.getLongitude();
+                prefrence.setValue(Consts.LATITUDE, latitude + "");
+                prefrence.setValue(Consts.LONGITUDE, longitude + "");
+
+
+                parms.put(Consts.USER_ID, userDTO.getUser_id());
+                parms.put(Consts.ROLE, "2");
+                parms.put(Consts.LATITUDE, latitude + "");
+                parms.put(Consts.LONGITUDE, longitude + "");
+
+                updateLocation();
+                Geocoder geocoder = new Geocoder(BaseActivity.this, Locale.getDefault());
+                try {
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                    Address obj = addresses.get(0);
+                    String add = obj.getAddressLine(0);
+                    add = add + "\n" + obj.getCountryName();
+                    add = add + "\n" + obj.getCountryCode();
+                    add = add + "\n" + obj.getAdminArea();
+                    add = add + "\n" + obj.getPostalCode();
+                    add = add + "\n" + obj.getSubAdminArea();
+                    add = add + "\n" + obj.getLocality();
+                    add = add + "\n" + obj.getSubThoroughfare();
+
+                    address_flag = true;
+                    customer_live_address = obj.getAddressLine(0);
+                    customer_live_lat = latitude;
+                    customer_live_long = longitude;
+                    customer_location_txt.setText(obj.getAddressLine(0));
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
             }
-            updateLocation();
+
         }
     }
 
@@ -1074,11 +1369,17 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     public void updateLocation() {
+
+        Log.e("UPDATE_LOCATION", "" + parms.toString());
+
         new HttpsRequest(Consts.UPDATE_LOCATION_API, parms, mContext).stringPost(TAG, new Helper() {
             @Override
             public void backResponse(boolean flag, String msg, JSONObject response) {
                 if (flag) {
 
+                    Log.e("UPDATE_LOCATION", "" + response.toString());
+                    Log.e("SEARCHED_ADDRESS", " lati oncreate 2 " + prefrence.getValue(Consts.LATITUDE));
+                    Log.e("SEARCHED_ADDRESS", " longi oncreate 2 " + prefrence.getValue(Consts.LONGITUDE));
                 } else {
                     ProjectUtils.showToast(mContext, msg);
                 }

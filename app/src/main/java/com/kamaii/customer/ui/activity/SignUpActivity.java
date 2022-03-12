@@ -1,9 +1,14 @@
 package com.kamaii.customer.ui.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,8 +16,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.kamaii.customer.DTO.UserDTO;
 import com.kamaii.customer.R;
 import com.kamaii.customer.api.apiClient;
@@ -28,6 +37,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -48,6 +59,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private ActivitySignUpBinding binding;
     String mobileno = "";
     ProgressDialog progressDialog;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+    boolean single_time_location = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +76,62 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         progressDialog = new ProgressDialog(SignUpActivity.this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Please Wait");
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+
+                if (location != null) {
+
+                    if (!single_time_location){
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+
+                        Log.e("GPS_L"," latitude "+latitude);
+                        Log.e("GPS_L"," longitude "+longitude);
+                    }
+                    //txtLocation.setText(String.format(Locale.US, "%s -- %s", wayLatitude, wayLongitude));
+
+                    Geocoder geocoder = new Geocoder(SignUpActivity.this, Locale.getDefault());
+                    try {
+                        // Toast.makeText(mContext, "8", Toast.LENGTH_LONG).show();
+
+                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        Address obj = addresses.get(0);
+                        String add = obj.getAddressLine(0);
+                        add = add + "\n" + obj.getCountryName();
+                        add = add + "\n" + obj.getCountryCode();
+                        add = add + "\n" + obj.getAdminArea();
+                        add = add + "\n" + obj.getPostalCode();
+                        add = add + "\n" + obj.getSubAdminArea();
+                        add = add + "\n" + obj.getLocality();
+                        add = add + "\n" + obj.getSubThoroughfare();
+
+                       // rider_location = obj.getAddressLine(0);
+                        Log.e("GPS_L"," address "+obj.getAddressLine(0));
+
+                        single_time_location = true;
+
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
         setUiAction();
     }
 
@@ -155,6 +226,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 intent.putExtra(Consts.REFERRAL_CODE, "");
                                 intent.putExtra(Consts.MOBILE, ProjectUtils.getEditTextValue(binding.edtmono));
                                 intent.putExtra(Consts.OTP, otp);
+                                intent.putExtra(Consts.LATITUDE, String.valueOf(latitude));
+                                intent.putExtra(Consts.LONGITUDE, String.valueOf(longitude));
                                 startActivity(intent);
                                 finish();
                             } catch (Exception e) {

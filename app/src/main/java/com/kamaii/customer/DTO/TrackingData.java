@@ -117,6 +117,79 @@ public class TrackingData implements Serializable {
     String rider_rating = "";
     String rider_image = "";
 
+    String order_placed = "";
+    String delivered_by = "";
+    String revised_time = "";
+    String order_mode = "";
+    String remain_time = "";
+    String partner_logo = "";
+
+    String getdeliveryflag = "";
+    String confirm_timer = "";
+
+    public String getConfirm_timer() {
+        return confirm_timer;
+    }
+
+    public void setConfirm_timer(String confirm_timer) {
+        this.confirm_timer = confirm_timer;
+    }
+
+    public String getPartner_logo() {
+        return partner_logo;
+    }
+
+    public void setPartner_logo(String partner_logo) {
+        this.partner_logo = partner_logo;
+    }
+
+    public String getGetdeliveryflag() {
+        return getdeliveryflag;
+    }
+
+    public void setGetdeliveryflag(String getdeliveryflag) {
+        this.getdeliveryflag = getdeliveryflag;
+    }
+
+    public String getOrder_placed() {
+        return order_placed;
+    }
+
+    public void setOrder_placed(String order_placed) {
+        this.order_placed = order_placed;
+    }
+
+    public String getDelivered_by() {
+        return delivered_by;
+    }
+
+    public void setDelivered_by(String delivered_by) {
+        this.delivered_by = delivered_by;
+    }
+
+    public String getRevised_time() {
+        return revised_time;
+    }
+
+    public void setRevised_time(String revised_time) {
+        this.revised_time = revised_time;
+    }
+
+    public String getOrder_mode() {
+        return order_mode;
+    }
+
+    public void setOrder_mode(String order_mode) {
+        this.order_mode = order_mode;
+    }
+
+    public String getRemain_time() {
+        return remain_time;
+    }
+
+    public void setRemain_time(String remain_time) {
+        this.remain_time = remain_time;
+    }
 
     public String getRider_name() {
         return rider_name;

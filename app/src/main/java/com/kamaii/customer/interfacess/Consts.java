@@ -23,6 +23,7 @@ public interface Consts {
 
  //   String BASE_URL = "https://kamaii.in/app/Newwebservice/";
     String BASE_URL = "https://kamaii.in/app/Webservice/";
+  //  String BASE_URL = "https://multiscopesolution.com/app/Webservice/";
     String PAYMENT_FAIL = "https://kamaii.in/app/Stripe/Payment/fail";
     String PAYMENT_SUCCESS = "https://kamaii.in/app/Stripe/Payment/success";
     String PAYMENT_SUCCESS_PAYU = "https://kamaii.in/app/Stripe/Payment/success";
@@ -37,14 +38,15 @@ public interface Consts {
     String INVOICE_PAYMENT_Stripe = "https://kamaii.in/app/Stripe/BookingPayement/make_payment/";
 
     String INVOICE__PAYMENT_paypal = "https://kamaii.in/app/Webservice/paypal?";
-    String PRIVACY_URL = "https://kamaii.in/app/Webservice/privacy";
-    String TERMS_URL = "https://kamaii.in/app/Webservice/term";
-    String About_URL = "https://kamaii.in/app/Webservice/about";
-    String COVID_URL = "https://kamaii.in/app/Webservice/covid19";
+    String PRIVACY_URL = "https://kamaii.in/app/Myadmin/privacy";
+    String TERMS_URL = "https://kamaii.in/app/Myadmin/term";
+    String About_URL = "https://kamaii.in/app/Myadmin/about";
+    String COVID_URL = "https://kamaii.in/app/Myadmin/covid19";
 
 
     /*Api Details*/
     String WALLET_REQUEST_API = "customerWalletRequest";
+    String CONFIRM_TIME_UPDATION_API = "confirm_updation_order";
     String GET_ALL_ARTISTS_API = "getAllArtists";
     String GET_ARTIST_BY_ID_API_ARTIST = "getArtistByid_apiArtist";
     String GET_ARTIST_BY_ID_API_THIRD = "getArtistByid_api_third";
@@ -64,8 +66,12 @@ public interface Consts {
     String VIEW_REFER = "view_referral";
     String VIEW_REFER_SERVICE = "get_referra_det";
     String GET_WHATS_APP_CHAT_API = "get_chat_api";
+    String GET_DELIVERY_CONFIRM_API = "get_delivery_confirm";
     //dummy
     String BOOK_ARTIST_API2 = "book_test_artist2";
+  //  String BOOK_ARTIST_API2 = "book_test_artist_ionic";
+    String BOOK_ARTIST_API2_TEMP = "mybook_test_artist2";
+    String BOOK_ARTIST_API2_new = "book_test_artist2new";
     String ADD_TO_CART_TEST_API = "get_shipping_data4";
     String CHECK_MINIMUM_PRICE = "check_min_price";
     String ADD_TO_CART_TEST_API_LIVE = "productaddtocart";
@@ -271,6 +277,8 @@ public interface Consts {
     String GET_BOOKING_SECONDS_API = "getBookingSecond";
     String GET_DELIVERY_TIME_API = "getDeliveryTime";
     String REPEAT_ORDER_API = "repeatOrder";
+   // String ORDER_TIMEBREAK_API = "getordersec";
+    String ORDER_TIMEBREAK_API = "getordersec2";
 
     /*Chat intent*/
     String ARTIST_NAME = "artist_name";
@@ -342,6 +350,7 @@ public interface Consts {
     String ADMIN_NOTIFICATION = "10016";
     String SWIFT_REPEAT_NOTIFICATION = "10017";
     String ARRIVAL_NOTIFICATION = "10018";
+    String TIME_CONFIRM_DIALOG_NOTIFICATION = "10080";
     String TYPE = "type";
 
 }

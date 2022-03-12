@@ -1,7 +1,12 @@
 plugins {
     id 'com.android.application'
 }
-
+repositories {
+    mavenCentral()
+    flatDir{
+        dirs 'libs'
+    }
+}
 android {
     buildFeatures {
 
@@ -17,8 +22,8 @@ android {
         applicationId "com.kamaii.customer"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 74
-        versionName "8.7"
+        versionCode 85
+        versionName "9.8"
         useLibrary 'org.apache.http.legacy'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,7 +57,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "com.github.hotchemi:permissionsdispatcher:${permissionsDispatcherVersion}"
     implementation 'me.relex:circleindicator:2.1.4'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.4.0-alpha01'
+    implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
+    implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
+    implementation 'com.google.android.gms:play-services-analytics:10.2.4'
+    implementation 'com.github.warkiz.widget:indicatorseekbar:1.1.2'
+
     implementation 'com.cocosw:bottomsheet:1.4.0'
     implementation 'com.isseiaoki:simplecropview:1.1.4'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -113,6 +123,7 @@ dependencies {
     implementation 'com.google.android.play:core:1.7.3'
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+    implementation('com.razorpay:checkout:1.6.7')
 
     implementation project(':androidcountdown')
     /*implementation 'com.google.android.gms:play-services-auth:17.0.0'

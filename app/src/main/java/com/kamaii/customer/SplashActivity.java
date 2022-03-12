@@ -3,15 +3,31 @@ package com.kamaii.customer;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
+import android.location.Location;
+import android.location.LocationListener;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.kamaii.customer.interfacess.Consts;
 import com.kamaii.customer.preferences.SharedPrefrence;
 import com.kamaii.customer.ui.activity.AppIntro;
@@ -28,9 +44,9 @@ public class SplashActivity extends AppCompatActivity {
     Context mContext;
     MediaPlayer mediaPlayer;
     private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 1003;
-    private boolean cameraAccepted, storageAccepted, accessNetState, fineLoc, corasLoc,readstorage,wakelock,call;
-    private String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE ,Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK,Manifest.permission.CALL_PHONE};
+    private boolean cameraAccepted, storageAccepted, accessNetState, fineLoc, corasLoc, readstorage, wakelock, call;
+    private String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK, Manifest.permission.CALL_PHONE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +70,7 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
                 overridePendingTransition(R.anim.anim_slide_in_left,
                         R.anim.anim_slide_out_left);
-            }else {
+            } else {
                 Intent in = new Intent(SplashActivity.this, AppIntro.class);
                 startActivity(in);
                 finish();
@@ -71,10 +87,10 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+
     public boolean checkPermission() {
-        if (Build.VERSION.SDK_INT >= 23)
-        {
-            boolean isCamera=false,isReadPhoneState=false,isExternalStrage = false, isFinelocation = false,isReadStorage=false,iscrose=false;
+        if (Build.VERSION.SDK_INT >= 23) {
+            boolean isCamera = false, isReadPhoneState = false, isExternalStrage = false, isFinelocation = false, isReadStorage = false, iscrose = false;
 
             try {
                 int hasFinelocationPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -112,14 +128,12 @@ public class SplashActivity extends AppCompatActivity {
             return true;
         }
     }
-    public boolean check()
-    {
-        if(checkPermission())
-        {
+
+    public boolean check() {
+        if (checkPermission()) {
             handler.postDelayed(mTask, SPLASH_TIME_OUT);
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
@@ -162,10 +176,10 @@ public class SplashActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
+
         }
         check();
     }
-
 }
 
 

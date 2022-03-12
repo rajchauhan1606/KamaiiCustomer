@@ -73,6 +73,7 @@ public class DiscoverActivity extends AppCompatActivity implements SwipeRefreshL
     boolean flag = false;
     public CustomTextViewBold total_product;
     CustomEditText svSearch;
+    boolean load = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +85,6 @@ public class DiscoverActivity extends AppCompatActivity implements SwipeRefreshL
         if (flag) {
             thirdcategory = getIntent().getStringExtra("third_leval_tracker");
         }
-        initView();
     }
 
     private void initView() {
@@ -164,29 +164,44 @@ public class DiscoverActivity extends AppCompatActivity implements SwipeRefreshL
     @Override
     public void onResume() {
         super.onResume();
-        swipeRefreshLayout.setRefreshing(false);
-        swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() {
+        if (!load) {
+
+            initView();
+
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.post(new Runnable() {
+                                        @Override
+                                        public void run() {
 
 
-                                        if (NetworkManager.isConnectToInternet(DiscoverActivity.this)) {
-                                            swipeRefreshLayout.setRefreshing(true);
+                                            if (NetworkManager.isConnectToInternet(DiscoverActivity.this)) {
+                                                swipeRefreshLayout.setRefreshing(true);
 
-                                            getArtist();
+                                                getArtist();
 
-                                        } else {
-                                            ProjectUtils.showToast(DiscoverActivity.this, getResources().getString(R.string.internet_concation));
+                                            } else {
+                                                ProjectUtils.showToast(DiscoverActivity.this, getResources().getString(R.string.internet_concation));
+                                            }
                                         }
                                     }
-                                }
-        );
+            );
+            load = true;
+        }
     }
 
 
     public void getArtist() {
         Retrofit retrofit = apiClient.getClient();
         apiRest api = retrofit.create(apiRest.class);
+
+        Log.e("API_PARAMS", " catid " + catid);
+        Log.e("API_PARAMS", " sub_category_idd " + catid);
+        Log.e("API_PARAMS", " thirdcategory " + catid);
+        Log.e("API_PARAMS", "" + userDTO.getUser_id());
+        Log.e("API_PARAMS", " lat " + prefrence.getValue(Consts.LATITUDE));
+        Log.e("API_PARAMS", " long " + prefrence.getValue(Consts.LONGITUDE));
+
+
         Call<ResponseBody> callone = api.getArtist(catid, sub_category_idd, thirdcategory, userDTO.getUser_id(), prefrence.getValue(Consts.LATITUDE), prefrence.getValue(Consts.LONGITUDE));
         callone.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -194,13 +209,13 @@ public class DiscoverActivity extends AppCompatActivity implements SwipeRefreshL
 
                 swipeRefreshLayout.setRefreshing(false);
 
-                Log.e("RES_DISCOVER", response.message());
+                // Log.e("RES_DISCOVER", response.message());
                 try {
                     if (response.isSuccessful()) {
                         ResponseBody responseBody = response.body();
 
                         String s = responseBody.string();
-                        Log.e("RES_DISCOVER", s);
+                        Log.e("API_PARAMS_RESPONSE", s);
 
                         JSONObject object = new JSONObject(s);
 
@@ -253,9 +268,9 @@ public class DiscoverActivity extends AppCompatActivity implements SwipeRefreshL
         rvDiscover.setVisibility(View.VISIBLE);
         if (allAtristListDTOList.size() == 1) {
 
-            total_product.setText(allAtristListDTOList.size() + " Provider Near by");
+            total_product.setText(allAtristListDTOList.size() + " Partner Near by");
         } else {
-            total_product.setText(allAtristListDTOList.size() + " Providers Near by");
+            total_product.setText(allAtristListDTOList.size() + " Partners Near by");
 
         }
         svSearch.addTextChangedListener(new TextWatcher() {

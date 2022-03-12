@@ -78,7 +78,12 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_my_booking, container, false);
         prefrence = SharedPrefrence.getInstance(getActivity());
+
+        getActivity().findViewById(R.id.ivLogo).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.my_bookings));
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
         baseActivity.base_recyclerview.setVisibility(View.GONE);
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
         setUiAction(view);
@@ -177,7 +182,7 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
                         rvBooking.setVisibility(View.VISIBLE);
                         String message = object.getString("message");
                         int sstatus = object.getInt("status");
-                        Log.e("ssstatus",""+sstatus);
+                        Log.e("ssstatus", "" + sstatus);
                         if (sstatus == 1) {
 
                             try {
@@ -188,7 +193,8 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
                                 userBookingList = (ArrayList<UserBooking>) new Gson().fromJson(object.getJSONArray("data").toString(), getpetDTO);
                                 showData();
 
-                            } catch (Exception e) {Log.e("ssstatus_error",""+sstatus);
+                            } catch (Exception e) {
+                                Log.e("ssstatus_error", "" + sstatus);
                                 e.printStackTrace();
                             }
 

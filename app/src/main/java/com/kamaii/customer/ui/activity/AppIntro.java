@@ -33,7 +33,7 @@ public class AppIntro extends AppCompatActivity implements ViewPager.OnPageChang
     private ImageView[] dots;
     public SharedPrefrence preference;
     private Context mContext;
-    int[] mResources = {R.drawable.first_intro, R.drawable.second_intro, R.drawable.third_intro};
+    int[] mResources = {R.drawable.first_intro, R.drawable.second_intro, R.drawable.intro_3};
     private ActivityAppIntro2Binding binding;
     CustomTextViewBold skip_txt;
 

@@ -11,8 +11,7 @@
             android:id="@+id/laytitle123"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_10dp">
 
             <com.kamaii.customer.utils.CustomTextViewBold
                 android:id="@+id/ctvbTitle"
@@ -23,8 +22,9 @@
                 android:gravity="center_vertical"
                 android:padding="@dimen/dimen_10dp"
                 android:text="@string/select_an_address"
+                android:layout_marginLeft="@dimen/dimen_10dp"
                 android:textColor="@color/dark_blue_color"
-                android:textSize="@dimen/dimen_20dp" />
+                android:textSize="@dimen/text_size_16" />
 
             <ImageView
                 android:id="@+id/address_dialog_close_img"
@@ -82,6 +82,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
                         android:hint="@string/search_destination"
+                        android:layout_gravity="center_vertical"
                         android:singleLine="true"
                         android:textColor="@color/dark_blue_color"
                         android:textSize="14sp" />
@@ -94,7 +95,7 @@
             android:id="@+id/add_view1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/address_lay_dest_location"
+            android:layout_below="@+id/customAddress"
             android:background="#d8d8d8" />
 
 
@@ -102,7 +103,8 @@
             android:id="@+id/address_relative"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/add_view1">
+            android:layout_below="@+id/add_view1"
+            >
 
             <com.kamaii.customer.utils.CustomTextViewBold
                 android:id="@+id/select_add_txt"
@@ -118,6 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/select_add_txt"
+                android:padding="@dimen/dimen_10dp"
                 android:layout_marginTop="-10dp" />
         </RelativeLayout>
 
@@ -202,11 +205,30 @@
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
+                        <!--  <com.kamaii.partner.utils.InputOpenFieldView
+                              android:id="@+id/one"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="5dp"
+                              android:textColorHint="@color/hintcolor">
+
+                              <com.kamaii.partner.utils.CustomEditText
+                                  android:id="@+id/etNameD"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:hint="@string/business_name"
+                                  android:inputType="textCapWords"
+                                  android:singleLine="true"
+                                  android:text=""
+                                  android:textSize="16dp" />
+
+                          </com.kamaii.partner.utils.InputOpenFieldView>
+  -->
+
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dimen_10dp"
-
                             android:padding="@dimen/dimen_5dp">
 
                             <com.kamaii.customer.utils.CustomEditText
@@ -214,9 +236,7 @@
                                 style="@style/Autocomplete"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:ellipsize="end"
                                 android:hint="@string/houseno"
-                                android:maxLines="1"
                                 android:padding="5dp"
                                 android:singleLine="true"
                                 android:textColor="@color/dark_blue_color"
@@ -226,15 +246,15 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_10dp">
+                            android:layout_marginTop="@dimen/dimen_10dp"
+                            android:padding="@dimen/dimen_5dp">
 
                             <com.kamaii.customer.utils.CustomEditText
                                 android:id="@+id/society_name_etx"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:ellipsize="end"
                                 android:hint="@string/enter_society_name"
-                                android:maxLines="1"
+                                android:digits="QWERTYUIOPA/SDFGHJKLZXCVBNMqwertyuioplkjhgfdsazxcvbnm,1234567890 "
                                 android:padding="5dp"
                                 android:singleLine="true"
                                 android:textColor="@color/dark_blue_color"

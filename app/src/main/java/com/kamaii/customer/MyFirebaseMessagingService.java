@@ -58,7 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.WALLET_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.WALLET_NOTIFICATION);
                 } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)) {
-                    sendNotificationcopy(getValue(remoteMessage.getData(), "body"), Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION);
+                    sendDeclineNotificationcopy(getValue(remoteMessage.getData(), "body"), Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION);
                     //  sendNotification(getValue(remoteMessage.getData(), "body"), Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION);
                 } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.START_BOOKING_ARTIST_NOTIFICATION)) {
                     sendNotificationcopy(getValue(remoteMessage.getData(), "body"), Consts.START_BOOKING_ARTIST_NOTIFICATION);
@@ -75,8 +75,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.ADMIN_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.ADMIN_NOTIFICATION);
                 } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.ARRIVAL_NOTIFICATION)) {
-
                     sendarrival(getValue(remoteMessage.getData(), "body"), Consts.ARRIVAL_NOTIFICATION);
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.TIME_CONFIRM_DIALOG_NOTIFICATION)) {
+                    sendNotificationstoprring(getValue(remoteMessage.getData(), "body"), Consts.TIME_CONFIRM_DIALOG_NOTIFICATION);
                 } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase("9000")) {
                     sendNotificationcopy2(getValue(remoteMessage.getData(), "body"), "9000");
                 } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.SWIFT_REPEAT_NOTIFICATION)) {
@@ -111,8 +112,39 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         editor.commit();
     }
 
+    private void sendNotificationstoprring(String messageBody, String tag) {
+
+        Log.e("notification_number","0" + " tag :-- "+tag);
+
+        Intent resultIntent = null;
+
+        resultIntent = new Intent(this, BaseActivity.class);
+        resultIntent.putExtra(Consts.SCREEN_TAG, tag);
+        resultIntent.putExtra("message", messageBody);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(resultIntent);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT);
+        String channelId = "Default";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.app_name))
+
+                .setContentText(messageBody).setAutoCancel(true).setContentIntent(pendingIntent);
+
+
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "Default channel", NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(channel);
+        }
+        manager.notify(0, builder.build());
+
+    }
+
     private void sendNotification(String messageBody, String tag) {
 
+        Log.e("notification_number","1" + " tag :-- "+tag);
         Intent intent = new Intent(this, BaseActivity.class);
         intent.putExtra(Consts.SCREEN_TAG, tag);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -132,6 +164,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendarrival(String messageBody, String tag) {
+
+        Log.e("notification_number","2"+ " tag :-- "+tag);
 
         Intent intent = new Intent(this, BaseActivity.class);
         intent.putExtra(Consts.SCREEN_TAG, tag);
@@ -161,8 +195,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
+
     private void sendNotificationcopy(String messageBody, String tag) {
 
+        Log.e("notification_number","3"+ " tag :-- "+tag);
 
         Intent intent = new Intent(this, BaseActivity.class);
         intent.putExtra(Consts.SCREEN_TAG, tag);
@@ -188,7 +224,42 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
 
+    private void sendDeclineNotificationcopy(String messageBody, String tag) {
+
+        Log.e("notification_number","4"+ " tag :-- "+tag);
+
+        Intent intent = new Intent(this, BaseActivity.class);
+        intent.putExtra(Consts.SCREEN_TAG, tag);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        String channelId = "Default";
+
+        long[] VIBRATE_PATTERN = {0, 500};
+
+        Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.cancel);
+
+        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), soundUri);
+        r.play();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(messageBody).setAutoCancel(true).setContentIntent(pendingIntent);
+
+
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "Default channel", NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(channel);
+        }
+        manager.notify(0, builder.build());
+
+
+    }
+
+
     private void sendNotificationcopy2(String messageBody, String tag) {
+
+        Log.e("notification_number","5"+ " tag :-- "+tag);
 
         Intent intent = new Intent(this, TrackingActivity.class);
         intent.putExtra("flag", "0");
@@ -213,6 +284,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void sendNotificationcrepeat(String messageBody, String tag) {
+
+        Log.e("notification_number","6"+ " tag :-- "+tag);
+
         if (isAppIsInBackground(this)) {
             TrackingActivity viewMapTrackingActivity = new TrackingActivity();
             viewMapTrackingActivity.getLatestBooking();
@@ -243,6 +317,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public static boolean isAppIsInBackground(Context context) {
+
+        Log.e("notification_number","7");
+
         boolean isInBackground = true;
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {

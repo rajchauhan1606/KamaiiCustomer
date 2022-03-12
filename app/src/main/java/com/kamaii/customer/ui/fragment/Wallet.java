@@ -68,11 +68,13 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     private CustomTextViewBold tvWallet;
     private String amt = "";
     private String currency = "";
+    private String wallet_rate = "";
+    //private String bank_status = "";
     private BaseActivity baseActivity;
     Button btncashout;
     private Dialog dialog;
     CustomEditText etamount;
-    CustomTextView tvCancel,tvAdd;
+    CustomTextView tvCancel, tvAdd;
     private HashMap<String, String> paramsRequest = new HashMap<>();
 
     @Override
@@ -81,6 +83,8 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
         view = inflater.inflate(R.layout.fragment_wallet, container, false);
         prefrence = SharedPrefrence.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        getActivity().findViewById(R.id.ivLogo).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.ic_wallet));
         baseActivity.base_recyclerview.setVisibility(View.GONE);
 
@@ -118,9 +122,9 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dailog_cashout);
-        etamount=dialog.findViewById(R.id.etamount);
-        tvCancel=dialog.findViewById(R.id.tvCancel);
-        tvAdd=dialog.findViewById(R.id.tvAdd);
+        etamount = dialog.findViewById(R.id.etamount);
+        tvCancel = dialog.findViewById(R.id.tvCancel);
+        tvAdd = dialog.findViewById(R.id.tvAdd);
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,11 +135,17 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
         btncashout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //  dialog.show();
             }
         });
         llAddMoney = v.findViewById(R.id.llAddMoney);
         llAddMoney.setOnClickListener(this);
-
+        tvAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPayment();
+            }
+        });
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         tvNo = v.findViewById(R.id.tvNo);
         RVhistorylist = v.findViewById(R.id.RVhistorylist);
@@ -158,16 +168,17 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
             public void backResponse(boolean flag, String msg, JSONObject response) {
                 ProjectUtils.pauseProgressDialog();
                 if (flag) {
-                    Toast.makeText(getActivity(),msg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     getWallet();
                 } else {
-                    Toast.makeText(getActivity(),msg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -176,6 +187,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
                     Intent in = new Intent(getActivity(), AddMoney.class);
                     in.putExtra(Consts.AMOUNT, amt);
                     in.putExtra(Consts.CURRENCY, currency);
+                    in.putExtra("wallet_rate", wallet_rate);
                     startActivity(in);
                 } else {
                     ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
@@ -217,11 +229,15 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
                 if (flag) {
                     tvNo.setVisibility(View.GONE);
                     RVhistorylist.setVisibility(View.VISIBLE);
+
                     try {
                         walletHistoryList = new ArrayList<>();
                         Type getpetDTO = new TypeToken<List<WalletHistory>>() {
                         }.getType();
                         walletHistoryList = (ArrayList<WalletHistory>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                        //      bank_status = response.getString("bank_status");
+                        wallet_rate = response.getString("wallet_rate");
+
                         showData();
 
                     } catch (Exception e) {
@@ -326,6 +342,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
         tvCreditSelect.setSelected(secondBTN);
 
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

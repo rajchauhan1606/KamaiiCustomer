@@ -145,11 +145,15 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
         cartList = new ArrayList<>();
         cartHashmap = new HashMap<>();
         if (getIntent().hasExtra(Consts.ARTIST_ID)) {
+
             artist_id = getIntent().getStringExtra(Consts.ARTIST_ID);
+            Log.e("view_service_tracker"," 1:-- "+artist_id);
             artist_name = getIntent().getStringExtra("artist_name");
             subcategoryid = getIntent().getStringExtra(Consts.SUB_CATEGORY_ID);
             searchtext = getIntent().getStringExtra("searchtext");
         } else {
+            Log.e("view_service_tracker"," 2 ");
+
             Intent intent = new Intent(this, BaseActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -159,12 +163,16 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
         }
 
         if (getIntent().hasExtra(Consts.ARTIST_DTO)) {
+            Log.e("view_service_tracker"," 3 ");
+
             artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Consts.ARTIST_DTO);
             artist_id = getIntent().getStringExtra(Consts.ARTIST_ID);
             changes_price = getIntent().getStringExtra(Consts.CHANGE_PRICE);
             cartHashmap = (HashMap<String, String>) getIntent().getSerializableExtra("cartHashmap");
             screen_tag = getIntent().getIntExtra(Consts.SCREEN_TAG, 0);
             if (screen_tag == 2) {
+                Log.e("view_service_tracker"," 4 ");
+
                 Bundle b = getIntent().getExtras();
                 cartarraylist = (ArrayList<ProductDTO>) b.getSerializable(Consts.CARTDATA);
             }
@@ -173,7 +181,6 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
         parms.put(Consts.SUB_CATEGORY_ID, DiscoverActivity.sub_category_idd);
         parms.put(Consts.ARTIST_ID, artist_id);
         parms.put(Consts.USER_ID, userDTO.getUser_id());
-
         parmsthird.put(Consts.SUB_CATEGORY_ID, DiscoverActivity.sub_category_idd);
         parmsthird.put(Consts.ARTIST_ID, artist_id);
         parmsthird.put(Consts.USER_ID, userDTO.getUser_id());
@@ -183,7 +190,9 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
     }
 
     public void showSuggestionData() {
-        Log.e("Khakhra_tHIRD", "showSuggestionData" + "0");
+        Log.e("view_service_tracker"," 5 ");
+
+
         subcategoryDTOList = new ArrayList<>();
         subcategoryDTOList = artistDetailsDTO.getSubcategory();
         if (subcategoryDTOList.size() > 0) {
@@ -286,6 +295,9 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
     }
 
     public void suggestionsecond(String subcat) {
+
+        Log.e("view_service_tracker"," 6 ");
+        Log.e("view_service_tracker"," suggestionsecond_method "+artist_id);
 
         updateList();
         for (ProductDTO productDTO : cartarraylist) {

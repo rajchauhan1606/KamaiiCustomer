@@ -1126,7 +1126,7 @@ public class ViewAddressActivity extends AppCompatActivity implements com.google
                 });
             }
         } else {
-            ProjectUtils.showToast(ViewAddressActivity.this, "No Service Provider Found at your location");
+            ProjectUtils.showToast(ViewAddressActivity.this, "No partner found at your location");
         }
     }
 

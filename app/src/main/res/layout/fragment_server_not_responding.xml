@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerVertical="true"
+    tools:context=".ui.fragment.CheckInternetFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/maintainence_image" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="150dp"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dimen_30dp">
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:id="@+id/txt_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:paddingTop="@dimen/dimen_30dp"
+            android:text="Oops! Temporary Server is Down"
+            android:textColor="@color/dark_blue_color"
+            android:textSize="@dimen/dimen_20dp" />
+
+
+        <com.kamaii.customer.utils.CustomTextView
+            android:id="@+id/txt_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_1"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/dimen_10dp"
+            android:text="Our Servers are facing a temporary technical problem. We regret the inconvenience caused.Please try again after some time"
+
+            android:textColor="@color/dark_blue_color"
+            android:textSize="@dimen/dimen_20dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_150"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints">
+
+        <com.kamaii.customer.utils.CustomTextView
+            android:id="@+id/retry_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="200dp"
+            android:background="@drawable/no_internet_btn_bg"
+            android:paddingLeft="50dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingRight="50dp"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:text="Retry"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

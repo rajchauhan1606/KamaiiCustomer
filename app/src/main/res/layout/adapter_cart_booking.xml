@@ -70,22 +70,120 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="0dp"
-                        android:layout_toLeftOf="@id/priceData"
                         android:layout_toEndOf="@id/imagedata"
-                        android:layout_weight="0.5"
+                        android:paddingTop="@dimen/dimen_10dp"
                         android:orientation="vertical">
 
+                        <RelativeLayout
+                            android:id="@+id/two_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/one"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/prd_name_relative"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_toLeftOf="@+id/li"
+                                android:paddingRight="@dimen/dimen_10dp">
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/tvProductName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:text="Gujarati Thali Small"
+                                    android:textColor="@color/dark_blue_color"
+                                    android:textSize="@dimen/text_size_15"
+                                    android:textStyle="bold" />
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/tvvehiclenumber"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/tvProductName"
+                                    android:text=""
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="@dimen/text_size_12"
+                                    android:textStyle="bold"
+                                    android:visibility="gone" />
+
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/li"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toLeftOf="@+id/price_tv"
+                                android:orientation="horizontal"
+                                android:layout_marginLeft="@dimen/dimen_10dp"
+                                android:backgroundTint="@color/pink_text_color"
+                                android:paddingBottom="2dp"
+                                android:layout_centerVertical="true"
+                                android:paddingTop="2dp"
+                                android:paddingLeft="@dimen/dimen_5dp"
+                                android:paddingRight="@dimen/dimen_5dp"
+                                android:background="@drawable/custom_curved_background">
+
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/tvPrices_title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:text="QTY:"
+                                    android:textColor="@color/white"
+                                    android:textSize="14dp"
+                                    android:visibility="visible" />
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/qty_final"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_toRightOf="@+id/tvPrices_title"
+                                    android:paddingLeft="@dimen/dimen_5dp"
+                                    android:singleLine="true"
+                                    android:text=""
+                                    android:textColor="@color/white"
+                                    android:textSize="14dp"
+                                    android:visibility="visible" />
+
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:id="@+id/price_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/dimen_10dp">
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/tvPrice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="@color/dark_blue_color"
+                                    android:textSize="14dp" />
+                            </LinearLayout>
+
+
+                        </RelativeLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:visibility="gone">
 
                             <com.kamaii.customer.utils.CustomTextViewBold
-                                android:id="@+id/tvProductName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
@@ -98,10 +196,8 @@
                                 android:textStyle="bold" />
 
                             <com.kamaii.customer.utils.CustomTextViewBold
-                                android:id="@+id/tvvehiclenumber"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/tvProductName"
                                 android:paddingLeft="4dp"
                                 android:text=""
                                 android:textColor="@color/colorPrimary"
@@ -113,7 +209,6 @@
                                 android:id="@+id/qty_tit"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/tvProductName"
                                 android:paddingLeft="4dp"
                                 android:text="Qty : "
                                 android:textColor="@color/pink_text_color"
@@ -122,10 +217,8 @@
                                 android:visibility="visible" />
 
                             <com.kamaii.customer.utils.CustomTextViewBold
-                                android:id="@+id/qty_final"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/tvProductName"
                                 android:layout_marginTop="1dp"
                                 android:layout_toRightOf="@+id/qty_tit"
                                 android:text=""
@@ -137,10 +230,8 @@
                                 android:id="@+id/descriptionType"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/tvProductName"
                                 android:layout_marginStart="10dp"
                                 android:layout_marginTop="1dp"
-                                android:layout_toRightOf="@+id/qty_final"
                                 android:text=""
                                 android:textColor="@color/dark_blue_color"
                                 android:textSize="@dimen/text_size_12"
@@ -185,7 +276,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="5dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <com.kamaii.customer.utils.CustomTextView
                             android:id="@+id/tvPrices"
@@ -198,7 +290,6 @@
                             android:textSize="14dp" />
 
                         <com.kamaii.customer.utils.CustomTextViewBold
-                            android:id="@+id/tvPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"

@@ -63,6 +63,9 @@ public class PaidFrag extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_paid, container, false);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.invoice));
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.ivLogo).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
         baseActivity.base_recyclerview.setVisibility(View.GONE);
 
         prefrence = SharedPrefrence.getInstance(getActivity());

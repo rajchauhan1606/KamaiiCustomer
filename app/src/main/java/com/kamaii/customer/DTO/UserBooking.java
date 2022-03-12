@@ -82,7 +82,25 @@ public class UserBooking implements Serializable {
     String discount_digit_txt = "";
     String order_product = "";
     String Scratch_amount = "";
-    String working_time;
+    String working_time = "";
+    String percentage = "";
+    String getdeliveryflag = "";
+
+    public String getGetdeliveryflag() {
+        return getdeliveryflag;
+    }
+
+    public void setGetdeliveryflag(String getdeliveryflag) {
+        this.getdeliveryflag = getdeliveryflag;
+    }
+
+    public String getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(String percentage) {
+        this.percentage = percentage;
+    }
 
     public String getWorking_time() {
         return working_time;
@@ -167,6 +185,69 @@ public class UserBooking implements Serializable {
     String there_is_rider_not = "";
     String ismap = "";
     String partnerisrider = "";
+    String order_placed = "";
+    String delivered_by = "";
+    String revised_time = "";
+    String order_mode = "";
+    String remain_time = "";
+    String partner_logo = "";
+    String dialog_show_remain_time = "";
+
+    public String getDialog_show_remain_time() {
+        return dialog_show_remain_time;
+    }
+
+    public void setDialog_show_remain_time(String dialog_show_remain_time) {
+        this.dialog_show_remain_time = dialog_show_remain_time;
+    }
+
+    public String getPartner_logo() {
+        return partner_logo;
+    }
+
+    public void setPartner_logo(String partner_logo) {
+        this.partner_logo = partner_logo;
+    }
+
+    public String getOrder_placed() {
+        return order_placed;
+    }
+
+    public void setOrder_placed(String order_placed) {
+        this.order_placed = order_placed;
+    }
+
+    public String getDelivered_by() {
+        return delivered_by;
+    }
+
+    public void setDelivered_by(String delivered_by) {
+        this.delivered_by = delivered_by;
+    }
+
+    public String getRevised_time() {
+        return revised_time;
+    }
+
+    public void setRevised_time(String revised_time) {
+        this.revised_time = revised_time;
+    }
+
+    public String getOrder_mode() {
+        return order_mode;
+    }
+
+    public void setOrder_mode(String order_mode) {
+        this.order_mode = order_mode;
+    }
+
+    public String getRemain_time() {
+        return remain_time;
+    }
+
+    public void setRemain_time(String remain_time) {
+        this.remain_time = remain_time;
+    }
 
     public String getPartnerisrider() {
         return partnerisrider;

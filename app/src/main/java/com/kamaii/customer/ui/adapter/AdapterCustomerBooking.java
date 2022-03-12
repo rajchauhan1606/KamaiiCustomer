@@ -216,6 +216,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
 
             holder.tvStatus.setText(objects.get(position).getBooking_msg2());
 
+            Log.e("booking_msg1234567",""+objects.get(position).getBooking_msg2()+" net pay :"+objects.get(position).getTotal_amount()+" position:-- "+position);
             if (productDTOArrayList.get(0).getSub_category_id().equals("242") || productDTOArrayList.get(0).getSub_category_id().equals("434")) {
                 holder.service_txt.setText("Driver allowance");
                 if (objects.get(position).getServicecharge().equals("0") || objects.get(position).getServicecharge().equals("0.00")) {
@@ -316,6 +317,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                     SimpleDateFormat format = new SimpleDateFormat(
                             "yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
 
+                    Log.e("DATE_DELIVERY"," MyBooking Adapter "+objects.get(position).getWorking_time());
                     Date date = null;
                     try {
                         date = format.parse(objects.get(position).getWorking_time());

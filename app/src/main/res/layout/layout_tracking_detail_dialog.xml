@@ -61,17 +61,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
 
                     <com.kamaii.customer.utils.CustomTextViewBold
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
                         android:layout_marginTop="15dp"
-                        android:gravity="center_horizontal"
                         android:singleLine="true"
-                        android:text="Time to reach at your location"
+                        android:text="Approx estimated delivery time at your location"
                         android:textColor="@color/dark_blue_color"
                         android:textSize="15sp" />
 
@@ -79,13 +78,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="@dimen/dimen_10dp"
                         android:background="@drawable/preparation_bg_border"
-                        android:gravity="center_horizontal|center_vertical"
                         android:orientation="horizontal"
                         android:paddingLeft="@dimen/dimen_10dp"
                         android:paddingTop="@dimen/dimen_5dp"
@@ -96,7 +90,7 @@
                             android:id="@+id/dlivery_timer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
+                            app:max_time_unit="DAY"
                             android:textColor="@color/dark_blue_color"
                             app:text_color="@color/dark_blue_color" />
 
@@ -126,7 +120,7 @@
                         android:layout_marginTop="15dp"
                         android:gravity="start"
                         android:singleLine="true"
-                        android:text="Service Provider Details"
+                        android:text="Partner Details"
                         android:textColor="@color/dark_blue_color"
                         android:textSize="15sp" />
 
@@ -225,9 +219,8 @@
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
                             android:src="@drawable/single_logo"
-                            android:text="Call"
-                            android:textColor="@color/white"
-                            android:visibility="gone" />
+                            android:text="Chat"
+                            android:textColor="@color/white"/>
 
                         <com.kamaii.customer.utils.CustomTextViewBold
                             android:id="@+id/call_button_disabled"
@@ -240,7 +233,7 @@
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
                             android:src="@drawable/single_logo"
-                            android:text="Call"
+                            android:text="Chat"
                             android:textColor="@color/white"
                             android:visibility="gone" />
 
@@ -504,6 +497,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:gravity="start|center_vertical"
                         android:textColor="@color/green_text_color"
                         android:textSize="14dp" />
 
@@ -514,6 +508,7 @@
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@+id/discount_digit_txt"
                         android:text=""
+                        android:gravity="end|center_vertical"
                         android:textColor="@color/dark_blue_color"
                         android:textSize="14dp" />
 
@@ -783,7 +778,7 @@
                         android:paddingTop="7dp"
                         android:paddingBottom="7dp"
                         android:singleLine="true"
-                        android:text="Net Pay "
+                        android:text="Order Amount "
                         android:textColor="#C13003"
                         android:textSize="18sp" />
 

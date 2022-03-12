@@ -66,6 +66,15 @@ public interface apiRest {
     @POST("getAllCatalogCategory")
     Call<ResponseBody> getAllCatalogCategory(@Field("user_id") String user_id, @Field("device_token") String device_token);
 
+
+    @FormUrlEncoded
+    @POST("getPopulerPartners")
+    Call<ResponseBody> getPopulerPartners(@Field("user_id") String user_id, @Field("device_token") String device_token);
+
+    @FormUrlEncoded
+    @POST("getPopulerService")
+    Call<ResponseBody> getPopulerService(@Field("user_id") String user_id, @Field("device_token") String device_token);
+
     @FormUrlEncoded
     @POST("get_sub_cat")
     Call<ResponseBody> getsubcategory(@Field("category_id") String category_id, @Field("user_id") String user_id);
@@ -89,6 +98,10 @@ public interface apiRest {
     @FormUrlEncoded
     @POST("getallservice_forsearch")
     Call<ResponseBody> getSearch(@Field("user_id") String user_id);
+
+    @FormUrlEncoded
+    @POST("search_by_product")
+    Call<ResponseBody> getProductSearch(@Field("product_name") String user_id);
 
     @FormUrlEncoded
     @POST("getallprovider_forsearch_temp")

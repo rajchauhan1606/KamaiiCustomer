@@ -62,7 +62,13 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_jobs, container, false);
+
+        getActivity().findViewById(R.id.ivLogo).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.jobs));
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
+
         baseActivity.base_recyclerview.setVisibility(View.GONE);
 
         prefrence = SharedPrefrence.getInstance(getActivity());

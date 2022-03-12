@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class ArtistDetailsDTO implements Serializable {
 
     String id = "";
+    String artist_id = "";
+
     String artist_banner = "";
     String user_id = "";
     String name = "";
@@ -70,6 +72,68 @@ public class ArtistDetailsDTO implements Serializable {
     String dis_price = "";
     String defualt_whatsappno = "";
     String slotnote = "";
+    String wallet_rate = "";
+    String wallet_hide_status = "";
+    String minimum_amount_price = "";
+    String artist_name = "";
+    String delivery_date = "";
+    String delivery_time = "";
+
+    public String getArtist_id() {
+        return artist_id;
+    }
+
+    public void setArtist_id(String artist_id) {
+        this.artist_id = artist_id;
+    }
+
+    public String getDelivery_date() {
+        return delivery_date;
+    }
+
+    public void setDelivery_date(String delivery_date) {
+        this.delivery_date = delivery_date;
+    }
+
+    public String getDelivery_time() {
+        return delivery_time;
+    }
+
+    public void setDelivery_time(String delivery_time) {
+        this.delivery_time = delivery_time;
+    }
+
+    public String getArtist_name() {
+        return artist_name;
+    }
+
+    public void setArtist_name(String artist_name) {
+        this.artist_name = artist_name;
+    }
+
+    public String getMinimum_amount_price() {
+        return minimum_amount_price;
+    }
+
+    public void setMinimum_amount_price(String minimum_amount_price) {
+        this.minimum_amount_price = minimum_amount_price;
+    }
+
+    public String getWallet_rate() {
+        return wallet_rate;
+    }
+
+    public void setWallet_rate(String wallet_rate) {
+        this.wallet_rate = wallet_rate;
+    }
+
+    public String getWallet_hide_status() {
+        return wallet_hide_status;
+    }
+
+    public void setWallet_hide_status(String wallet_hide_status) {
+        this.wallet_hide_status = wallet_hide_status;
+    }
 
     public String getSlotnote() {
         return slotnote;

@@ -39,8 +39,13 @@ public class ContactUs extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_contact, container, false);
+
+        //    getActivity().findViewById(R.id.ivLogo).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.contact));
-        baseActivity.base_recyclerview.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
+       baseActivity.base_recyclerview.setVisibility(View.GONE);
 
         cardcall = view.findViewById(R.id.cardcall);
         cardchat = view.findViewById(R.id.cardchat);
@@ -77,7 +82,7 @@ public class ContactUs extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:9909998404"));
+                intent.setData(Uri.parse("tel:9909998402"));
                 startActivity(intent);
 
             }
@@ -85,7 +90,7 @@ public class ContactUs extends Fragment {
         return view;
     }
 
-    public void whatsappChatmsg() {
+    public void whatsappChatmsg()   {
         new HttpsRequest(Consts.GET_WHATS_APP_CHAT_API, chat, getContext()).stringPost("Kamaii", new Helper() {
             @Override
             public void backResponse(boolean flag, String msg, JSONObject response) {
@@ -96,7 +101,7 @@ public class ContactUs extends Fragment {
                         String success_msg = jsonObject.getString("message");
                         String data_msg = jsonObject.getString("data");
 
-                        String phoneNumberWithCountryCode = "+919714443264";
+                        String phoneNumberWithCountryCode = "+919909998402";
                         startActivity(new Intent(Intent.ACTION_VIEW,
                                 Uri.parse(
                                         String.format("https://api.whatsapp.com/send?phone=%s&text=%s",

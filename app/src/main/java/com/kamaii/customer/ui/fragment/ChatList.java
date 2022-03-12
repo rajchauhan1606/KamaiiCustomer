@@ -46,6 +46,7 @@ public class ChatList extends Fragment {
     private CustomTextViewBold tvNo;
     private View view;
     private BaseActivity baseActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +54,12 @@ public class ChatList extends Fragment {
 
         prefrence = SharedPrefrence.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
+
+        getActivity().findViewById(R.id.ivLogo).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.chats));
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
         baseActivity.base_recyclerview.setVisibility(View.GONE);
         setUiAction(view);
         return view;

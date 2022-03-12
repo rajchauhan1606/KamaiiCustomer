@@ -1,2 +1,2 @@
-include ':app',':androidcountdown'
+include ':app',':androidcountdown',
 rootProject.name = "Kamaii Customer"

@@ -1,6 +1,7 @@
 package com.kamaii.customer.ui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,10 +37,12 @@ public class OuterAdapter extends RecyclerView.Adapter<OuterAdapter.ViewHolder> 
         this.fragmentManager=fragmentManager;
         outerList = new ArrayList<>();
         recycledViewPool = new RecyclerView.RecycledViewPool();
+        Log.e("OUTER_ADAPTER_LIST",""+outerList.toString());
     }
 
     public void addOuter(ParentModel outer) {
         outerList.add(outer);
+        Log.e("OUTER_ADAPTER_LIST"," ParentModel "+outer.toString());
         notifyDataSetChanged();
     }
 

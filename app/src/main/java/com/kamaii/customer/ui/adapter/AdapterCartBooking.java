@@ -229,9 +229,8 @@ public class AdapterCartBooking extends RecyclerView.Adapter<AdapterCartBooking.
 
         public LinearLayout rel_view, lay_service_charge;
         public CustomTextViewBold descriptionType, qty_final, tvProductName, tvPrice, tvService_charge, tvquantity, tvquantitydays, tvroundtrip, tvmore, tvvehiclenumber, qty_tit;
-        public CustomTextView tvPrices;
         public ImageView img_delete_cart_data, img_plus, img_minus, ProductImg;
-        CustomTextView tvdesc;
+        CustomTextView tvdesc,tvPrices;
         String finalDesc = "";
         TextView toping;
 
@@ -245,7 +244,7 @@ public class AdapterCartBooking extends RecyclerView.Adapter<AdapterCartBooking.
             tvProductName = (CustomTextViewBold) view.findViewById(R.id.tvProductName);
             ProductImg = (ImageView) view.findViewById(R.id.ProductImg);
             tvPrice = (CustomTextViewBold) view.findViewById(R.id.tvPrice);
-            tvPrices = (CustomTextView) view.findViewById(R.id.tvPrices);
+            tvPrices =  view.findViewById(R.id.tvPrices);
             rel_view = view.findViewById(R.id.rel_view);
             tvService_charge = view.findViewById(R.id.tvService_charge);
             img_delete_cart_data = view.findViewById(R.id.img_delete_cart_data);

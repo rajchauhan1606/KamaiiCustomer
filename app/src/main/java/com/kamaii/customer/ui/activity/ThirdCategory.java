@@ -187,7 +187,7 @@ public class ThirdCategory extends AppCompatActivity {
                         }.getType();
                         silderarraylist = (ArrayList<SiderModel>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
 
-                        pagerhometwo.setAdapter(new SliderAdapter(ThirdCategory.this, silderarraylist,getSupportFragmentManager()));
+                     //   pagerhometwo.setAdapter(new SliderAdapter(ThirdCategory.this, silderarraylist,getSupportFragmentManager()));
 
                         Timer timer = new Timer();
                         timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);

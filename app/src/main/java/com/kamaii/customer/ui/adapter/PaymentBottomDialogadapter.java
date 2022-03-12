@@ -29,14 +29,22 @@ public class PaymentBottomDialogadapter extends RecyclerView.Adapter<PaymentBott
     public String item = "";
     String amt = "";
     String ptype = "";
+    String wallet_rate = "";
+    String wallet_rate2 = "";
+    String cash_rate = "";
+    String wallet_rate_txt_flag = "";
     int pos = 0;
 
-    public PaymentBottomDialogadapter(Context context, List<String> arraylist, String amt, String ptype,String pos) {
+    public PaymentBottomDialogadapter(Context context, List<String> arraylist, String amt, String ptype, String pos, String wallet_rate, String wallet_rate2, String cash_rate, String wallet_rate_txt_flag) {
         this.context = context;
         this.arraylist = arraylist;
         this.amt = amt;
         this.ptype = ptype;
-        this.pos=Integer.parseInt(pos);
+        this.wallet_rate = wallet_rate;
+        this.wallet_rate2 = wallet_rate2;
+        this.cash_rate = cash_rate;
+        this.wallet_rate_txt_flag = wallet_rate_txt_flag;
+        this.pos = Integer.parseInt(pos);
 
     }
 
@@ -54,11 +62,22 @@ public class PaymentBottomDialogadapter extends RecyclerView.Adapter<PaymentBott
         holder.payment_dialog_radio.setClickable(false);
         holder.payment_type.setText(arraylist.get(position));
 
-        if (arraylist.get(position).equals("Online Payment")) {
-            holder.payment_type_description.setText("2% extra charges");
+        if (wallet_rate_txt_flag.equalsIgnoreCase("1")) {
+            if (arraylist.get(position).equals("Online Payment")) {
+                holder.payment_type_description.setVisibility(View.VISIBLE);
+                holder.payment_type_description.setText(wallet_rate + "% extra charges");
+            } else if (arraylist.get(position).equals("Kamaii Wallet")) {
+                holder.payment_type_description.setText(wallet_rate2 + "% extra charges");
+
+            } else if (arraylist.get(position).equals("Cash")) {
+                holder.payment_type_description.setText(cash_rate + "% extra charges");
+            } else {
+              //  holder.payment_type_description.setVisibility(View.GONE);
+            }
         } else {
-            holder.payment_type_description.setText("0% extra charge");
+            //holder.payment_type_description.setVisibility(View.GONE);
         }
+
 
         if (position == 0) {
             holder.tmp_dialog_txtview.setVisibility(View.GONE);
@@ -75,12 +94,13 @@ public class PaymentBottomDialogadapter extends RecyclerView.Adapter<PaymentBott
             holder.wallet_amount.setText("(" + Html.fromHtml("&#x20B9;" + amt + ")"));
             holder.payment_dialog_imageview.setBackground(context.getResources().getDrawable(R.drawable.ic_kamaii_wallet));
         }
+
         holder.child_dialog_rel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pos = position;
                 notifyDataSetChanged();
-             }
+            }
         });
 
         if (pos == position) {

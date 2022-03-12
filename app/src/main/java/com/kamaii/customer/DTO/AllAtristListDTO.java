@@ -48,6 +48,33 @@ public class AllAtristListDTO implements Serializable {
     String iconthirdcat = "";
     String ordernote = "";
     String slotnote = "";
+    String order_type = "";
+    String order_time = "";
+    String order_time_text = "";
+
+    public String getOrder_time() {
+        return order_time;
+    }
+
+    public void setOrder_time(String order_time) {
+        this.order_time = order_time;
+    }
+
+    public String getOrder_time_text() {
+        return order_time_text;
+    }
+
+    public void setOrder_time_text(String order_time_text) {
+        this.order_time_text = order_time_text;
+    }
+
+    public String getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(String order_type) {
+        this.order_type = order_type;
+    }
 
     public String getSlotnote() {
         return slotnote;

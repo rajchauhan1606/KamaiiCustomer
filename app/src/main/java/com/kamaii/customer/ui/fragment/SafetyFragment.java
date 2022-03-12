@@ -1,5 +1,6 @@
 package com.kamaii.customer.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -27,7 +28,8 @@ public class SafetyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_safety, container, false);
-
+        baseActivity.base_recyclerview.setVisibility(View.GONE);
+        baseActivity.ivmainsearchLayout.setVisibility(View.GONE);
         mWebView = (WebView) view.findViewById(R.id.safetyWebView);
         mWebView.setWebViewClient(new MyBrowser123());
         mWebView.getSettings().setLoadsImagesAutomatically(true);
@@ -43,5 +45,10 @@ public class SafetyFragment extends Fragment {
             view.loadUrl(url);
             return true;
         }
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        baseActivity = (BaseActivity) activity;
     }
 }

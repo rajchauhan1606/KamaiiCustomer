@@ -99,7 +99,7 @@ public class AddressBottomSheetAdapter extends RecyclerView.Adapter<AddressBotto
 //                Log.e("ADDRESS_ADAPTER",);
 
                 onAddressSelected.setAddress(position, homeList.get(position).getAddress_id(), homeList.get(position).getHouse_no(), homeList.get(position).getStreet_address(), homeList.get(position).getSociety_name(),Double.parseDouble(homeList.get(position).getLatitude()),Double.parseDouble(homeList.get(position).getLongitude()));
-                ((BookingProduct) context).changingtext();
+              //  ((BookingProduct) context).changingtext();
             }
         });
         holder.delete_address.setOnClickListener(new View.OnClickListener() {

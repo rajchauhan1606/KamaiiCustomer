@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Tickets extends Fragment implements  SwipeRefreshLayout.OnRefreshListener {
+public class Tickets extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private String TAG = Tickets.class.getSimpleName();
     private RecyclerView RVhistorylist;
     private TicketAdapter ticketAdapter;
@@ -58,10 +58,10 @@ public class Tickets extends Fragment implements  SwipeRefreshLayout.OnRefreshLi
     private BaseActivity baseActivity;
     private ImageView ivPost;
     private Dialog dialog;
-    private CustomEditText etReason,etDescription;
+    private CustomEditText etReason, etDescription;
     private CustomTextView tvCancel, tvAdd;
     private HashMap<String, String> parmsadd = new HashMap<>();
-    private ArrayList<HistoryDTO> historyDTOList=new ArrayList<>();
+    private ArrayList<HistoryDTO> historyDTOList = new ArrayList<>();
     SpinnerDialogInvoice spinnerDialogInvoice;
     CustomTextViewBold tvcat;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -71,7 +71,11 @@ public class Tickets extends Fragment implements  SwipeRefreshLayout.OnRefreshLi
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_ticket, container, false);
+        getActivity().findViewById(R.id.ivLogo).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.support));
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
         baseActivity.base_recyclerview.setVisibility(View.GONE);
 
         prefrence = SharedPrefrence.getInstance(getActivity());
@@ -88,6 +92,7 @@ public class Tickets extends Fragment implements  SwipeRefreshLayout.OnRefreshLi
         setUiAction(view);
         return view;
     }
+
     public void getHistroy() {
         new HttpsRequest(Consts.GET_INVOICE_API, getparminvoice(), getActivity()).stringPost(TAG, new Helper() {
             @Override
@@ -130,6 +135,7 @@ public class Tickets extends Fragment implements  SwipeRefreshLayout.OnRefreshLi
         parms.put(Consts.ROLE, "2");
         return parms;
     }
+
     public void setUiAction(View v) {
         tvNo = v.findViewById(R.id.tvNo);
         RVhistorylist = v.findViewById(R.id.RVhistorylist);
@@ -244,12 +250,12 @@ public class Tickets extends Fragment implements  SwipeRefreshLayout.OnRefreshLi
         tvCancel = (CustomTextView) dialog.findViewById(R.id.tvCancel);
         tvAdd = (CustomTextView) dialog.findViewById(R.id.tvAdd);
         etDescription = (CustomEditText) dialog.findViewById(R.id.etDescription);
-        tvcat=dialog.findViewById(R.id.tvcat);
+        tvcat = dialog.findViewById(R.id.tvcat);
 
         tvcat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (historyDTOList.size()!=0) {
+                if (historyDTOList.size() != 0) {
                     spinnerDialogInvoice.showSpinerDialog();
                 } else {
                     ProjectUtils.showLong(getActivity(), getResources().getString(R.string.no_invoice_found));
@@ -276,12 +282,11 @@ public class Tickets extends Fragment implements  SwipeRefreshLayout.OnRefreshLi
 
     public void submitForm() {
 
-        String cat=tvcat.getText().toString().trim();
+        String cat = tvcat.getText().toString().trim();
 
         if (cat.equalsIgnoreCase(getResources().getString(R.string.select_invoice_id))) {
-            Toast.makeText(getActivity(),getResources().getString(R.string.val_iid), Toast.LENGTH_SHORT).show();
-        }
-       else if (!validateReason()) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.val_iid), Toast.LENGTH_SHORT).show();
+        } else if (!validateReason()) {
             return;
         } else if (!validateDescription()) {
             return;

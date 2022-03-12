@@ -154,7 +154,7 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="22dp"
                         android:src="@drawable/ic_date_time"
                         android:tint="#0681A6" />
 
@@ -241,7 +241,7 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="22dp"
                         android:paddingStart="3dp"
                         android:src="@drawable/ic_iconfinder_wallet"
                         android:tint="#0681A6" />

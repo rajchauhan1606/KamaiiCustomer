@@ -11,10 +11,12 @@
         android:id="@+id/cardv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/custom_circuler_background"
         card_view:cardCornerRadius="5dp"
-        card_view:cardElevation="2dp"
+        card_view:cardElevation="0dp"
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
@@ -23,52 +25,86 @@
             android:layout_height="wrap_content"
             android:background="@drawable/custom_radious_5dp">
 
-            <RelativeLayout
-                android:id="@+id/relative_card"
+            <LinearLayout
+                android:id="@+id/l_123"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
-                android:background="@drawable/vendor_card_border"
-                android:gravity="center_vertical">
+                android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/IVartistCard"
+                <RelativeLayout
+                    android:id="@+id/relative_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="1.5dp"
-                    android:layout_marginLeft="@dimen/dimen_10dp"
-                    card_view:cardCornerRadius="5dp"
-                    card_view:cardElevation="0dp">
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:background="@drawable/vendor_card_border"
+                    android:gravity="center_vertical">
 
-                    <RelativeLayout
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/IVartistCard"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="0dp">
+                        android:layout_centerVertical="true"
+                        android:layout_margin="1.5dp"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        card_view:cardCornerRadius="5dp"
+                        card_view:cardElevation="0dp">
 
-                        <ImageView
-                            android:id="@+id/IVartist"
-                            android:layout_width="90dp"
-                            android:layout_height="90dp"
-                            android:background="@drawable/imageview_backgroung"
-                            android:scaleType="center" />
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="0dp">
 
-                    </RelativeLayout>
+                            <ImageView
+                                android:id="@+id/IVartist"
+                                android:layout_width="85dp"
+                                android:layout_height="85dp"
+                                android:background="@drawable/imageview_backgroung"
+                                android:scaleType="center" />
 
-                </androidx.cardview.widget.CardView>
+                        </RelativeLayout>
 
-                <com.kamaii.customer.utils.CustomTextViewBold
+                    </androidx.cardview.widget.CardView>
+
+                    <com.kamaii.customer.utils.CustomTextViewBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/IVartistCard"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="-10dp"
+                        android:background="#e0215a"
+                        android:paddingLeft="@dimen/dimen_5dp"
+                        android:paddingRight="@dimen/dimen_5dp"
+                        android:text="10% OFF"
+                        android:textColor="@color/white"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/ivfeatured"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/IVartistCard"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="-10dp"
-                    android:background="#e0215a"
-                    android:paddingLeft="@dimen/dimen_5dp"
-                    android:paddingRight="@dimen/dimen_5dp"
-                    android:text="10% OFF"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
+                    android:layout_above="@+id/relative_card"
+                    android:layout_alignBottom="@+id/relative_card"
+                    android:layout_marginTop="-22dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_certified_123" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="3dp"
+                android:visibility="gone"
+                android:padding="0dp">
+
+                <ImageView
+                    android:id="@+id/order_type"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="center" />
+
             </RelativeLayout>
 
             <LinearLayout
@@ -78,8 +114,10 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="5dp"
-                android:layout_toRightOf="@+id/relative_card"
+                android:layout_toLeftOf="@id/order_type_relative"
+                android:layout_toRightOf="@+id/l_123"
                 android:orientation="vertical">
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -92,28 +130,11 @@
                         android:layout_toLeftOf="@+id/child_linear"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text=""
+                        android:text="as"
                         android:textColor="@color/dark_blue_color"
                         android:textSize="16dp" />
 
-                    <RelativeLayout
-                        android:id="@+id/child_linear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="-9dp"
-                        android:gravity="right">
 
-                        <ImageView
-                            android:id="@+id/ivfeatured"
-                            android:layout_width="100dp"
-                            android:layout_height="30dp"
-                            android:layout_gravity="right"
-                            android:src="@drawable/ic_certfed"
-                            android:visibility="gone" />
-
-                    </RelativeLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -121,7 +142,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginTop="4dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -133,33 +155,47 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="1dp"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <com.kamaii.customer.utils.CustomTextView
                                 android:id="@+id/cat_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=""
+                                android:text="as"
+                                android:layout_centerVertical="true"
                                 android:textColor="#173143"
-                                android:textSize="@dimen/dimen_12dp" />
+                                android:textSize="@dimen/dimen_12dp"
+                                android:visibility="gone"/>
+
+                            <com.kamaii.customer.utils.CustomTextViewBold
+                                android:id="@+id/CTVdistance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="as"
+                                android:layout_centerVertical="true"
+                                android:textColor="#333333"
+                                android:textSize="@dimen/dimen_12dp"
+                                />
 
                             <TextView
                                 android:id="@+id/tmp_view_one"
                                 android:layout_width="1dp"
-                                android:layout_height="9dp"
+                                android:layout_height="@dimen/dimen_10dp"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/dimen_5dp"
-                                android:layout_toRightOf="@+id/cat_name"
-                                android:background="@color/gray" />
+                                android:layout_toRightOf="@+id/CTVdistance"
+                                android:background="#333333" />
 
-                            <com.kamaii.customer.utils.CustomTextView
+                            <com.kamaii.customer.utils.CustomTextViewBold
                                 android:id="@+id/total_items"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/dimen_5dp"
                                 android:layout_toRightOf="@+id/tmp_view_one"
-                                android:text=""
-                                android:textColor="#173143"
+                                android:text="sac"
+                                android:layout_centerVertical="true"
+                                android:textColor="#333333"
                                 android:textSize="@dimen/dimen_12dp" />
                         </RelativeLayout>
 
@@ -167,85 +203,121 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="1dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:layout_marginTop="2dp">
 
                             <com.kamaii.customer.utils.CustomTextView
                                 android:id="@+id/area_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=""
+                                android:text="asc"
                                 android:textColor="#173143"
                                 android:textSize="@dimen/dimen_12dp"
                                 android:visibility="gone" />
 
-                            <TextView
-                                android:id="@+id/tmp_view_two"
-                                android:layout_width="1dp"
-                                android:layout_height="9dp"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/dimen_5dp"
-                                android:layout_toRightOf="@+id/area_name"
-                                android:background="@color/gray"
-                                android:visibility="gone" />
 
-                            <com.kamaii.customer.utils.CustomTextView
-                                android:id="@+id/CTVdistance"
+                            <LinearLayout
+                                android:id="@+id/rat_linear"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_toRightOf="@+id/tmp_view_two"
-                                android:text=""
-                                android:textColor="#173143"
-                                android:textSize="@dimen/dimen_12dp" />
+                                android:orientation="horizontal"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginBottom="2dp">
 
-                            <com.kamaii.customer.utils.CustomTextView
+                                <RelativeLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="5dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:layout_marginLeft="-2dp">
+
+                                    <RatingBar
+                                        android:id="@+id/ratingbar"
+                                        style="@style/Widget.AppCompat.RatingBar.Small"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:isIndicator="true"
+                                        android:numStars="1"
+                                        android:rating="5"
+                                        android:theme="@style/RatingBar" />
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/tvRating"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginLeft="@dimen/dimen_5dp"
+                                        android:layout_toRightOf="@+id/ratingbar"
+                                        android:gravity="center_vertical"
+                                        android:singleLine="true"
+                                        android:text="5/5"
+                                        android:textColor="#173143"
+                                        android:textSize="12sp" />
+                                </RelativeLayout>
+
+                                <TextView
+                                    android:id="@+id/tmp_view_two"
+                                    android:layout_width="1dp"
+                                    android:layout_height="@dimen/dimen_10dp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:background="#333333" />
+
+                                <RelativeLayout
+                                    android:id="@+id/order_type_relative"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/dimen_5dp"
+                                    android:gravity="center_vertical"
+                                    android:layout_gravity="center_vertical"
+                                    android:visibility="gone">
+
+                                    <ImageView
+                                        android:id="@+id/order_type_image"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/ic_lunch_dinner_icon" />
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/order_time_text"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Order Lunch"
+                                        android:layout_marginLeft="3dp"
+                                        android:layout_toRightOf="@+id/order_type_image"
+                                        android:textSize="12dp"
+                                        android:layout_centerVertical="true"
+                                        android:textColor="#F30E64"/>
+                                </RelativeLayout>
+                            </LinearLayout>
+
+                            <com.kamaii.customer.utils.CustomTextViewBold
                                 android:id="@+id/CTVSlot"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/CTVdistance"
-                                android:layout_toRightOf="@+id/tmp_view_two"
-                                android:text=""
-                                android:textColor="#173143"
-                                android:textSize="@dimen/dimen_12dp"
+                                android:layout_below="@id/rat_linear"
+                                android:text="Order by"
+                                android:textSize="@dimen/text_size_12"
+                                android:layout_marginTop="1dp"
                                 android:visibility="gone" />
+
+                            <com.kamaii.customer.utils.CustomTextViewBold
+                                android:id="@+id/CTVartistworknote"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/CTVSlot"
+                                android:text="Delivery by"
+                                android:layout_marginTop="2dp"
+                                android:textSize="@dimen/text_size_12" />
 
                         </RelativeLayout>
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <RatingBar
-                            android:id="@+id/ratingbar"
-                            style="@style/Widget.AppCompat.RatingBar.Small"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:isIndicator="true"
-                            android:numStars="1"
-                            android:rating="5"
-                            android:theme="@style/RatingBar" />
-
-                        <com.kamaii.customer.utils.CustomTextViewBold
-                            android:id="@+id/tvRating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginLeft="@dimen/dimen_5dp"
-                            android:layout_toRightOf="@+id/ratingbar"
-                            android:singleLine="true"
-                            android:text="5/5"
-                            android:textColor="#173143"
-                            android:textSize="14sp" />
-                    </RelativeLayout>
                 </RelativeLayout>
 
 
@@ -260,15 +332,7 @@
                     android:orientation="horizontal"
                     android:visibility="visible">
 
-                    <com.kamaii.customer.utils.CustomTextViewBold
-                        android:id="@+id/CTVartistworknote"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/IVartist"
-                        android:singleLine="false"
-                        android:text=""
-                        android:textColor="@color/green_text_color"
-                        android:textSize="12sp" />
+
 
                     <ImageView
                         android:id="@+id/ivFav"

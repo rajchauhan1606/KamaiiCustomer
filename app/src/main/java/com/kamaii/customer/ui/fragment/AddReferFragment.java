@@ -41,6 +41,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+
 public class AddReferFragment extends Fragment {
 
     private final String TAG = AddReferFragment.class.getSimpleName();
@@ -58,8 +59,13 @@ public class AddReferFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_addrefer, container, false);
+
+        //  getActivity().findViewById(R.id.ivLogo).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.addrefer));
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
+      prefrence = SharedPrefrence.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
         btnenter = view.findViewById(R.id.btnenter);
         edtmobileno = view.findViewById(R.id.edtmobileno);
@@ -147,6 +153,24 @@ public class AddReferFragment extends Fragment {
         });
     }
 
+    public void callSqlite() {
+
+        //progressDialog = new ProgressDialog(getActivity());
+        //progressDialog.setMessage("Please Wait...");
+        //progressDialog.show();
+//                db = getActivity().openOrCreateDatabase("DATABASE", android.content.Context.MODE_PRIVATE, null);
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 111);
+        } else {
+
+
+           // new UploadContacts().execute();
+//                    callSqlite();
+        }
+    }
+
 
     public HashMap<String, String> getparm() {
 
@@ -184,4 +208,57 @@ public class AddReferFragment extends Fragment {
             return true;
         }
     }
+
+/*
+    class UploadContacts extends AsyncTask<String,String,String>{
+
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            try {
+                Cursor cc = db.rawQuery("SELECT * FROM con_data", null);
+                if (cc != null) {
+                    cc.moveToFirst();
+                    getActivity().startManagingCursor(cc);
+
+                    if (cc.getCount() < 1) {
+                        Intent intent4 = new Intent(getActivity(), NormalFilePickActivity.class);
+                        intent4.putExtra(Constant.MAX_NUMBER, 1);
+                        intent4.putExtra(com.webknight.filemanager.activity.BaseActivity.IS_NEED_FOLDER_LIST, false);
+                        intent4.putExtra(NormalFilePickActivity.SUFFIX,
+                                new String[]{"vcf"});
+                        startActivityForResult(intent4, Constant.REQUEST_CODE_PICK_FILE);
+                        //Toast.makeText(getActivity(), "khali", Toast.LENGTH_SHORT).show();
+                        //  Log.e("khali",""+"khali");
+                    } else {
+                        getActivity().startActivity(new Intent(getActivity(), ContactListActivity.class));
+                        // Toast.makeText(getActivity(), "bharelu", Toast.LENGTH_SHORT).show();
+                        //Log.e("khali",""+"bharelu");
+
+                    }
+                }
+            }catch (Exception e){
+                //    Log.e("ERROR",""+e.getMessage());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressDialog.dismiss();
+        }
+    }
+*/
 }

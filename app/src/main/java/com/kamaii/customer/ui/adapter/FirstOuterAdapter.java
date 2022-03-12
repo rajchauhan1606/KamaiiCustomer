@@ -1,9 +1,11 @@
 package com.kamaii.customer.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentManager;
@@ -11,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kamaii.customer.R;
+import com.kamaii.customer.ui.activity.ProductSearchActivity;
+import com.kamaii.customer.ui.activity.SearchActivity;
 import com.kamaii.customer.ui.fragment.CategoryFragment;
 import com.kamaii.customer.ui.models.FirstModel;
 import com.kamaii.customer.ui.models.ParentModel;
@@ -53,6 +57,12 @@ public class FirstOuterAdapter extends RecyclerView.Adapter<FirstOuterAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bind(position);
+        holder.searchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, ProductSearchActivity.class).putExtra("search_product_flag",true));
+            }
+        });
     }
 
     @Override
@@ -68,12 +78,14 @@ public class FirstOuterAdapter extends RecyclerView.Adapter<FirstOuterAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView text_product_type;
         RecyclerView rvInner;
+        RelativeLayout searchLayout;
         private GridItemDailyAdapter innerAdapter;
 
         public ViewHolder(View itemView) {
             super(itemView);
             text_product_type = itemView.findViewById(R.id.text_product_type);
             rvInner = itemView.findViewById(R.id.rec_child_product);
+            searchLayout = itemView.findViewById(R.id.productsearchLayout);
             setupRv();
         }
 

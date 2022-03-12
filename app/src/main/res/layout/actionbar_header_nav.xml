@@ -3,33 +3,34 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     android:orientation="vertical">
-
+<!--
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardBackgroundColor="@color/white"
-        card_view:cardElevation="5dp"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardElevation="0dp"
+        card_view:cardUseCompatPadding="true">-->
 
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="@drawable/headergradient">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/child_header"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <ImageView
                     android:id="@+id/menuLeftIV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:contentDescription="@string/webknight_infosystem"
                     android:padding="8dp"
                     android:src="@drawable/menu" />
@@ -44,23 +45,76 @@
                     android:src="@drawable/logo3"
                     android:visibility="gone" />
 
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:gravity="center_vertical"
                 android:layout_toRightOf="@+id/child_header">
 
                 <com.kamaii.customer.utils.CustomTextViewBold
                     android:id="@+id/headerNameTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:gravity="center_vertical"
+                    android:text="hghhjbhjvg"
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:visibility="gone" />
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/customer_location_relative_header"
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_toLeftOf="@+id/search_view"
+                android:layout_toRightOf="@+id/child_header"
+                android:layout_marginRight="@dimen/dimen_10dp">
+
+                <Spinner
+                    android:id="@+id/area_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:spinnerMode="dropdown"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/location_img_cust"
+                    android:layout_width="@dimen/text_size_20"
+                    android:layout_height="@dimen/text_size_20"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="-3dp"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/ic_location"
+                    android:tint="@color/red"
+                    card_view:ignore="UseAppTint" />
+
+                <com.kamaii.customer.utils.CustomTextViewBold
+                    android:id="@+id/customer_location_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/location_img_cust"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@color/dark_blue_color"
+                    android:textSize="@dimen/text_size_16" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/search_view"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_light"
+                android:layout_toLeftOf="@+id/search_last_linear"
+                android:layout_marginTop="@dimen/text_size_15"
+                android:layout_marginBottom="@dimen/text_size_15"/>
 
             <ImageView
                 android:id="@+id/ivFilter"
@@ -96,10 +150,10 @@
                 android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/search_last_linear"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -108,18 +162,21 @@
                     android:layout_height="50dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_5dp">
 
                     <com.kamaii.customer.utils.CustomTextViewBold
                         android:id="@+id/cart_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:textColor="@color/white"
-                        android:paddingTop="2dp"
+                        android:background="@drawable/circuler_textview_bg"
                         android:gravity="center_vertical|center_horizontal"
+                        android:padding="5dp"
                         android:text=""
-                        android:background="@drawable/circuler_textview_bg"/>
+                        android:textSize="@dimen/text_size_12"
+                        android:textColor="@color/white" />
 
                     <ImageView
                         android:layout_width="24dp"
@@ -131,12 +188,13 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/ivmainsearchLayout"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignRight="@id/ivmaincartLayout"
                     android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true">
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/dimen_5dp">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -147,7 +205,56 @@
                         android:visibility="visible" />
                 </RelativeLayout>
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/ivmainsearchLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/customer_location_relative_header"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:background="@drawable/vendor_search"
+                android:gravity="center_vertical">
+
+                <com.kamaii.customer.utils.CustomTextView
+                    android:id="@+id/svSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/vendor_search_background"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:drawablePadding="@dimen/dimen_10dp"
+                    android:focusedByDefault="false"
+                    android:gravity="center_vertical"
+                    android:hint="@string/search_by_vendor"
+                    android:maxLines="1"
+                    android:textColorHint="#AE000000"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="@dimen/dimen_10dp"
+                    android:paddingBottom="7dp"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SearchView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:paddingLeft="3dp"
+                    android:visibility="gone"
+                    app:defaultQueryHint="Search"
+                    app:iconifiedByDefault="false"
+                    app:theme="@style/AppSearchView">
+
+
+                </androidx.appcompat.widget.SearchView>
+            </RelativeLayout>
+
         </RelativeLayout>
 
+<!--
     </androidx.cardview.widget.CardView>
+-->
 </LinearLayout>

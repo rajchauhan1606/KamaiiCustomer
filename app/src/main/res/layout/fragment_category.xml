@@ -2,13 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/category_Fragment_id"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/screen_background"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <com.kamaii.customer.utils.CustomEditText
             android:id="@+id/etSearchFilter"
@@ -72,7 +75,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/size_24"
                             android:layout_alignBottom="@id/sliding"
-                            android:layout_alignParentEnd="true"
+                            android:layout_centerHorizontal="true"
                             android:layout_alignParentBottom="true"
                             android:layout_marginRight="13dp"
                             app:dot_tint="@color/sliderblue" />
@@ -110,8 +113,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginTop="@dimen/dimen_10dp">
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:orientation="vertical">
 
 
                         <FrameLayout
@@ -139,8 +142,11 @@
                                     android:id="@+id/rvCategoryDaily"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
                                     android:layout_gravity="center"
-                                    android:layout_margin="@dimen/dimen_10dp">
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginBottom="10dp">
 
                                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -159,14 +165,13 @@
                         android:layout_marginLeft="@dimen/dimen_10dp"
                         android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_marginRight="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_10dp"
                         android:scaleType="fitXY" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:orientation="vertical">
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -195,11 +200,59 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:layout_marginTop="@dimen/dimen_10dp"
                                         android:layout_marginLeft="@dimen/dimen_10dp"
+                                        android:layout_marginTop="@dimen/dimen_10dp"
                                         android:layout_marginRight="@dimen/dimen_10dp"></androidx.recyclerview.widget.RecyclerView>
 
                                 </RelativeLayout>
+                            </LinearLayout>
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/populer_service_linear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:visibility="visible">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/category_blue_back"
+                                android:orientation="vertical">
+
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/populer_service_title_txt"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/text_size_18"
+                                    android:textColor="@color/dark_blue_color"/>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/services_recyclerview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:orientation="horizontal"
+                                    android:layout_marginTop="@dimen/dimen_10dp"
+                                    ></androidx.recyclerview.widget.RecyclerView>
+
                             </LinearLayout>
                         </FrameLayout>
                     </LinearLayout>
@@ -208,7 +261,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_10dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_marginRight="@dimen/dimen_10dp"
                         android:layout_marginBottom="@dimen/dimen_10dp"
                         android:background="@drawable/curved_relative_white_layout"
@@ -256,6 +309,54 @@
 
                     </RelativeLayout>
 
+                    <LinearLayout
+                        android:id="@+id/populer_partner_linear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:layout_marginBottom="@dimen/dimen_10dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/category_blue_back"
+                                android:orientation="vertical">
+
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/populer_partner_title_txt"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/text_size_18"
+                                    android:layout_marginLeft="10dp"
+                                    android:textColor="@color/dark_blue_color"/>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/partner_recyclerview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="@dimen/dimen_10dp"
+                                    ></androidx.recyclerview.widget.RecyclerView>
+
+                            </LinearLayout>
+                        </FrameLayout>
+                    </LinearLayout>
+
+
                     <FrameLayout
                         android:id="@+id/botoomframe"
                         android:layout_width="match_parent"
@@ -281,8 +382,8 @@
                             android:layout_height="150dp"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="13dp"
-                            android:layout_marginRight="13dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:layout_marginBottom="10dp"
                             android:scrollbars="none" />
 
@@ -298,8 +399,9 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_10dp"
-                        android:layout_marginTop="@dimen/text_size_15"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:layout_marginRight="@dimen/dimen_10dp"
                         android:background="@drawable/curved_relative_white_layout"
                         android:orientation="vertical"
                         android:padding="10dp">
@@ -452,7 +554,8 @@
                     <RelativeLayout
                         android:id="@+id/invite_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp">
+                        android:layout_height="200dp"
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="match_parent"

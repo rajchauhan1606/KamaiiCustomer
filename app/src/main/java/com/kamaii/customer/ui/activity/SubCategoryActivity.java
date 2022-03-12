@@ -95,10 +95,12 @@ public class SubCategoryActivity extends AppCompatActivity {
     int currentPage = 0;
     boolean show_banner = false;
     public static String subleval = "";
+    public static String subcat_list_status = "";
     DotsIndicator dots;
     ViewPager mPager;
     List<String> sub_cat_slider = new ArrayList<>();
     RelativeLayout ivmainsearchLayout;
+    boolean load = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -180,7 +182,7 @@ public class SubCategoryActivity extends AppCompatActivity {
         rec_category.addItemDecoration(new ItemDecorationAlbumColumns(
                 4,
                 2));
-        subCateAdapter = new SubCateAdapter(this, subCateModelArrayList, onItemListener, subleval,getSupportFragmentManager());
+        subCateAdapter = new SubCateAdapter(this, subCateModelArrayList, onItemListener, subleval, getSupportFragmentManager());
         rec_category.setAdapter(subCateAdapter);
 
         img_back.setOnClickListener(new View.OnClickListener() {
@@ -216,21 +218,6 @@ public class SubCategoryActivity extends AppCompatActivity {
             }
         });
 
-        if (NetworkManager.isConnectToInternet(SubCategoryActivity.this)) {
-
-            getsubCategory();
-
-        } else {
-
-//            Fragment fragment = new CheckInternetFragment();
-//            FragmentTransaction fragmentTransaction = getApplicationContext().getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-//                    android.R.anim.fade_out);
-//            fragmentTransaction.replace(R.id.frame, fragment, TAG);
-//            fragmentTransaction.commitAllowingStateLoss();
-
-        }
-
         ivmainsearchLayout.setVisibility(View.VISIBLE);
         ivmainsearchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,27 +237,32 @@ public class SubCategoryActivity extends AppCompatActivity {
     public void onResume() {
         etSearchFilter.setText("");
         subCateAdapter.getFilter().filter("");
+        Log.e("load_sb_cat"," 1 "+load);
 
-        super.onResume();
+        if (!load) {
 
-        if (!NetworkManager.isConnectToInternet(SubCategoryActivity.this)) {
+            if (NetworkManager.isConnectToInternet(SubCategoryActivity.this)) {
 
-            Fragment fragment = new CheckInternetFragment();
-            FragmentTransaction fragmentTransaction = SubCategoryActivity.this.getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                    android.R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frame, fragment, TAG);
-            fragmentTransaction.commitAllowingStateLoss();
+                getsubCategory();
 
+            } else {
+                Fragment fragment = new CheckInternetFragment();
+                FragmentTransaction fragmentTransaction = SubCategoryActivity.this.getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.frame, fragment, TAG);
+                fragmentTransaction.commitAllowingStateLoss();
 
+            }
+            Log.e("load_sb_cat"," 2 "+load);
+            load = true;
         }
+        super.onResume();
 
     }
 
     public void getsubCategory() {
         progressDialog.show();
-        Log.v("RES " + " fuck ", " fuck ");
-
 
         Retrofit retrofit = apiClient.getClient();
         apiRest api = retrofit.create(apiRest.class);
@@ -279,8 +271,6 @@ public class SubCategoryActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 progressDialog.dismiss();
-
-                Log.v("RES " + " fuck ", response.message());
                 try {
                     if (response.isSuccessful()) {
                         ResponseBody responseBody = response.body();
@@ -289,6 +279,7 @@ public class SubCategoryActivity extends AppCompatActivity {
                         Log.e("SUBCATRESPONSE123", "" + s);
                         JSONObject object = new JSONObject(s);
                         String banner_status = object.getString("image_show");
+                        subcat_list_status = object.getString("subcatstatus");
 
                         if (banner_status.equalsIgnoreCase("1")) {
                             silderarraylist.clear();
@@ -312,26 +303,34 @@ public class SubCategoryActivity extends AppCompatActivity {
                             findViewById(R.id.subcat_banner_layout).setVisibility(View.GONE);
                         }
 
+
                         subleval = object.getString("sublevel");
                         tvNo.setVisibility(View.GONE);
+                        if (subcat_list_status.equalsIgnoreCase("1")) {
 
-                        try {
-                            subCateModelArrayList = new ArrayList<>();
-                            Type getpetDTO = new TypeToken<List<SubCateModel>>() {
-                            }.getType();
-                            subCateModelArrayList = (ArrayList<SubCateModel>) new Gson().fromJson(object.getJSONArray("data").toString(), getpetDTO);
-                            Log.e("SUBCATRESPONSE", "" + subCateModelArrayList.toString());
-                            Collections.sort(subCateModelArrayList, new Comparator<SubCateModel>() {
-                                @Override
-                                public int compare(SubCateModel lhs, SubCateModel rhs) {
-                                    return lhs.getCat_name().compareTo(rhs.getCat_name());
-                                }
-                            });
-                            subCateAdapter.notifyDataChanged(subCateModelArrayList);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+
+                            try {
+                                subCateModelArrayList = new ArrayList<>();
+                                Type getpetDTO = new TypeToken<List<SubCateModel>>() {
+                                }.getType();
+                                subCateModelArrayList = (ArrayList<SubCateModel>) new Gson().fromJson(object.getJSONArray("data").toString(), getpetDTO);
+                                Log.e("SUBCATRESPONSE", "" + subCateModelArrayList.toString());
+                                Collections.sort(subCateModelArrayList, new Comparator<SubCateModel>() {
+                                    @Override
+                                    public int compare(SubCateModel lhs, SubCateModel rhs) {
+                                        return lhs.getCat_name().compareTo(rhs.getCat_name());
+                                    }
+                                });
+                                subCateAdapter.notifyDataChanged(subCateModelArrayList);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+
+                            rec_category.setVisibility(View.GONE);
+                            tvNo.setVisibility(View.VISIBLE);
+
                         }
-
                     } else {
                         Toast.makeText(SubCategoryActivity.this, "Try again. Server is not responding.",
                                 LENGTH_LONG).show();
@@ -350,12 +349,10 @@ public class SubCategoryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.v("RES " + " fuck ", call.toString());
-                Log.v("RES " + " fuck ", t.toString());
-
                 tvNo.setVisibility(View.VISIBLE);
             }
         });
     }
+
 
 }

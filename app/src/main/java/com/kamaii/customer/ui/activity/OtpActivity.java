@@ -61,7 +61,7 @@ public class OtpActivity extends AppCompatActivity {
     CustomTextViewBold otp_txt;
     ImageView img_back;
     ImageView btn_signIn;
-    String mobile = "", mainotp = "", verificationCode = "", name = "", email, pasword;
+    String mobile = "", mainotp = "", verificationCode = "", name = "", email, pasword, latitude ="",longitude="";
     ProgressDialog progressDialog;
     TextView txt_timer, txt_resend_timer;
     CustomTextView txt_resend;
@@ -95,6 +95,8 @@ public class OtpActivity extends AppCompatActivity {
             email = getIntent().getStringExtra(Consts.EMAIL_ID);
             mobile = getIntent().getStringExtra(Consts.MOBILE);
             mainotp = getIntent().getStringExtra(Consts.OTP);
+            latitude = getIntent().getStringExtra(Consts.LATITUDE);
+            longitude = getIntent().getStringExtra(Consts.LONGITUDE);
         }
 
         btn_signIn = findViewById(R.id.CBsignIn);
@@ -400,9 +402,27 @@ public class OtpActivity extends AppCompatActivity {
         return parms;
     }
 
+    public HashMap<String, String> getSignupparm() {
+
+        HashMap<String, String> parms = new HashMap<>();
+        parms.put(Consts.NAME, name);
+        parms.put(Consts.EMAIL_ID, email);
+        parms.put(Consts.MOBILE, mobile);
+        parms.put(Consts.ROLE, "2");
+        parms.put(Consts.DEVICE_TYPE, "ANDROID");
+        parms.put(Consts.DEVICE_TOKEN, firebase.getString(Consts.DEVICE_TOKEN, ""));
+        parms.put(Consts.DEVICE_ID, "12345");
+        parms.put(Consts.LATITUDE, latitude);
+        parms.put(Consts.LONGITUDE, longitude);
+        Log.e(TAG + "register123_params", parms.toString());
+
+
+        return parms;
+    }
+
     public void register() {
         progressDialog.show();
-        new HttpsRequest(Consts.REGISTER_API, getparm(), mContext).stringPost(TAG, new Helper() {
+        new HttpsRequest(Consts.REGISTER_API, getSignupparm(), mContext).stringPost(TAG, new Helper() {
             @Override
             public void backResponse(boolean flag, String msg, JSONObject response) {
                 progressDialog.dismiss();

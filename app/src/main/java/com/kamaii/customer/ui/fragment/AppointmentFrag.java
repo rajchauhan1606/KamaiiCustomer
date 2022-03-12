@@ -52,8 +52,13 @@ public class AppointmentFrag extends Fragment implements SwipeRefreshLayout.OnRe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_appointment, container, false);
+
+        //      getActivity().findViewById(R.id.ivLogo).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(R.string.future_bookings);
-        baseActivity.base_recyclerview.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
+      baseActivity.base_recyclerview.setVisibility(View.GONE);
 
         prefrence = SharedPrefrence.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Consts.USER_DTO);

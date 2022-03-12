@@ -62,7 +62,11 @@ public class ReferCustomerFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_refercustomerfragment, container, false);
+        //    getActivity().findViewById(R.id.ivLogo).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.viewrefer));
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
         baseActivity.base_recyclerview.setVisibility(View.GONE);
 
         rvrefercustomer = view.findViewById(R.id.rvrefercustomer);

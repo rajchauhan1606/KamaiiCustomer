@@ -197,9 +197,13 @@ public class Booking extends AppCompatActivity {
     AlertDialog dialog;
     public CustomTextViewBold spinner_txt, order_now_text;
     public RelativeLayout service_charge_relative;
-    CustomTextView booking_date, address,order_shipping_note;
+    CustomTextView booking_date, address, order_shipping_note;
     CustomTextViewBold tvHeader;
 
+    private String wallet_rate = "";
+    private String cash_rate = "";
+    private String wallet_rate2 = "";
+    private String wallet_rate_txt_flag = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -213,6 +217,7 @@ public class Booking extends AppCompatActivity {
         timeZone = new SimpleDateFormat(Consts.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
         date = new Date();
         service_charge_relative = findViewById(R.id.service_charge_relative);
+
         parmsGetWallet.put(Consts.USER_ID, userDTO.getUser_id());
         paramsBookingOp.put(Consts.DATE_STRING, sdf1.format(date).toString().toUpperCase());
         paramsBookingOp.put(Consts.TIMEZONE, timeZone.format(date));
@@ -391,7 +396,7 @@ public class Booking extends AppCompatActivity {
                                     binding.llTime.setVisibility(View.GONE);
                                     binding.laydestination.setVisibility(View.GONE);
                                     binding.llDate.setVisibility(View.GONE);
-                                    tverror.setText("Service Provider Location this time not available so please choose My Location");
+                                    tverror.setText("Partner location this time not available so please choose My Location");
                                 }
                             }
                         }
@@ -519,7 +524,7 @@ public class Booking extends AppCompatActivity {
         LinearLayout lll = bottomSheetDialog.findViewById(R.id.lll);
         RecyclerView recyclerView = bottomSheetDialog.findViewById(R.id.payment_dialog_recyclerview);
 
-        PaymentBottomDialogadapter dialogadapter = new PaymentBottomDialogadapter(this, paymentList, amt, paymentselectedtype, paystatus);
+        PaymentBottomDialogadapter dialogadapter = new PaymentBottomDialogadapter(this, paymentList, amt, paymentselectedtype, paystatus, wallet_rate ,wallet_rate2 ,cash_rate ,wallet_rate_txt_flag);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(dialogadapter);
 
@@ -684,7 +689,7 @@ public class Booking extends AppCompatActivity {
                                 if (shippingDTOArrayList.get(i).getMy_location().equalsIgnoreCase("0")) {
 
                                     error = 0;
-                                    tverror.setText("Your location not available so please select Service Provider Location");
+                                    tverror.setText("Your location not available so please select Partner Location");
                                 }
                             }
 
@@ -1442,7 +1447,7 @@ public class Booking extends AppCompatActivity {
 
         Retrofit retrofit = apiClient.getClient();
         apiRest api = retrofit.create(apiRest.class);
-        Call<ResponseBody> callone = api.getpaymenttype(SubCategoryActivity.categoryid,userDTO.getUser_id());
+        Call<ResponseBody> callone = api.getpaymenttype(SubCategoryActivity.categoryid, userDTO.getUser_id());
         callone.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -1459,7 +1464,10 @@ public class Booking extends AppCompatActivity {
 
                         int status = object.getInt("status");
 
-
+                        wallet_rate = object.getString("wallet_rate");
+                        wallet_rate2 = object.getString("wallet_rate2");
+                        cash_rate = object.getString("cash_rate");
+                        wallet_rate_txt_flag = object.getString("wallet_rate_txt_flag");
                         if (status == 1) {
                             JSONArray jsonarray = object.getJSONArray("data");
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -58,7 +59,7 @@ import static com.kamaii.customer.interfacess.Consts.TRACK_SUB_ID;
 import static com.kamaii.customer.interfacess.Consts.TRACK_SUB_LEVEL_ID;
 import static com.kamaii.customer.interfacess.Consts.TRACK_VEHICLE_NUMBER;
 
-public class CurruntBookingListAdapter extends RecyclerView.Adapter<CurruntBookingListAdapter.CurrentViewholder> {
+public class CurruntBookingListAdapter extends RecyclerView.Adapter<CurruntBookingListAdapter.currentViewHolder> {
 
     Context context;
     List<UserBooking> arrayList;
@@ -70,19 +71,39 @@ public class CurruntBookingListAdapter extends RecyclerView.Adapter<CurruntBooki
         arrayListduplicate = new ArrayList<>();
     }
 
+    class currentViewHolder extends RecyclerView.ViewHolder {
+
+        CustomTextViewBold current_booking_name;
+        CustomTextView current_booking_prd;
+        ImageView current_booking_marker;
+        RelativeLayout current_booking_relative;
+        ImageView current_booking_artist, current_booking_close;
+
+        public currentViewHolder(@NonNull View view) {
+            super(view);
+
+            current_booking_relative = view.findViewById(R.id.current_booking_relative);
+            current_booking_prd = view.findViewById(R.id.current_booking_prd);
+            current_booking_close = view.findViewById(R.id.current_booking_close);
+            current_booking_artist = view.findViewById(R.id.current_booking_artist);
+            current_booking_name = view.findViewById(R.id.current_booking_name);
+            current_booking_marker = view.findViewById(R.id.current_booking_marker);
+
+        }
+    }
+
+
     @NonNull
     @Override
-    public CurrentViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.current_booking_layout, parent, false);
-        return new CurrentViewholder(view);
+    public currentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.current_booking_layout, parent,false);
+        return new currentViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CurrentViewholder holder, int position) {
+    public void onBindViewHolder(@NonNull currentViewHolder holder, int position) {
 
-
-//           holder.current_booking_relative.setVisibility(View.VISIBLE);
+        //           holder.current_booking_relative.setVisibility(View.VISIBLE);
         holder.current_booking_name.setText(arrayList.get(position).getArtistName());
         holder.current_booking_prd.setText(arrayList.get(position).getOrder_product());
         Glide.with(context).load(arrayList.get(position).getArtistImage()).into(holder.current_booking_artist);
@@ -202,6 +223,7 @@ public class CurruntBookingListAdapter extends RecyclerView.Adapter<CurruntBooki
        /*else {
             holder.current_booking_relative.setVisibility(View.GONE);
        }*/
+
     }
 
     @Override
@@ -209,23 +231,13 @@ public class CurruntBookingListAdapter extends RecyclerView.Adapter<CurruntBooki
         return arrayList.size();
     }
 
-    class CurrentViewholder extends RecyclerView.ViewHolder {
 
-        CustomTextViewBold current_booking_name;
-        CustomTextView current_booking_prd;
-        ImageView current_booking_marker;
-        RelativeLayout current_booking_relative;
-        ImageView current_booking_artist,current_booking_close;
-
-        public CurrentViewholder(@NonNull View itemView) {
-            super(itemView);
-
-            current_booking_relative = itemView.findViewById(R.id.current_booking_relative);
-            current_booking_prd = itemView.findViewById(R.id.current_booking_prd);
-            current_booking_close = itemView.findViewById(R.id.current_booking_close);
-            current_booking_artist = itemView.findViewById(R.id.current_booking_artist);
-            current_booking_name = itemView.findViewById(R.id.current_booking_name);
-            current_booking_marker = itemView.findViewById(R.id.current_booking_marker);
-        }
-    }
 }
+
+
+
+
+
+
+
+

@@ -57,8 +57,13 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
         myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         parms.put(Consts.USER_ID, userDTO.getUser_id());
+
+        //    getActivity().findViewById(R.id.ivLogo).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.GONE);
+
         baseActivity.headerNameTV.setText(getResources().getString(R.string.get_discount));
-        baseActivity.base_recyclerview.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.headerNameTV).setVisibility(View.VISIBLE);
+       baseActivity.base_recyclerview.setVisibility(View.GONE);
 
         setUiAction(view);
         return view;

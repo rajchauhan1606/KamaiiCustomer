@@ -108,6 +108,7 @@ public class SubLevalCategoryActivity extends AppCompatActivity {
 
         Retrofit retrofit = apiClient.getClient();
         apiRest api = retrofit.create(apiRest.class);
+        Log.e("SUBLEVAL_RESPONSE"," Params "+ " catid "+catid+" subcatid "+sub_category_idd);
         Call<ResponseBody> callone = api.getthirdcategory(catid, sub_category_idd);
         callone.enqueue(new Callback<ResponseBody>() {
             @Override

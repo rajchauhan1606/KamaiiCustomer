@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -25,16 +26,27 @@
             android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/base_recyclerview"
             android:layout_below="@+id/action_bar123"
             android:background="#fff"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"></FrameLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/base_recyclerview"
+        <!--<ScrollView
+            android:id="@+id/recy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/screen_background"
-            android:layout_alignParentBottom="true"></androidx.recyclerview.widget.RecyclerView>
+            android:scrollbars="none"
+            android:layout_alignParentBottom="true"
+            android:nestedScrollingEnabled="true"
+            android:overScrollMode="never">
+-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/base_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="bottom"
+                android:layout_alignParentBottom="true"></androidx.recyclerview.widget.RecyclerView>
+<!--
+        </ScrollView>
+-->
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

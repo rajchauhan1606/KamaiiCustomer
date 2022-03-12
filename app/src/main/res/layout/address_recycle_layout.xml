@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text="DELIVERES TO"
         android:textColor="@color/pink_text_color"
+        android:layout_marginBottom="@dimen/dimen_5dp"
         android:textSize="@dimen/dimen_12dp" />
 
     <ImageView
@@ -28,6 +29,7 @@
         android:layout_below="@+id/add_recycle_txt">
 
         <ImageView
+            android:id="@+id/done_img_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

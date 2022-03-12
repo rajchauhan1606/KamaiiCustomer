@@ -301,7 +301,7 @@ public class ScrachActivity extends AppCompatActivity {
                                 subTotal.setText("₹" + String.valueOf(userBookingList.get(0).getSub_total()));
                                 netPrice.setText("₹" + String.valueOf(userBookingList.get(0).getNetpay()));
 
-                                txtprice.setText(" ₹ " + String.valueOf(userBookingList.get(0).getScratch_amount()));
+                                txtprice.setText(" ₹" + String.valueOf(userBookingList.get(0).getScratch_amount()));
 
                                 discount_txt.setText(Html.fromHtml(userBookingList.get(0).getDiscount_txt()));
                                 discount_digit_txt.setText(Html.fromHtml("₹" + userBookingList.get(0).getDiscount_digit_txt()));

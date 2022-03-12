@@ -269,6 +269,16 @@ public class Counter extends ConstraintLayout {
             } else {
                 mTvHour.setText(getResources().getString(R.string.hour, hours));
             }
+           /* if (minutes == 0) {
+                mTvMinute.setVisibility(GONE);
+            } else {
+                mTvMinute.setText(getResources().getString(R.string.tminute, minutes));
+            }
+            if (seconds == 0) {
+                mTvSecond.setVisibility(GONE);
+            } else {
+                mTvSecond.setText(getResources().getString(R.string.tsecond, seconds));
+            }*/
         } else {
             if (days == 0) {
                 mTvDay.setVisibility(GONE);
@@ -277,11 +287,19 @@ public class Counter extends ConstraintLayout {
             }
             if (hours == 0) {
                 mTvHour.setVisibility(GONE);
-            }else {
+            } else {
                 mTvHour.setText(getResources().getString(R.string.hour, hours));
             }
-            mTvMinute.setText(getResources().getString(R.string.minute, minutes));
-            mTvSecond.setText(getResources().getString(R.string.second, seconds));
+           /* if (minutes == 0) {
+                mTvMinute.setVisibility(GONE);
+            } else {
+                mTvMinute.setText(getResources().getString(R.string.minute, minutes));
+            }
+            if (seconds == 0) {
+                mTvSecond.setVisibility(GONE);
+            } else {
+                mTvSecond.setText(getResources().getString(R.string.second, seconds));
+            }*/
         }
     }
 

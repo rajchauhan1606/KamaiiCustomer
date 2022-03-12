@@ -32,7 +32,7 @@ public class CustomTextViewBold extends TextView {
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = FontCache.getTypeface("Poppins-Regular.otf", context);
+        Typeface customFont = FontCache.getTypeface("lato-bold.ttf", context);
         setTypeface(customFont, Typeface.BOLD);
     }
 }

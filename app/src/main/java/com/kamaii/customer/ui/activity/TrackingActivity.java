@@ -23,14 +23,18 @@ import android.os.SystemClock;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -97,6 +101,7 @@ import com.kamaii.customer.utils.MapUtils;
 import com.kamaii.customer.utils.ProjectUtils;
 import com.tsuryo.androidcountdown.Counter;
 import com.tsuryo.androidcountdown.TimeUnits;
+import com.warkiz.widget.IndicatorSeekBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -192,6 +197,19 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     private String shippingcharges = "";
     private String discount_txt = "";
     private String discount_digit_txt = "";
+    private String getdeliveryflag = "";
+    private String order_placed = "";
+    private String delivered_by = "";
+    private String revised_time = "";
+    private String order_mode = "";
+    private String remain_time = "";
+    private String partner_logo = "";
+    boolean confirm_timer_flag = false;
+    String confirm_timer = "";
+
+    CountDownTimer dialog_timercT;
+
+    boolean confirm_dialog_flag = false;
     private String totalAmount = "";
     private double customerSourceLatitude = 0.0;
     private double customerSourceLongitude = 0.0;
@@ -212,15 +230,17 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     DecimalFormat decimalLocationFormat = new DecimalFormat("#.#######");
     private Dialog dialog;
     HashMap paramsDecline = new HashMap<>();
+    HashMap updatetimeparams = new HashMap<>();
     String booking_type = "product";
     double latitute;
     double longi;
     double delatitute;
     double delongitiute;
+    boolean preparing_flag = true;
     String s_year = "", s_month = "", s_days = "", s_hour = "", s_min = "", e_year = "", e_month = "", e_days = "", e_hour = "", e_min = "";
     @BindView(R.id.pulsator)
     pl.bclogic.pulsator4droid.library.PulsatorLayout pulsator;
-
+    Dialog timaConfirmationDialog;
     @BindView(R.id.relanimation)
     RelativeLayout relanimation;
 
@@ -247,7 +267,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     RelativeLayout relcancel;
 
     @BindView(R.id.imgback1)
-    FloatingActionButton imgback;
+    ImageView imgback;
 
     @BindView(R.id.call_button)
     CustomTextViewBold call_button;
@@ -258,8 +278,8 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     @BindView(R.id.ivStatus)
     ImageView ivStatus;
 
-    @BindView(R.id.bottom_sheet)
-    LinearLayout bottom_sheet;
+  /*  @BindView(R.id.bottom_sheet)
+    LinearLayout bottom_sheet;*/
 
     BottomSheetBehavior sheetBehavior;
 
@@ -349,11 +369,87 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     @BindView(R.id.txtvendorname)
     CustomTextViewBold txtvendorname;
 
+    @BindView(R.id.progressbar_vespa)
+    SeekBar progressbar_vespa;
+
+    int progressbar_vespa_progress = 0;
+
+    List<String> stepper_form_data = new ArrayList<>();
+
     @BindView(R.id.shippingCharge)
     CustomTextViewBold shippingCharge;
 
+    @BindView(R.id.first_point)
+    ImageView first_point;
+
+    @BindView(R.id.first_step_done_img)
+    ImageView first_step_done_img;
+
+    @BindView(R.id.second_step_done_img)
+    ImageView second_step_done_img;
+
+    @BindView(R.id.third_step_done_img)
+    ImageView third_step_done_img;
+
+    @BindView(R.id.forth_step_done_img)
+    ImageView forth_step_done_img;
+
+    @BindView(R.id.fifth_step_done_img)
+    ImageView fifth_step_done_img;
+
+    @BindView(R.id.first_verticle_line)
+    CustomTextViewBold first_verticle_line;
+
+    @BindView(R.id.second_point)
+    ImageView second_point;
+
+    @BindView(R.id.second_verticle_line)
+    CustomTextViewBold second_verticle_line;
+
+    @BindView(R.id.third_point)
+    ImageView third_point;
+
+    @BindView(R.id.third_verticle_line)
+    CustomTextViewBold third_verticle_line;
+
+    @BindView(R.id.forth_point)
+    ImageView forth_point;
+
+    @BindView(R.id.forth_verticle_line)
+    CustomTextViewBold forth_verticle_line;
+
+    @BindView(R.id.fifth_point)
+    ImageView fifth_point;
+
+    @BindView(R.id.sixth_relative)
+    RelativeLayout sixth_relative;
+
+    @BindView(R.id.sixth_point)
+    ImageView sixth_point;
+
+    @BindView(R.id.fifth_verticle_line)
+    CustomTextViewBold fifth_verticle_line;
+
     @BindView(R.id.subTotal)
     CustomTextViewBold subTotal;
+
+    @BindView(R.id.first_step_subtext)
+    CustomTextView first_step_subtext;
+
+    @BindView(R.id.second_step_subtext)
+    CustomTextView second_step_subtext;
+
+    @BindView(R.id.third_step_subtext)
+    CustomTextView third_step_subtext;
+
+    @BindView(R.id.forth_step_subtext)
+    CustomTextView forth_step_subtext;
+
+    @BindView(R.id.fifth_step_subtext)
+    CustomTextView fifth_step_subtext;
+
+    @BindView(R.id.sixth_step_subtext)
+    CustomTextView sixth_step_subtext;
 
     @BindView(R.id.dlivery_timer)
     Counter dlivery_timer;
@@ -390,6 +486,14 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
     AdapterProductBooking adapterCartBooking;
     private ArrayList<ProductDTO> productDTOArrayList;
     boolean category_type = false;
+    String order_details_message = "";
+    ImageView confirm_IVartist;
+    CustomTextViewBold confirm_partner_name,
+            estimated_delivery_time,
+            rewise_date,
+            order_place_date,
+            deliveryby_date,
+            order_mode_date, add_time_tvYesPro, txtarivaltimer, add_time_tvNoPro;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -401,6 +505,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         name = userDTO.getName();
         Log.e("tracking_tracker", "101");
 
+
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
@@ -409,14 +514,29 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             e.printStackTrace();
         }
 
-        initView();
+        progressbar_vespa.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
 
+
+        timaConfirmationDialog = new Dialog(TrackingActivity.this, R.style.Theme_Dialog);
+        timaConfirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        timaConfirmationDialog.requestWindowFeature((Window.FEATURE_NO_TITLE));
+        timaConfirmationDialog.setContentView(R.layout.delivery_time_confirmation_dialog);
+        timaConfirmationDialog.setCancelable(false);
+        //timaConfirmationDialog.getWindow().setLayout(650, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+
+        initView();
        /* if (getIntent().hasExtra("flag")) {
 
             String str = getIntent().getStringExtra("flag");
             Toast.makeText(this, "Hidden Notification called", Toast.LENGTH_SHORT).show();
         }*/
     }
+
 
     private void getDeliverTime(int bookingid) {
 
@@ -427,24 +547,15 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         new HttpsRequest(Consts.GET_DELIVERY_TIME_API, delivery_params, TrackingActivity.this).stringPost(TAG, new Helper() {
             @Override
             public void backResponse(boolean flag, String msg, JSONObject response) {
+
+                Log.e("DATE_DELIVERY", "1234" + response.toString());
+
                 if (flag) {
                     try {
                         String date123 = response.getString("delivery_time_ordernote");
                         Log.e("DATE_DELIVERY", "" + date123);
 
 
-                     /*   s_month = response.getString("s_month");
-
-                        s_days = response.getString("s_day");
-                        s_hour = response.getString("s_hours");
-                        s_min = response.getString("s_min");
-
-                        e_year = response.getString("e_year");
-                        e_month = response.getString("e_month");
-                        e_days = response.getString("e_day");
-                        e_hour = response.getString("e_hours");
-                        e_min = response.getString("e_min");
-*/
                         SimpleDateFormat format = new SimpleDateFormat(
                                 "yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
 
@@ -464,7 +575,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                          * */
                         dlivery_timer.setIsShowingTextDesc(true);
                         dlivery_timer.setMaxTimeUnit(TimeUnits.DAY);
-                        dlivery_timer.setTextColor(Color.RED);
+                        dlivery_timer.setTextColor(getResources().getColor(R.color.green));
                         dlivery_timer.setTextSize(30);
                         //Typeface font3 = Typeface.createFromAsset(context.getAssets(), "ds_digit.ttf");
 
@@ -483,28 +594,13 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                                         minutes + "M " +
                                         seconds + "S ");
 
-                                String newtime = "";
-
-                                if (days == 00 && hours == 00) {
-                                    //    Log.e("DATE_FORMAT", "first");
-                                    newtime =
-                                            minutes + "M " +
-                                                    seconds + "S ";
-                                } else if (days == 00 && hours != 00) {
-                                    //   Log.e("DATE_FORMAT", "second");
-
-                                    newtime =
-                                            hours + "H " + minutes + "M " + seconds + "S ";
-                                } else {
-                                    //    Log.e("DATE_FORMAT", "third");
-
-                                }
                             }
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
+                    Log.e("DATE_DELIVERY", " tracker 10");
 
                 }
             }
@@ -516,7 +612,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         Log.e("tracking_tracker", "102");
 
-        new HttpsRequest(GET_BOOKING_SECONDS_API, getparm(), TrackingActivity.this).stringPost(TAG, new Helper() {
+        new HttpsRequest(GET_BOOKING_SECONDS_API, getparm(), TrackingActivity.this).stringPost("123", new Helper() {
             @Override
             public void backResponse(boolean flag, String msg, JSONObject response) {
                 if (flag) {
@@ -570,10 +666,12 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         Log.e("tracking_tracker", "103");
 
 
+/*
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         handler = new Handler();
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet);
+*/
         getTrackingData();
         getDeliverTime(bookingId);
         getBookingSeconds();
@@ -590,6 +688,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 onBackPressed();
             }
         });
+/*
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int newState) {
@@ -616,6 +715,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
             }
         });
+*/
 
         dialogpriview = new
 
@@ -1187,6 +1287,9 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                             String rider_lat = decimalLocationFormat.format(Double.parseDouble(jsonObject.getString("riderlati")));
                             String rider_longi = decimalLocationFormat.format(Double.parseDouble(jsonObject.getString("riderlongi")));
 
+                            Log.e("progressbar_vespa_prog", " latitude " + rider_lat);
+                            Log.e("progressbar_vespa_prog", " latitude " + rider_longi);
+
                             latitute = Double.parseDouble(rider_lat);
                             longi = Double.parseDouble(rider_longi);
 
@@ -1292,7 +1395,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
                 String totaltime = ProjectUtils.changeDateFormate1(trackingData.getBookingDate()) + " " + trackingData.getBookingTime();
                 String phoneNumberWithCountryCode = "+91" + etmobile.getText().toString();
-                String message = "Dear," + "\n \n" + getResources().getString(R.string.shareone) + "\n\n" + getResources().getString(R.string.sharetwo) + "\n\n" +
+                order_details_message = "Dear," + "\n \n" + getResources().getString(R.string.shareone) + "\n\n" + getResources().getString(R.string.sharetwo) + "\n\n" +
                         getResources().getString(R.string.sharethree) + " " + trackingData.getVendorName() + "\n" +
                         getResources().getString(R.string.sharefour) + " " + trackingData.getProductName() + " " + trackingData.getVehicleNumber() + "\n" +
                         getResources().getString(R.string.sharefive) + " " + totaltime + "\n" +
@@ -1303,7 +1406,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                String shareBody = message;
+                String shareBody = order_details_message;
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
@@ -1477,6 +1580,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                             userBookingList = new Gson().fromJson(object.getJSONArray("data").toString(), getpetDTO);
                             artistId = Integer.parseInt(userBookingList.get(0).getArtist_id());
                             vendorName = userBookingList.get(0).getArtistName();
+                            progressbar_vespa_progress = Integer.valueOf(userBookingList.get(0).getPercentage());
 
 
                             vendorImage = userBookingList.get(0).getArtistImage();
@@ -1484,6 +1588,8 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                             vendorLongitude = Double.parseDouble(userBookingList.get(0).getArtistlivelang());
                             artistRating = userBookingList.get(0).getArtistRating();
 
+                            Log.e("progressbar_vespa_prog", " vendor latitude " + vendorLatitude);
+                            Log.e("progressbar_vespa_prog", " vendor latitude " + vendorLongitude);
 
                             mobileNumber = userBookingList.get(0).getArtistMobile();
                             bookingId = Integer.parseInt(userBookingList.get(0).getId());
@@ -1493,6 +1599,20 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                             booking_msg2 = userBookingList.get(0).getBooking_msg2();
                             discount_txt = userBookingList.get(0).getDiscount_txt();
                             discount_digit_txt = userBookingList.get(0).getDiscount_digit_txt();
+                            getdeliveryflag = userBookingList.get(0).getGetdeliveryflag();
+
+
+                            order_placed = userBookingList.get(0).getOrder_placed();
+                            delivered_by = userBookingList.get(0).getDelivered_by();
+                            revised_time = userBookingList.get(0).getRevised_time();
+                            order_mode = userBookingList.get(0).getOrder_mode();
+                            remain_time = userBookingList.get(0).getRemain_time();
+                            partner_logo = userBookingList.get(0).getPartner_logo();
+                            if (!confirm_dialog_flag){
+
+                                confirm_timer = userBookingList.get(0).getDialog_show_remain_time();
+                            }
+
 
                             productDTOArrayList = new ArrayList<>();
                             productDTOArrayList = userBookingList.get(0).getProduct();
@@ -1549,6 +1669,13 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
 
                             trackingData = new TrackingData();
+                            trackingData.setPartner_logo(partner_logo);
+                            trackingData.setGetdeliveryflag(getdeliveryflag);
+                            trackingData.setOrder_placed(order_placed);
+                            trackingData.setOrder_mode(order_mode);
+                            trackingData.setDelivered_by(delivered_by);
+                            trackingData.setRevised_time(revised_time);
+                            trackingData.setRemain_time(remain_time);
                             trackingData.setArtistId(artistId);
                             trackingData.setVendorName(vendorName);
                             trackingData.setArtistRating(artistRating);
@@ -1833,7 +1960,128 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         discount_text.setText(Html.fromHtml(trackingData.getDiscount_txt()));
         discount_digit_text.setText(Html.fromHtml("&#x20B9;" + trackingData.getDiscount_digit_txt()));
         servicenamerating.setText(trackingData.getArtistRating());
-        if (trackingData.getCat_typemap().equals("1")) {
+        first_step_subtext.setText(trackingData.getBookingDate());
+        second_step_subtext.setText("Order accepted by partner");
+        third_step_subtext.setText("Your order is in progress, Please wait");
+        forth_step_subtext.setText("Order accepted by rider");
+        fifth_step_subtext.setText("Rider is on the way");
+        sixth_step_subtext.setText("Your order is completed");
+
+
+        //     String flag123 = trackingData.getGetdeliveryflag();
+
+        Log.e("TRACK_DATA", " getdeliveryflag " + trackingData.getGetdeliveryflag());
+        Log.e("TRACK_DATA", " remain_time " + trackingData.getRemain_time());
+        Log.e("TRACK_DATA", " partner_logo " + trackingData.getPartner_logo());
+        //  Log.e("TRACK_DATA"," confirm_timer "+confirm_timer);
+        Log.e("TRACK_DATA", " order_placed " + trackingData.getOrder_placed());
+        Log.e("TRACK_DATA", " delivered_by " + trackingData.getDelivered_by());
+        Log.e("TRACK_DATA", " revised_time " + trackingData.getRevised_time());
+        Log.e("TRACK_DATA", " order_mode " + trackingData.getOrder_mode());
+
+
+        if (trackingData.getGetdeliveryflag().equalsIgnoreCase("1")) {
+
+
+            confirm_partner_name = timaConfirmationDialog.findViewById(R.id.confirm_partner_name);
+            estimated_delivery_time = timaConfirmationDialog.findViewById(R.id.estimated_delivery_time);
+            rewise_date = timaConfirmationDialog.findViewById(R.id.rewise_date);
+            order_place_date = timaConfirmationDialog.findViewById(R.id.order_place_date);
+            deliveryby_date = timaConfirmationDialog.findViewById(R.id.deliveryby_date);
+            order_mode_date = timaConfirmationDialog.findViewById(R.id.order_mode_date);
+            confirm_IVartist = timaConfirmationDialog.findViewById(R.id.confirm_IVartist);
+            add_time_tvYesPro = timaConfirmationDialog.findViewById(R.id.add_time_tvYesPro);
+            add_time_tvNoPro = timaConfirmationDialog.findViewById(R.id.add_time_tvNoPro);
+            txtarivaltimer = timaConfirmationDialog.findViewById(R.id.txtarivaltimer);
+
+            //   txtarivaltimer.setVisibility(View.GONE);
+
+            Glide.with(this).load(Uri.parse(trackingData.getPartner_logo())).placeholder(R.drawable.dafault_product).into(confirm_IVartist);
+            confirm_partner_name.setText(trackingData.getVendorName());
+            estimated_delivery_time.setText(trackingData.getRemain_time());
+            rewise_date.setText(trackingData.getRevised_time());
+            order_place_date.setText(trackingData.getOrder_placed());
+            deliveryby_date.setText(trackingData.getDelivered_by());
+            order_mode_date.setText(trackingData.getOrder_mode());
+
+            Log.e("tracker_timer123", "5 ---- 1 " + confirm_dialog_flag);
+
+            if (!confirm_dialog_flag) {
+
+                Log.e("tracker_timer123", "5 ---- 2 " + confirm_dialog_flag);
+
+                confirm_dialog_flag = true;
+
+                int timer = Integer.parseInt(confirm_timer);
+
+                Log.e("tracker_timer", "5");
+
+                dialog_timercT = new CountDownTimer(timer, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+
+                    //    Log.e("tracker_timer", "6");
+
+                        int va = (int) ((millisUntilFinished % 60000) / 1000);
+                      //  Log.e("tracker_timer", "show_timer:-- " + va);
+
+                        txtarivaltimer.setText("" + String.format("%02d", va));
+
+                    }
+
+                    public void onFinish() {
+
+                        add_time_tvYesPro.performClick();
+                    }
+                };
+
+                dialog_timercT.start();
+            }
+            add_time_tvNoPro.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    decline(String.valueOf(artistId), String.valueOf(trackingData.getBookingId()), "2");
+                    timaConfirmationDialog.dismiss();
+                }
+            });
+
+            add_time_tvYesPro.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //    String b_id = trackingData.getBookingId();
+                    updatetimeparams.put(Consts.BOOKING_ID, String.valueOf(trackingData.getBookingId()));
+                    updatetimeparams.put("booking_id2", String.valueOf(trackingData.getBookingId()));
+
+                    Log.e("track_book", "" + updatetimeparams.toString());
+                    new HttpsRequest(Consts.CONFIRM_TIME_UPDATION_API, updatetimeparams, TrackingActivity.this).stringPost(TAG, new Helper() {
+                        @Override
+                        public void backResponse(boolean flag, String msg, JSONObject response) {
+                            if (flag) {
+                                Log.e("track_book", "" + response.toString());
+
+                                timaConfirmationDialog.dismiss();
+                                Toast.makeText(TrackingActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(TrackingActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
+
+            timaConfirmationDialog.show();
+        } else {
+            timaConfirmationDialog.dismiss();
+
+        }
+
+
+        if (trackingData.getCat_typemap().
+
+                equals("1")) {
             totalingdata.setVisibility(View.GONE);
         } else {
             subTotal.setText("₹" + trackingData.getSubTotal());
@@ -1854,6 +2102,16 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         rider_call_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+/*
+
+                String phoneNumberWithCountryCode = "+91" + trackingData.getRider_mobileno();
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(
+                                String.format("https://api.whatsapp.com/send?phone=%s&text=%s",
+                                        phoneNumberWithCountryCode, ""))));
+*/
+
+
                 Intent callIntent = new Intent(Intent.ACTION_CALL); //use ACTION_CALL class
                 callIntent.setData(Uri.parse("tel:" + trackingData.getRider_mobileno()));    //this is the phone number calling
                 //check permission
@@ -1880,12 +2138,28 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                 /*Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + trackingData.getMobileNumber()));
                 startActivity(callIntent);*/
-                Intent callIntent = new Intent(Intent.ACTION_CALL); //use ACTION_CALL class
-                callIntent.setData(Uri.parse("tel:" + trackingData.getMobileNumber()));    //this is the phone number calling
+
+                order_details_message = "*Order Details*" + "\n \n" + getResources().getString(R.string.shareone2) + "\n\n" + getResources().getString(R.string.sharetwo) + "\n\n" +
+                        getResources().getString(R.string.sharethree) + " " + trackingData.getVendorName() + "\n" +
+                        getResources().getString(R.string.sharefour) + " " + trackingData.getProductName() + " " + trackingData.getVehicleNumber() + "\n" +
+                        getResources().getString(R.string.sharefive) + " " + totaltime + "\n" +
+                        getResources().getString(R.string.sharesix) + " " + trackingData.getSourceAddress() + "\n" +
+                        getResources().getString(R.string.shareseven) + " " + trackingData.getDestinationAddress() + "\n \n";
+                       /* getResources().getString(R.string.shareseight) + "\n\n " +
+                        getResources().getString(R.string.sharenine) + "\n\n ";*/
+
+                String phoneNumberWithCountryCode = "+91" + trackingData.getMobileNumber();
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(
+                                String.format("https://api.whatsapp.com/send?phone=%s&text=%s",
+                                        phoneNumberWithCountryCode, order_details_message))));
+
+                //    Intent callIntent = new Intent(Intent.ACTION_CALL); //use ACTION_CALL class
+                //  callIntent.setData(Uri.parse("tel:" + trackingData.getMobileNumber()));    //this is the phone number calling
                 //check permission
                 //If the device is running Android 6.0 (API level 23) and the app's targetSdkVersion is 23 or higher,
                 //the system asks the user to grant approval.
-                if (ActivityCompat.checkSelfPermission(TrackingActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                /*if (ActivityCompat.checkSelfPermission(TrackingActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     //request permission from user if the app hasn't got the required permission
                     ActivityCompat.requestPermissions(TrackingActivity.this,
                             new String[]{Manifest.permission.CALL_PHONE},   //request specific permission from user
@@ -1896,30 +2170,52 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                         startActivity(callIntent);  //call activity and make phone call
                     } catch (android.content.ActivityNotFoundException ex) {
                     }
-                }
+                }*/
             }
         });
 
 
         Glide.with(this).
+
                 load(trackingData.getVendorImage())
-                .placeholder(R.drawable.dummyuser_image)
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imgvendonrimage);
+                .
+
+                        placeholder(R.drawable.dummyuser_image)
+                .
+
+                        dontAnimate()
+                .
+
+                        diskCacheStrategy(DiskCacheStrategy.ALL)
+                .
+
+                        into(imgvendonrimage);
 
         Glide.with(this).
+
                 load(trackingData.getRider_image())
-                .placeholder(R.drawable.dummyuser_image)
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(riderimage);
+                .
+
+                        placeholder(R.drawable.dummyuser_image)
+                .
+
+                        dontAnimate()
+                .
+
+                        diskCacheStrategy(DiskCacheStrategy.ALL)
+                .
+
+                        into(riderimage);
 
         etAddressSelectsource.setText(trackingData.getSourceAddress());
 
         txttotalamount.setText("₹" + trackingData.getTotalAmount());
 
-        if (!trackingData.getDestinationAddress().trim().isEmpty()) {
+        if (!trackingData.getDestinationAddress().
+
+                trim().
+
+                isEmpty()) {
             etAddressSelectdesti.setText(trackingData.getDestinationAddress());
 
         } else {
@@ -1956,8 +2252,9 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             providerdata.setVisibility(View.VISIBLE);
             riderData.setVisibility(View.GONE);
 
-            relmap.setVisibility(View.VISIBLE);
-            relanimation.setVisibility(View.VISIBLE);
+            //    relmap.setVisibility(View.VISIBLE);
+            relmap.setVisibility(View.GONE);
+            relanimation.setVisibility(View.GONE);
             laycallcancel.setVisibility(View.VISIBLE);
             share_layout.setVisibility(View.GONE);
             lay_add_refer.setVisibility(View.GONE);
@@ -1972,6 +2269,13 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             Log.e("tracking_tracker", "2");
             Log.e("tracking_tracker1", "2");
 
+            laycallcancel.setVisibility(View.VISIBLE);
+            laycall.setVisibility(View.VISIBLE);
+
+            first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            first_step_done_img.setVisibility(View.VISIBLE);
+            second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
             providerdata.setVisibility(View.VISIBLE);
             riderData.setVisibility(View.GONE);
             Glide.with(this).
@@ -1981,8 +2285,6 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                     .into(ivStatus);
             llSt.setBackground(getDrawable(R.drawable.text_tracking_background));
             tvStatus.setTextColor(getResources().getColor(R.color.yellow_color));
-            laycallcancel.setVisibility(View.VISIBLE);
-            laycall.setVisibility(View.VISIBLE);
             relanimation.setVisibility(View.GONE);
             share_layout.setVisibility(View.GONE);
             lay_add_refer.setVisibility(View.GONE);
@@ -2007,8 +2309,9 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             call_button.setActivated(false);
             providerdata.setVisibility(View.VISIBLE);
             riderData.setVisibility(View.GONE);
-            relmap.setVisibility(View.VISIBLE);
-            relanimation.setVisibility(View.VISIBLE);
+            relmap.setVisibility(View.GONE);
+            //   relmap.setVisibility(View.VISIBLE);
+            relanimation.setVisibility(View.GONE);
             laycallcancel.setVisibility(View.VISIBLE);
             share_layout.setVisibility(View.GONE);
             lay_add_refer.setVisibility(View.GONE);
@@ -2022,8 +2325,9 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         } else if (bookingFlag == 1 && rider_flag == 5) {
             Log.e("tracking_tracker", "4");
             Log.e("tracking_tracker1", "4");
-            relmap.setVisibility(View.VISIBLE);
-            relanimation.setVisibility(View.VISIBLE);
+            relmap.setVisibility(View.GONE);
+            //      relmap.setVisibility(View.VISIBLE);
+            relanimation.setVisibility(View.GONE);
             laycallcancel.setVisibility(View.VISIBLE);
             share_layout.setVisibility(View.GONE);
             lay_add_refer.setVisibility(View.GONE);
@@ -2049,8 +2353,9 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             providerdata.setVisibility(View.VISIBLE);
             riderData.setVisibility(View.GONE);
 
-            relmap.setVisibility(View.VISIBLE);
-            relanimation.setVisibility(View.VISIBLE);
+            relmap.setVisibility(View.GONE);
+            //       relmap.setVisibility(View.VISIBLE);
+            relanimation.setVisibility(View.GONE);
             laycallcancel.setVisibility(View.VISIBLE);
             share_layout.setVisibility(View.GONE);
             lay_add_refer.setVisibility(View.GONE);
@@ -2098,6 +2403,21 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         } else if (bookingFlag == 3 && rider_flag == 1) {
             Log.e("tracking_tracker", "8");
             Log.e("tracking_tracker1", "8");
+
+            //    progressbar_vespa.setProgress(50);
+
+            first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            first_step_done_img.setVisibility(View.VISIBLE);
+            second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            second_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            second_step_done_img.setVisibility(View.VISIBLE);
+            third_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            third_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            third_step_done_img.setVisibility(View.VISIBLE);
+            forth_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
+            //forth_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+
             providerdata.setVisibility(View.VISIBLE);
             riderData.setVisibility(View.VISIBLE);
             Glide.with(this).
@@ -2149,10 +2469,25 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             isStartBooking = true;
             relanimation.setVisibility(View.GONE);
             laycallcancel.setVisibility(View.GONE);
+            laycancel.setVisibility(View.GONE);
             rel_sos.setVisibility(View.VISIBLE);
             laycall.setVisibility(View.GONE);
             share_layout.setVisibility(View.VISIBLE);
             lay_add_refer.setVisibility(View.VISIBLE);
+
+
+            //    progressbar_vespa.setProgress(35);
+
+            first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            first_step_done_img.setVisibility(View.VISIBLE);
+
+            second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            second_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            second_step_done_img.setVisibility(View.VISIBLE);
+
+            third_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
+
             if (!isAlreadyStartedCustomerToDestination) {
                 if (checkMapCategory(category_id)) {
                     getBookingRoute();
@@ -2165,6 +2500,25 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         } else if (bookingFlag == 4) {
             Log.e("tracking_tracker", "10");
             Log.e("tracking_tracker1", "10");
+
+
+            first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            first_step_done_img.setVisibility(View.VISIBLE);
+            second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            second_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            second_step_done_img.setVisibility(View.VISIBLE);
+            third_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            third_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            third_step_done_img.setVisibility(View.VISIBLE);
+            forth_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            forth_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            forth_step_done_img.setVisibility(View.VISIBLE);
+            fifth_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+
+            fifth_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            sixth_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
+
             providerdata.setVisibility(View.GONE);
             riderData.setVisibility(View.VISIBLE);
             Glide.with(this).
@@ -2177,7 +2531,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             mBackgroundHandler.obtainMessage(FINISH_COUNTER, true).sendToTarget();
         }
 
-        if (booking_msg.equals("Waiting for service provider response")) {
+        if (booking_msg.equals("Waiting for partner response")) {
             Log.e("tracking_tracker", "11");
             Log.e("tracking_tracker1", "11");
 
@@ -2189,9 +2543,17 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivStatus);
         }
-        if (booking_msg.equals("Request Accepted By Service Provider")) {
+        if (booking_msg.equals("Request Accepted By Partner")) {
             Log.e("tracking_tracker", "12");
             Log.e("tracking_tracker1", "12");
+            call_button.setVisibility(View.VISIBLE);
+
+
+            first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            first_step_done_img.setVisibility(View.VISIBLE);
+            second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
+
             llSt.setBackground(getDrawable(R.drawable.text_tracking_background_green));
             tvStatus.setTextColor(getResources().getColor(R.color.green_text_color));
             Glide.with(this).
@@ -2200,19 +2562,26 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivStatus);
             call_button_disabled.setVisibility(View.GONE);
-            call_button.setVisibility(View.VISIBLE);
         }
         if (booking_msg.equals("Request Accepted By Rider")) {
             Log.e("tracking_tracker", "13");
             Log.e("tracking_tracker1", "13");
-            booking_msg = "Request Accepted By Service Provider";
+            call_button.setVisibility(View.VISIBLE);
+
+
+            first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            first_step_done_img.setVisibility(View.VISIBLE);
+            second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
+
+
+            booking_msg = "Request Accepted By Partner";
             Glide.with(this).
                     load(R.drawable.ic_accepted)
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivStatus);
             call_button_disabled.setVisibility(View.GONE);
-            call_button.setVisibility(View.VISIBLE);
             rider_call_button_disabled.setVisibility(View.VISIBLE);
             rider_call_button.setVisibility(View.GONE);
 
@@ -2225,19 +2594,53 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         }
 //        if (booking_msg.equalsIgnoreCase(""))
         if (booking_msg.equals("Preparing Your Order") || booking_msg.equals("Request Accepted By Rider")) {
+
+            if (preparing_flag) {
+
+                preparing_flag = false;
+                Log.e("PREPARING__STATUS", "preparing ma gayu");
+
+                first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+                first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+                first_step_done_img.setVisibility(View.VISIBLE);
+                second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+                second_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+                second_step_done_img.setVisibility(View.VISIBLE);
+                third_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
+
+            }
+            if (booking_msg.equalsIgnoreCase("Request Accepted By Rider")) {
+
+
+                first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+                first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+                first_step_done_img.setVisibility(View.VISIBLE);
+                second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+                second_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+                second_step_done_img.setVisibility(View.VISIBLE);
+                third_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+                third_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+                third_step_done_img.setVisibility(View.VISIBLE);
+                forth_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
+
+            }
             Log.e("tracking_tracker", "14");
             Log.e("tracking_tracker1", "14");
+            call_button.setVisibility(View.VISIBLE);
+
             Glide.with(this).
                     load(R.drawable.ic_accepted_blue)
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivStatus);
             call_button_disabled.setVisibility(View.GONE);
-            call_button.setVisibility(View.VISIBLE);
             rider_call_button_disabled.setVisibility(View.GONE);
             rider_call_button.setVisibility(View.VISIBLE);
         }
         if (booking_msg.equals("Waiting For Rider Response")) {
+
+            call_button.setVisibility(View.VISIBLE);
+
             Log.e("tracking_tracker", "15");
             Log.e("tracking_tracker1", "15");
             Glide.with(this).
@@ -2248,11 +2651,12 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             call_button_disabled.setVisibility(View.GONE);
             laycallcancel.setVisibility(View.GONE);
             riderData.setVisibility(View.GONE);
-            call_button.setVisibility(View.VISIBLE);
+            laycancel.setVisibility(View.GONE);
             rider_call_button_disabled.setVisibility(View.VISIBLE);
             rider_call_button.setVisibility(View.GONE);
         }
         if (booking_msg.equals("Order Has Handover To Rider")) {
+
             Log.e("tracking_tracker", "16");
             Log.e("tracking_tracker1", "16");
             llSt.setBackground(getDrawable(R.drawable.text_tracking_background_pink));
@@ -2269,6 +2673,28 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
             rider_call_button.setVisibility(View.VISIBLE);
         }
         if (booking_msg.equals("Rider is On the way")) {
+
+
+            first_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            first_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            first_step_done_img.setVisibility(View.VISIBLE);
+            second_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            second_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            second_step_done_img.setVisibility(View.VISIBLE);
+            third_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            third_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            third_step_done_img.setVisibility(View.VISIBLE);
+            forth_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_start_green));
+            forth_verticle_line.setBackground(getResources().getDrawable(R.drawable.ic_active_green_line));
+            forth_step_done_img.setVisibility(View.VISIBLE);
+            fifth_point.setBackground(getResources().getDrawable(R.drawable.ic_track_step_active_green));
+
+            Log.e("progressbar_vespa_prog", "" + progressbar_vespa_progress);
+            progressbar_vespa.setProgress(progressbar_vespa_progress);
+
+
+            sixth_relative.setVisibility(View.VISIBLE);
+
             Log.e("tracking_tracker", "17");
             Log.e("tracking_tracker1", "17");
             providerdata.setVisibility(View.GONE);
@@ -2298,6 +2724,8 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
         if (booking_msg.equals("Your Booking In Progress")) {
             Log.e("tracking_tracker", "18");
             Log.e("tracking_tracker1", "18");
+
+
             Glide.with(this).
                     load(R.drawable.ic_service_provider_blue)
                     .dontAnimate()
@@ -2324,6 +2752,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
                     .into(ivStatus);
             order_preparation_note.setVisibility(View.GONE);
         }
+
     }
 
     public void resetMapRoute() {
@@ -2416,7 +2845,7 @@ public class TrackingActivity extends AppCompatActivity implements OnMapReadyCal
 
         //Polyline options
 
-            options = new PolylineOptions();
+        options = new PolylineOptions();
 
         List<PatternItem> pattern = Arrays.<PatternItem>asList(new Dash(30), new Gap(20));
 

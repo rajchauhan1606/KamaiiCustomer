@@ -18,26 +18,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.afollestad.viewpagerdots.DotsIndicator;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kamaii.customer.DTO.CategoryDTO;
-import com.kamaii.customer.DTO.ProductDTO;
 import com.kamaii.customer.DTO.UserBooking;
 import com.kamaii.customer.DTO.UserDTO;
 import com.kamaii.customer.R;
@@ -53,19 +55,26 @@ import com.kamaii.customer.ui.activity.BookingProduct;
 import com.kamaii.customer.ui.activity.CashBackOfferActivity;
 import com.kamaii.customer.ui.activity.ScrachActivity;
 import com.kamaii.customer.ui.activity.SearchActivity;
-import com.kamaii.customer.ui.activity.ViewAddressActivity;
+import com.kamaii.customer.ui.activity.SubCategoryActivity;
+import com.kamaii.customer.ui.activity.TrackingActivity;
 import com.kamaii.customer.ui.adapter.FirstOuterAdapter;
 import com.kamaii.customer.ui.adapter.FooterSliderAdapter;
 import com.kamaii.customer.ui.adapter.OuterAdapter;
+import com.kamaii.customer.ui.adapter.PopulerServiceAdapter;
 import com.kamaii.customer.ui.adapter.SliderAdapter;
 import com.kamaii.customer.ui.models.AddressModel;
 import com.kamaii.customer.ui.models.FirstModel;
 import com.kamaii.customer.ui.models.FooterSliderModel;
 import com.kamaii.customer.ui.models.ParentModel;
+import com.kamaii.customer.ui.adapter.PopulerPartnerAdapter;
+import com.kamaii.customer.ui.models.PopulerPartnerModel;
+import com.kamaii.customer.ui.models.PopulerServiceModel;
 import com.kamaii.customer.ui.models.SiderModel;
 import com.kamaii.customer.utils.AppController;
 import com.kamaii.customer.utils.CustomTextView;
 import com.kamaii.customer.utils.CustomTextViewBold;
+import com.kamaii.customer.utils.ExpandableHeightGridView;
+import com.kamaii.customer.utils.ItemDecorationAlbumColumns;
 import com.kamaii.customer.utils.ProjectUtils;
 
 import org.json.JSONArray;
@@ -73,7 +82,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,12 +109,18 @@ public class CategoryFragment extends Fragment {
     private BaseActivity baseActivity;
     RecyclerView rec_category;
     RecyclerView rec_categoryDaily;
+    RecyclerView partner_recyclerview;
+    RecyclerView services_recyclerview;
     public RecyclerView horizontal_recyclerview;
     private HashMap<String, String> parmsCategory = new HashMap<>();
     private UserDTO userDTO;
     private CustomTextViewBold tvNo;
     private EditText etSearchFilter;
     ArrayList<SiderModel> silderarraylist = new ArrayList<>();
+    ArrayList<PopulerPartnerModel> populerPartnerlist;
+    ArrayList<PopulerServiceModel> populerServicelist;
+    LinearLayout populer_partner_linear;
+    LinearLayout populer_service_linear;
     ArrayList<FooterSliderModel> footersilderarraylist = new ArrayList<>();
     ArrayList<FooterSliderModel> footersilderarraylistFooter = new ArrayList<>();
     ViewPager mPager, pagerhometwo;
@@ -119,16 +133,21 @@ public class CategoryFragment extends Fragment {
     private SharedPreferences firebase;
     DotsIndicator dotsIndicator, dotsIndicator2;
     OuterAdapter outerAdapter;
+    PopulerPartnerAdapter populerPartnerAdapter;
+    PopulerServiceAdapter populerServiceAdapter;
     FirstOuterAdapter firstouterAdapter;
     private HashMap<String, String> parmsversion = new HashMap<>();
     private Dialog dailograting;
-    CustomTextViewBold tvupdateapp;
+    CustomTextViewBold tvupdateapp, populer_partner_title_txt, populer_service_title_txt;
     ImageView img_sub_cat;
     ImageView bg_imageview;
     RelativeLayout first_relative_layout, second_relative_layout;
     boolean isCheck = false;
     String carticon_flag = "";
     String carticon_count = "";
+    List<String> areaSpinnerList = new ArrayList<>();
+    boolean load = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,8 +160,10 @@ public class CategoryFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_category, container, false);
         prefrence = SharedPrefrence.getInstance(getActivity());
 
-        getActivity().findViewById(R.id.ivLogo).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.ivLogo).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.customer_location_relative_header).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.headerNameTV).setVisibility(View.GONE);
+
         firebase = getActivity().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
         parmsCategory.put(Consts.USER_ID, userDTO.getUser_id());
@@ -162,14 +183,16 @@ public class CategoryFragment extends Fragment {
         bg_imageview = view.findViewById(R.id.category_frag_bg_img);
         mPager = view.findViewById(R.id.pagerhome);
         pagerhometwo = view.findViewById(R.id.category_pagerhometwo);
+        populer_partner_title_txt = view.findViewById(R.id.populer_partner_title_txt);
+        populer_service_title_txt = view.findViewById(R.id.populer_service_title_txt);
         dotsIndicator = view.findViewById(R.id.dots);
         dotsIndicator2 = view.findViewById(R.id.dots2);
         first_relative_layout = view.findViewById(R.id.first_card_relative);
         second_relative_layout = view.findViewById(R.id.second_card_relative);
-        getWelcomeBanner();
+        populer_partner_linear = view.findViewById(R.id.populer_partner_linear);
+        populer_service_linear = view.findViewById(R.id.populer_service_linear);
+        //getWelcomeBanner();
 
-        checkaddress();
-        setUiAction(view);
 
         fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         tvskip.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +207,6 @@ public class CategoryFragment extends Fragment {
 
                 dialogapproxtime.dismiss();
 
-
             }
         });
 
@@ -193,17 +215,6 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                /*if (!NetworkManager.isConnectToInternet(getActivity())) {
-
-                    Fragment fragment = new CheckInternetFragment();
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                            android.R.anim.fade_out);
-                    fragmentTransaction.replace(R.id.frame, fragment, TAG);
-                    fragmentTransaction.commitAllowingStateLoss();
-
-                } else {
-                }*/
                 startActivity(new Intent(getActivity(), CashBackOfferActivity.class));
             }
         });
@@ -227,6 +238,7 @@ public class CategoryFragment extends Fragment {
         view.findViewById(R.id.know_more).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                baseActivity.navItemIndex = 103;
                 baseActivity.navItemIndex = 103;
                 baseActivity.loadHomeFragment(new SafetyFragment(), "3");
             }
@@ -257,6 +269,12 @@ public class CategoryFragment extends Fragment {
         img_sub_cat = dailograting.findViewById(R.id.img_sub_cat);
         return view;
 
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
     }
 
@@ -265,124 +283,118 @@ public class CategoryFragment extends Fragment {
         Log.e("DEBUG", "OnPause of HomeFragment");
         super.onPause();
 
-        /*if (!NetworkManager.isConnectToInternet(getActivity())) {
-            Fragment fragment = new CheckInternetFragment();
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                    android.R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frame, fragment, TAG);
-            fragmentTransaction.commitAllowingStateLoss();
-
-        }*/
-    }
-
-    public void getWelcomeBanner() {
-
-        new HttpsRequest(Consts.GET_WELCOME_SLIDER_API, getContext()).stringGet(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    try {
-                        String s = response.toString();
-                        JSONObject jsonObject = new JSONObject(s);
-
-                        String message = jsonObject.getString("message");
-                        Log.e("CAT_MSG", "" + message);
-
-                        String img_uri = response.getJSONObject("data").getString("img");
-                        Glide.with(getContext()).load(img_uri).into(bg_imageview);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-
-                }
-            }
-        });
     }
 
     public void getVersion() {
 
-        parmsversion.put(Consts.USER_ID,userDTO.getUser_id());
+        parmsversion.put(Consts.USER_ID, userDTO.getUser_id());
 
         new HttpsRequest(Consts.GET_VERSION, parmsversion, getActivity()).stringPost(TAG, new Helper() {
             @Override
             public void backResponse(boolean flag, String msg, JSONObject response) {
                 if (flag) {
+
+                    Log.e("VERSION_12345", "" + response.toString());
                     try {
-                        int version = -1;
-                        carticon_flag = response.getString("cart_tracker");
-                        carticon_count = response.getString("cart_count");
+                        String status = response.getString("status");
 
-                        if (carticon_flag.equalsIgnoreCase("1")){
+                        if (status.equalsIgnoreCase("1")) {
 
-                            baseActivity.ivmaincartLayout.setVisibility(View.VISIBLE);
-                            baseActivity.cart_count.setText(carticon_count);
-                        }
-                        else {
+                            int version = -1;
+                            carticon_flag = response.getString("cart_tracker");
+                            carticon_count = response.getString("cart_count");
 
-                            baseActivity.ivmaincartLayout.setVisibility(View.GONE);
-                        }
-                        JSONObject jsonObjectmain = new JSONObject(String.valueOf(response));
-                        JSONArray jsonArray = jsonObjectmain.getJSONArray("data");
+                            if (carticon_flag.equalsIgnoreCase("1")) {
 
-                        String pname = getActivity().getPackageName();
-                        String update_image = "";
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject obj = jsonArray.getJSONObject(i);
+                                baseActivity.ivmaincartLayout.setVisibility(View.VISIBLE);
+                                baseActivity.cart_count.setText(carticon_count);
+                            } else {
 
-                            String sversion = obj.getString("version_code");
-                            String serverpname = obj.getString("package_name");
-                            if (serverpname.equalsIgnoreCase(pname)) {
-                                try {
-                                    PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-                                    version = pInfo.versionCode;
-                                    update_image = obj.getString("update_image");
-                                } catch (PackageManager.NameNotFoundException e) {
-                                    e.printStackTrace();
-                                }
+                                baseActivity.ivmaincartLayout.setVisibility(View.GONE);
+                            }
+                            JSONObject jsonObjectmain = new JSONObject(String.valueOf(response));
+                            JSONArray jsonArray = jsonObjectmain.getJSONArray("data");
+
+                            String pname = getActivity().getPackageName();
+                            String update_image = "";
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject obj = jsonArray.getJSONObject(i);
+
+                                String sversion = obj.getString("version_code");
+                                String serverpname = obj.getString("package_name");
+                                if (serverpname.equalsIgnoreCase(pname)) {
+                                    try {
+                                        PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+                                        version = pInfo.versionCode;
+                                        update_image = obj.getString("update_image");
+                                    } catch (PackageManager.NameNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
 
 
-                                if (sversion.equalsIgnoreCase(String.valueOf(version))) {
+                                    if (sversion.equalsIgnoreCase(String.valueOf(version))) {
 
-                                } else {
+                                    } else {
 
-                                    dailograting.show();
-                                    Glide.with(getActivity()).load(update_image).into(img_sub_cat);
+                                        dailograting.show();
+                                        Glide.with(getActivity()).load(update_image).into(img_sub_cat);
 
-                                    img_sub_cat.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
+                                        img_sub_cat.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
 
-                                            Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/iUJ4Omb8lro"));
-                                            try {
-                                                getActivity().startActivity(webIntent);
-                                            } catch (ActivityNotFoundException ex) {
+                                                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/iUJ4Omb8lro"));
+                                                try {
+                                                    getActivity().startActivity(webIntent);
+                                                } catch (ActivityNotFoundException ex) {
+                                                }
+
+
                                             }
+                                        });
+                                        tvupdateapp.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                final String appPackageName = getActivity().getApplication().getPackageName();
+                                                try {
+                                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                                                } catch (ActivityNotFoundException anfe) {
+                                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+                                                }
 
 
-                                        }
-                                    });
-                                    tvupdateapp.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-
-                                            final String appPackageName = getActivity().getApplication().getPackageName();
-                                            try {
-                                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                                            } catch (ActivityNotFoundException anfe) {
-                                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
                                             }
+                                        });
 
-
-                                        }
-                                    });
-
+                                    }
                                 }
                             }
+                        } else if (status.equalsIgnoreCase("5")) {
+
+
+                            carticon_flag = response.getString("cart_tracker");
+                            carticon_count = response.getString("cart_count");
+
+                            if (carticon_flag.equalsIgnoreCase("1")) {
+
+                                baseActivity.ivmaincartLayout.setVisibility(View.VISIBLE);
+                                baseActivity.cart_count.setText(carticon_count);
+                            } else {
+
+                                baseActivity.ivmaincartLayout.setVisibility(View.GONE);
+                            }
+                            Fragment fragment = new MaintenenceFragment();
+                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                                    android.R.anim.fade_out);
+                            fragmentTransaction.replace(R.id.frame, fragment, TAG);
+                            fragmentTransaction.commitAllowingStateLoss();
+
                         }
+
+                        checkaddress();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -404,29 +416,26 @@ public class CategoryFragment extends Fragment {
 
 
     private void setUiAction(View view) {
+
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
 
 
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getProduct();
+            }
+        }).start();*/
+
+        getslider();
+
         /*if (NetworkManager.isConnectToInternet(getActivity())) {*/
 
-            getProduct();
-            getslider();
-            getfooterslider();
-
-            getBooking();
-        /*} else {
-            Fragment fragment = new CheckInternetFragment();
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                    android.R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frame, fragment, TAG);
-            fragmentTransaction.commitAllowingStateLoss();
-        }*/
-
-
         tvNo = view.findViewById(R.id.tvNotFound);
+        partner_recyclerview = view.findViewById(R.id.partner_recyclerview);
+        services_recyclerview = view.findViewById(R.id.services_recyclerview);
         rec_category = view.findViewById(R.id.rvCategory);
         rec_categoryDaily = view.findViewById(R.id.rvCategoryDaily);
         etSearchFilter = view.findViewById(R.id.etSearchFilter);
@@ -439,6 +448,7 @@ public class CategoryFragment extends Fragment {
         outerAdapter = new OuterAdapter(this, getFragmentManager());
         rec_category.setAdapter(outerAdapter);
 
+
         baseActivity.ivmainsearchLayout.setVisibility(View.VISIBLE);
         baseActivity.base_recyclerview.setVisibility(View.VISIBLE);
 
@@ -448,12 +458,12 @@ public class CategoryFragment extends Fragment {
                 startActivity(new Intent(getActivity(), SearchActivity.class));
             }
         });
-      //  baseActivity.ivmaincartLayout.setVisibility(View.VISIBLE);
+        //  baseActivity.ivmaincartLayout.setVisibility(View.VISIBLE);
         baseActivity.ivmaincartLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getActivity(), BookingProduct.class));
+                startActivity(new Intent(getActivity(), BookingProduct.class).putExtra("fom_cart", true));
             }
         });
     }
@@ -475,6 +485,7 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
+                //         progressDialog.dismiss();
                 Log.e("RES", response.message());
                 try {
                     if (response.isSuccessful()) {
@@ -497,8 +508,17 @@ public class CategoryFragment extends Fragment {
                         }
 
                     } else {
-                        Toast.makeText(getActivity(), "Try again. Server is not responding.",
-                                LENGTH_LONG).show();
+                        /*Toast.makeText(getActivity(), "Try again. Server is not responding.",
+                                LENGTH_LONG).show();*/
+                        //            progressDialog.dismiss();
+
+                        Fragment fragment = new ServerNotRespondingFragment();
+                        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                                android.R.anim.fade_out);
+                        fragmentTransaction.replace(R.id.frame, fragment, TAG);
+                        fragmentTransaction.commitAllowingStateLoss();
+
 
                     }
 
@@ -552,14 +572,14 @@ public class CategoryFragment extends Fragment {
         baseActivity = (BaseActivity) activity;
     }
 
+    public void getPopulerService() {
 
-    public void getProduct() {
         if (AppController.getInstance().isNetworkAvailable()) {
 
-            //           progressDialog.show();
+            //progressDialog.show();
             Retrofit retrofit = apiClient.getClient();
             apiRest api = retrofit.create(apiRest.class);
-            Call<ResponseBody> callone = api.getAllCatalogCategory(userDTO.getUser_id(), firebase.getString(Consts.DEVICE_TOKEN, ""));
+            Call<ResponseBody> callone = api.getPopulerService(userDTO.getUser_id(), firebase.getString(Consts.DEVICE_TOKEN, ""));
             callone.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -569,66 +589,167 @@ public class CategoryFragment extends Fragment {
                             ResponseBody responseBody = response.body();
 
                             String s = responseBody.string();
-                            Log.e("CATALOG_CATEGORY", "" + s);
+                            Log.e("getPopulerServices", "" + s);
                             JSONObject object = new JSONObject(s);
 
-                            List<CategoryDTO> inners = new ArrayList<>();
-                            List<CategoryDTO> innersFirst = new ArrayList<>();
+                            String status = object.getString("status");
+                            String name = object.getString("name");
 
-                            String message = object.getString("message");
-                            int sstatus = object.getInt("status");
-                            if (sstatus == 1) {
-                                JSONArray jsonElements = object.getJSONArray("data");
+                            if (status.equalsIgnoreCase("1")) {
 
-                                for (int i = 0; i < jsonElements.length(); i++) {
-                                    JSONObject obj = jsonElements.getJSONObject(i);
-                                    if (i == 0) {
-                                        String catelog_idFirst = obj.getString("id");
-                                        String nameFirst = obj.getString("name");
-                                        String cpriceFirst = obj.getString("status");
+                                populer_service_title_txt.setText(name);
 
-                                        innersFirst = new Gson().fromJson(obj.getJSONArray("category").toString(), new TypeToken<ArrayList<CategoryDTO>>() {
-                                        }.getType());
+                                populerServicelist = new ArrayList<>();
+
+                                Type getpetDTO = new TypeToken<List<PopulerServiceModel>>() {
+                                }.getType();
+
+                                populerServicelist = new Gson().fromJson(object.getJSONArray("data").toString(), getpetDTO);
+
+                                Log.e("POPULER_SERVICE_", " list_size " + populerServicelist.toString());
 
 
-                                        if (innersFirst.size() == 0) {
-                                            Log.e("inner", "innerfirst list called");
-                                            first_relative_layout.setVisibility(View.GONE);
-                                        } else {
-                                            Log.e("inner", "innerfirst list not called");
-                                            first_relative_layout.setVisibility(View.VISIBLE);
-                                            firstouterAdapter.addFirstOuter(new FirstModel(catelog_idFirst, nameFirst, innersFirst));
-                                        }
-                                    } else {
-                                        String catelog_id = obj.getString("id");
-                                        String name = obj.getString("name");
-                                        String cprice = obj.getString("status");
+                                if (populerServicelist.size() != 0) {
 
-                                        inners = new Gson().fromJson(obj.getJSONArray("category").toString(), new TypeToken<ArrayList<CategoryDTO>>() {
-                                        }.getType());
+                                    populer_service_linear.setVisibility(View.VISIBLE);
 
-                                        if (inners.size() == 0) {
-                                            Log.e("inner", "innerlist called");
-                                            second_relative_layout.setVisibility(View.GONE);
-                                        } else {
-                                            Log.e("inner", "innerlist not called");
-                                            second_relative_layout.setVisibility(View.VISIBLE);
-                                            outerAdapter.addOuter(new ParentModel(catelog_id, name, inners));
-                                        }
-                                    }
+/*                                    //services_recyclerview.setLayoutManager(new GridLayoutManager(getActivity(),1,GridLayoutManager.HORIZONTAL,false));
+                                    services_recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.HORIZONTAL, false));
+                                    services_recyclerview.addItemDecoration(new ItemDecorationAlbumColumns(
+                                            0,
+                                            2));*/
+                                    services_recyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                                    populerServiceAdapter = new PopulerServiceAdapter(getActivity(), populerServicelist, getFragmentManager());
+                                    services_recyclerview.setAdapter(populerServiceAdapter);
+                                } else {
+
+                                    populer_service_linear.setVisibility(View.GONE);
                                 }
 
-                            } else if (sstatus == 3) {
-                                Toast.makeText(getActivity(), message, LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(getActivity(), message, LENGTH_LONG).show();
+
+                                populer_service_linear.setVisibility(View.GONE);
                             }
 
 
                         } else {
-                            Toast.makeText(getActivity(), "Try again. Server is not responding.",
+                            /*Toast.makeText(getActivity(), "Try again. Server is not responding.",
                                     LENGTH_LONG).show();
+*/
+                            //               progressDialog.dismiss();
+
+                            Fragment fragment = new ServerNotRespondingFragment();
+                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                                    android.R.anim.fade_out);
+                            fragmentTransaction.replace(R.id.frame, fragment, TAG);
+                            fragmentTransaction.commitAllowingStateLoss();
+
                         }
+                        getfooterslider();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    //        progressDialog.dismiss();
+                    Log.d(TAG, t.getMessage());
+
+                }
+            });
+        } else {
+/*            Toast.makeText(getActivity(), "Check Your Internet connection and Try again ",
+                    LENGTH_LONG).show();*/
+
+            //         progressDialog.dismiss();
+
+            Fragment fragment = new ServerNotRespondingFragment();
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                    android.R.anim.fade_out);
+            fragmentTransaction.replace(R.id.frame, fragment, TAG);
+            fragmentTransaction.commitAllowingStateLoss();
+
+        }
+
+
+    }
+
+    public void getPopulerPartners() {
+
+        if (AppController.getInstance().isNetworkAvailable()) {
+
+            //           progressDialog.show();
+            Retrofit retrofit = apiClient.getClient();
+            apiRest api = retrofit.create(apiRest.class);
+            Call<ResponseBody> callone = api.getPopulerPartners(userDTO.getUser_id(), firebase.getString(Consts.DEVICE_TOKEN, ""));
+            callone.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                    progressDialog.dismiss();
+                    try {
+                        if (response.isSuccessful()) {
+                            ResponseBody responseBody = response.body();
+
+                            String s = responseBody.string();
+                            Log.e("POPULER_PARTNER_", "" + s);
+                            JSONObject object = new JSONObject(s);
+                            populerPartnerlist = new ArrayList<>();
+
+                            String status = object.getString("status");
+                            String name = object.getString("name");
+
+                            if (status.equalsIgnoreCase("1")) {
+
+                                populer_partner_title_txt.setText(name);
+                                Type getpetDTO = new TypeToken<List<PopulerPartnerModel>>() {
+                                }.getType();
+
+                                populerPartnerlist = new Gson().fromJson(object.getJSONArray("data").toString(), getpetDTO);
+
+                                Log.e("POPULER_PARTNER_", " list_size " + populerPartnerlist.toString());
+
+
+                                if (populerPartnerlist.size() > 2) {
+
+                                /*partner_recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.HORIZONTAL, false));
+                                partner_recyclerview.addItemDecoration(new ItemDecorationAlbumColumns(
+                                        0,
+                                        2));*/
+                                    partner_recyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                                    populerPartnerAdapter = new PopulerPartnerAdapter(getActivity(), populerPartnerlist);
+                                    partner_recyclerview.setAdapter(populerPartnerAdapter);
+
+                                } else {
+
+                                    populer_partner_linear.setVisibility(View.GONE);
+                                }
+
+                            } else {
+
+                                populer_partner_linear.setVisibility(View.GONE);
+                            }
+                        } else {
+
+                            //                  progressDialog.dismiss();
+
+                            Fragment fragment = new ServerNotRespondingFragment();
+                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                                    android.R.anim.fade_out);
+                            fragmentTransaction.replace(R.id.frame, fragment, TAG);
+                            fragmentTransaction.commitAllowingStateLoss();
+
+                        }
+
+                        getBooking();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -647,8 +768,158 @@ public class CategoryFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), "Check Your Internet connection and Try again ",
-                    LENGTH_LONG).show();
+/*            Toast.makeText(getActivity(), "Check Your Internet connection and Try again ",
+                    LENGTH_LONG).show();*/
+            //        progressDialog.dismiss();
+
+
+            Fragment fragment = new ServerNotRespondingFragment();
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                    android.R.anim.fade_out);
+            fragmentTransaction.replace(R.id.frame, fragment, TAG);
+            fragmentTransaction.commitAllowingStateLoss();
+
+        }
+
+    }
+
+    public void getProduct() {
+        if (AppController.getInstance().isNetworkAvailable()) {
+
+            //   progressDialog.show();
+            Retrofit retrofit = apiClient.getClient();
+            apiRest api = retrofit.create(apiRest.class);
+            Call<ResponseBody> callone = api.getAllCatalogCategory(userDTO.getUser_id(), firebase.getString(Consts.DEVICE_TOKEN, ""));
+            callone.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    //            progressDialog.dismiss();
+                    try {
+                        if (response.isSuccessful()) {
+                            ResponseBody responseBody = response.body();
+
+                            String s = responseBody.string();
+                            Log.e("CATALOG_CATEGORY", "" + s);
+                            JSONObject object = new JSONObject(s);
+
+                            List<CategoryDTO> inners = new ArrayList<>();
+                            List<CategoryDTO> innersFirst = new ArrayList<>();
+
+                            String message = object.getString("message");
+                            int sstatus = object.getInt("status");
+                            String slider_data = object.getJSONObject("slider_data").getString("img");
+
+
+                            if (isAdded()) {
+                                Glide.with(getContext()).load(slider_data).into(bg_imageview);
+                            }
+                            if (sstatus == 1) {
+                                JSONArray jsonElements = object.getJSONArray("data");
+
+                                for (int i = 0; i < jsonElements.length(); i++) {
+                                    JSONObject obj = jsonElements.getJSONObject(i);
+                                    if (i == 0) {
+                                        String catelog_idFirst = obj.getString("id");
+                                        String nameFirst = obj.getString("name");
+                                        String cpriceFirst = obj.getString("status");
+
+                                        innersFirst = new Gson().fromJson(obj.getJSONArray("category").toString(), new TypeToken<ArrayList<CategoryDTO>>() {
+                                        }.getType());
+
+                                        Log.e("OUTER_ADAPTER_LIST", " innerlist first" + innersFirst.toString());
+                                        if (innersFirst.size() == 0) {
+                                            Log.e("inner", "innerfirst size is 0");
+                                            first_relative_layout.setVisibility(View.GONE);
+                                        } else {
+                                            Log.e("inner", "innerfirst size more than 0");
+                                            first_relative_layout.setVisibility(View.VISIBLE);
+                                            firstouterAdapter.addFirstOuter(new FirstModel(catelog_idFirst, nameFirst, innersFirst));
+                                        }
+                                    } else {
+                                        String catelog_id = obj.getString("id");
+                                        String name = obj.getString("name");
+                                        String cprice = obj.getString("status");
+
+                                        inners = new Gson().fromJson(obj.getJSONArray("category").toString(), new TypeToken<ArrayList<CategoryDTO>>() {
+                                        }.getType());
+
+                                        Log.e("OUTER_ADAPTER_LIST", " inners " + inners.toString() + " size " + inners.size());
+
+                                        if (inners.size() == 0) {
+                                            Log.e("inner", "innerlist size is 0");
+
+                                            if (second_relative_layout.getVisibility() == View.VISIBLE) {
+                                                Log.e("OUTER_ADAPTER_LIST", " tracker 1 size :-- " + inners.size());
+
+                                                second_relative_layout.setVisibility(View.GONE);
+                                            }
+
+                                            second_relative_layout.setVisibility(View.GONE);
+
+                                        } else {
+                                            Log.e("inner", "innerlist size is more than 0");
+
+                                            if (second_relative_layout.getVisibility() == View.GONE) {
+                                                Log.e("OUTER_ADAPTER_LIST", " tracker 2 size :-- " + inners.size());
+
+                                                second_relative_layout.setVisibility(View.VISIBLE);
+                                            }
+                                            outerAdapter.addOuter(new ParentModel(catelog_id, name, inners));
+                                        }
+                                    }
+                                }
+
+                            } else if (sstatus == 3) {
+                                Toast.makeText(getActivity(), message, LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getActivity(), message, LENGTH_LONG).show();
+                            }
+
+
+                        } else {
+                            /*Toast.makeText(getActivity(), "Try again. Server is not responding.",
+                                    LENGTH_LONG).show();
+*/
+                            //        progressDialog.dismiss();
+
+                            Fragment fragment = new ServerNotRespondingFragment();
+                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                                    android.R.anim.fade_out);
+                            fragmentTransaction.replace(R.id.frame, fragment, TAG);
+                            fragmentTransaction.commitAllowingStateLoss();
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    //       progressDialog.dismiss();
+                    Log.d(TAG, t.getMessage());
+
+                }
+            });
+        } else {
+/*            Toast.makeText(getActivity(), "Check Your Internet connection and Try again ",
+                    LENGTH_LONG).show();*/
+            //        progressDialog.dismiss();
+
+            Fragment fragment = new ServerNotRespondingFragment();
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                    android.R.anim.fade_out);
+            fragmentTransaction.replace(R.id.frame, fragment, TAG);
+            fragmentTransaction.commitAllowingStateLoss();
+
         }
     }
 
@@ -669,12 +940,14 @@ public class CategoryFragment extends Fragment {
                         }.getType();
                         silderarraylist = (ArrayList<SiderModel>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
 
-
                         mPager.setAdapter(new SliderAdapter(getActivity(), silderarraylist, getFragmentManager()));
-
                         dotsIndicator.attachViewPager(mPager);
-                        Timer timer = new Timer();
-                        timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);
+
+                        getPopulerService();
+
+
+                        // Timer timer = new Timer();
+                        // timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -716,6 +989,7 @@ public class CategoryFragment extends Fragment {
                         e.printStackTrace();
                     }
 
+                    getPopulerPartners();
 
                 } else {
                     ProjectUtils.showToast(getActivity(), msg);
@@ -772,25 +1046,48 @@ public class CategoryFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (!NetworkManager.isConnectToInternet(getActivity())) {
-            Fragment fragment = new CheckInternetFragment();
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                    android.R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frame, fragment, TAG);
-            fragmentTransaction.commitAllowingStateLoss();
+        if (!load) {
 
-        }
-        else {
-            getVersion();
 
+            if (!NetworkManager.isConnectToInternet(getActivity())) {
+                Fragment fragment = new CheckInternetFragment();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.frame, fragment, TAG);
+                fragmentTransaction.commitAllowingStateLoss();
+
+            } else {
+                getVersion();
+                new Thread() {
+                    public void run() {
+                        try {
+                            getActivity().runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    getProduct();
+
+                                }
+                            });
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }.start();
+
+                setUiAction(view);
+
+
+            }
         }
 
 
     }
 
     public void checkaddress() {
-
 
         Retrofit retrofit = apiClient.getClient();
         apiRest api = retrofit.create(apiRest.class);
@@ -829,8 +1126,19 @@ public class CategoryFragment extends Fragment {
 
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Try again. Server is not responding.",
-                                LENGTH_LONG).show();
+/*                        Toast.makeText(getActivity(), "Try again. Server is not responding.",
+                                LENGTH_LONG).show();*/
+
+                        //                 progressDialog.dismiss();
+
+
+                        Fragment fragment = new ServerNotRespondingFragment();
+                        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                                android.R.anim.fade_out);
+                        fragmentTransaction.replace(R.id.frame, fragment, TAG);
+                        fragmentTransaction.commitAllowingStateLoss();
+
 
                     }
 

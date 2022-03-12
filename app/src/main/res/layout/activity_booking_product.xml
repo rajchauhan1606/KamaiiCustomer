@@ -13,7 +13,7 @@
         <RelativeLayout
             android:id="@+id/action_bar_menus"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
+            android:layout_height="?android:actionBarSize"
             android:background="@color/white"
             android:orientation="horizontal"
             android:visibility="visible">
@@ -43,7 +43,6 @@
                     android:layout_marginStart="5dp"
                     android:layout_toEndOf="@id/img_back_cash"
                     android:gravity="center_vertical"
-                    android:paddingTop="3dp"
                     android:text="@string/booking_info"
                     android:textColor="@color/dark_blue_color"
                     android:textSize="17sp"
@@ -54,12 +53,14 @@
         </RelativeLayout>
 
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/booking_product_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/laypayment"
             android:layout_below="@+id/action_bar_menus"
-            android:nestedScrollingEnabled="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:overScrollMode="never"
             android:scrollbars="none">
 
@@ -75,6 +76,7 @@
                     android:id="@+id/RRsncbarrr"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
+                    android:nestedScrollingEnabled="false"
                     android:visibility="gone"></RelativeLayout>
 
                 <LinearLayout
@@ -105,7 +107,6 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="@dimen/dimen_5dp"
                             android:layout_marginRight="10dp"
-
                             android:background="@drawable/ic_paper_cut_top" />
 
                         <androidx.cardview.widget.CardView
@@ -228,65 +229,73 @@
 
 
                                     <LinearLayout
-                                        android:id="@+id/llDate"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/llerrormsg"
-                                        android:layout_marginTop="5dp"
-                                        android:layout_marginBottom="@dimen/dimen_10dp"
-                                        android:orientation="vertical"
-                                        android:visibility="gone">
-
-                                        <com.kamaii.customer.utils.CustomTextView
-                                            android:id="@+id/booking_date"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:paddingLeft="5dp"
-                                            android:text="@string/booking_date"
-                                            android:textColor="#173143"
-                                            android:textSize="14sp" />
-
-                                        <com.kamaii.customer.utils.CustomTextViewBold
-                                            android:id="@+id/tvBookingDate"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="5dp"
-                                            android:drawableRight="@drawable/ic_calendar"
-                                            android:enabled="false"
-                                            android:hint="@string/tap_to_select_date"
-                                            android:paddingLeft="5dp"
-                                            android:paddingTop="5dp"
-                                            android:paddingRight="5dp"
-                                            android:paddingBottom="5dp"
-                                            android:textColor="#173143"
-                                            android:textSize="16sp" />
-
-                                        <View
-                                            android:layout_width="match_parent"
-                                            android:layout_height="1dp"
-                                            android:layout_marginLeft="@dimen/dimen_5dp"
-                                            android:layout_marginRight="5dp"
-                                            android:background="#d8d8d8" />
-                                    </LinearLayout>
-
-
-                                    <LinearLayout
                                         android:id="@+id/llTime"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_below="@+id/llDate"
                                         android:orientation="vertical">
 
-                                        <com.kamaii.customer.utils.CustomTextView
-                                            android:id="@+id/address"
-                                            android:layout_width="wrap_content"
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_alignParentLeft="true"
-                                            android:padding="5dp"
-                                            android:singleLine="true"
-                                            android:text="@string/booking_address"
-                                            android:textColor="#173143"
-                                            android:textSize="14sp" />
+                                            android:layout_marginBottom="@dimen/dimen_5dp">
+
+                                            <LinearLayout
+                                                android:id="@+id/laychat123"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_marginRight="5dp"
+                                                android:layout_toLeftOf="@+id/filter_layout"
+                                                android:background="@drawable/chat_background"
+                                                android:gravity="center_vertical"
+                                                android:orientation="horizontal"
+                                                android:paddingLeft="7dp"
+                                                android:paddingRight="7dp">
+
+
+                                                <ImageView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="@dimen/dimen_20dp"
+                                                    android:contentDescription="@string/webknight_infosystem"
+                                                    android:src="@drawable/ic_chat" />
+
+                                                <com.kamaii.customer.utils.CustomTextViewBold
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:gravity="center"
+                                                    android:padding="7dp"
+                                                    android:singleLine="true"
+                                                    android:text="Need Help?"
+                                                    android:textAlignment="center"
+                                                    android:textColor="@color/black"
+                                                    android:textSize="12sp" />
+
+
+                                                <com.kamaii.customer.utils.CustomTextViewBold
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:gravity="center"
+                                                    android:singleLine="true"
+                                                    android:text=""
+                                                    android:textColor="@color/white"
+                                                    android:textSize="16sp" />
+
+                                            </LinearLayout>
+
+
+                                            <com.kamaii.customer.utils.CustomTextView
+                                                android:id="@+id/address"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentLeft="true"
+                                                android:padding="5dp"
+                                                android:singleLine="true"
+                                                android:text="@string/booking_address"
+                                                android:textColor="#173143"
+                                                android:textSize="14sp" />
+
+                                        </RelativeLayout>
 
                                         <LinearLayout
                                             android:id="@+id/customAddress"
@@ -422,6 +431,49 @@
 
                                     </LinearLayout>
 
+                                    <LinearLayout
+                                        android:id="@+id/llDate"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/llTime"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginBottom="@dimen/dimen_10dp"
+                                        android:visibility="gone"
+                                        android:orientation="vertical">
+
+                                        <com.kamaii.customer.utils.CustomTextView
+                                            android:id="@+id/booking_date"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:paddingLeft="5dp"
+                                            android:text="@string/booking_date"
+                                            android:textColor="#173143"
+                                            android:textSize="14sp" />
+
+                                        <com.kamaii.customer.utils.CustomTextViewBold
+                                            android:id="@+id/tvBookingDate"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:drawableRight="@drawable/ic_calendar"
+                                            android:enabled="false"
+                                            android:hint="@string/tap_to_select_date"
+                                            android:paddingLeft="5dp"
+                                            android:paddingTop="5dp"
+                                            android:paddingRight="5dp"
+                                            android:paddingBottom="5dp"
+                                            android:textColor="@color/green_text_color"
+                                            android:textSize="16sp" />
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1dp"
+                                            android:layout_marginLeft="@dimen/dimen_5dp"
+                                            android:layout_marginRight="5dp"
+                                            android:background="#d8d8d8" />
+
+                                    </LinearLayout>
+
 
                                     <LinearLayout
                                         android:id="@+id/laydestination"
@@ -525,12 +577,13 @@
                             android:visibility="gone"></View>
 
 
-                        <androidx.cardview.widget.CardView
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="@dimen/dimen_10dp"
                             android:layout_marginRight="10dp"
+                            android:background="@color/white"
                             card_view:cardBackgroundColor="@color/white"
                             card_view:cardCornerRadius="5dp"
                             card_view:cardElevation="0dp">
@@ -547,19 +600,113 @@
 
                             </androidx.recyclerview.widget.RecyclerView>
 
-                            <com.kamaii.customer.utils.ExpandableHeightGridView
-                                android:id="@+id/rv_cart2"
+                            <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="@dimen/dimen_5dp"
-                                android:paddingTop="@dimen/dimen_5dp"
-                                android:paddingRight="@dimen/dimen_5dp"
-                                android:scrollbars="none"
-                                tools:listitem="@layout/adapter_services_cart">
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
 
-                            </com.kamaii.customer.utils.ExpandableHeightGridView>
 
-                        </androidx.cardview.widget.CardView>
+                                <com.kamaii.customer.utils.CustomTextView
+                                    android:id="@+id/s_name_t"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/cooking_instruction_txt"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="10dp"
+                                    android:text="@string/service_provider_name"
+                                    android:textColor="#173143"
+                                    android:textSize="12sp" />
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/vendor_name_txt"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/s_name_t"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginTop="-3dp"
+                                    android:layout_toLeftOf="@+id/laychat123"
+                                    android:ellipsize="end"
+                                    android:paddingLeft="10dp"
+                                    android:text="Kamaii"
+                                    android:textColor="@color/green_text_color"
+                                    android:textSize="18dp" />
+
+                                <com.kamaii.customer.utils.ExpandableHeightGridView
+                                    android:id="@+id/rv_cart2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_below="@+id/vendor_name_txt"
+                                    android:scrollbars="none">
+
+                                </com.kamaii.customer.utils.ExpandableHeightGridView>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/rv_cart2"
+                                    android:layout_marginLeft="@dimen/dimen_10dp"
+                                    android:layout_marginRight="@dimen/dimen_10dp"
+                                    android:orientation="vertical"
+                                    android:paddingBottom="@dimen/dimen_10dp">
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/cooking_instruction_txt"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentTop="true"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_marginEnd="0dp"
+                                        android:paddingTop="10dp"
+                                        android:textColor="@color/dark_blue_color"
+                                        android:textSize="@dimen/text_size_12" />
+
+                                    <RelativeLayout
+                                        android:id="@+id/instruction_relative"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/dimen_10dp"
+                                        android:background="@drawable/curved_5dp_grey_bg"
+                                        android:visibility="gone">
+
+                                        <com.kamaii.customer.utils.CustomEditText
+                                            android:id="@+id/remark"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerVertical="true"
+                                            android:layout_toLeftOf="@+id/instructionclose"
+                                            android:background="@drawable/curved_5dp_grey_bg"
+                                            android:focusable="true"
+                                            android:focusableInTouchMode="true"
+                                            android:paddingLeft="@dimen/dimen_10dp"
+                                            android:paddingTop="@dimen/dimen_10dp"
+                                            android:paddingRight="@dimen/dimen_10dp"
+                                            android:paddingBottom="@dimen/dimen_10dp"
+                                            android:textColor="@color/dark_blue_color"
+                                            android:textSize="12dp" />
+
+                                        <LinearLayout
+                                            android:id="@+id/instructionclose"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:layout_alignParentRight="true"
+                                            android:paddingTop="@dimen/dimen_10dp"
+                                            android:paddingRight="@dimen/dimen_10dp"
+                                            android:paddingBottom="@dimen/dimen_10dp">
+
+                                            <ImageView
+                                                android:layout_width="18dp"
+                                                android:layout_height="18dp"
+                                                android:src="@drawable/ic_close"
+                                                android:tint="#E01E5A" />
+                                        </LinearLayout>
+                                    </RelativeLayout>
+
+                                </LinearLayout>
+
+
+                            </RelativeLayout>
+                        </RelativeLayout>
 
                     </LinearLayout>
 
@@ -737,6 +884,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:layout_marginRight="10dp"
+                    android:focusableInTouchMode="true"
                     android:paddingBottom="@dimen/dimen_5dp"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="@dimen/dimen_5dp"
@@ -922,6 +1070,7 @@
                             android:paddingLeft="15dp"
                             android:paddingRight="15dp"
                             android:textColor="#173143"
+                            android:text=""
                             android:textSize="12dp"
                             android:visibility="gone" />
 
@@ -1019,7 +1168,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/laypayment"

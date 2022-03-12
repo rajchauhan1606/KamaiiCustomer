@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:fitsSystemWindows="true">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/imgback1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/webknight_infosystem"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_baseline_arrow_back_24"
-        app:backgroundTint="@color/white"
-        app:elevation="2dp" />
 
     <LinearLayout
         android:id="@+id/llBack"
@@ -29,8 +21,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/back"
             android:contentDescription="@string/webknight_infosystem"
+            android:src="@drawable/back"
             android:textColor="@color/white" />
 
     </LinearLayout>
@@ -49,94 +41,657 @@
 
     <!--</RelativeLayout>-->
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/track_heading"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingLeft="@dimen/dimen_20dp"
+        android:paddingRight="@dimen/dimen_20dp">
+
+        <ImageView
+            android:id="@+id/imgback1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back_arrow" />
+
+        <com.kamaii.customer.utils.CustomTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/imgback1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dimen_10dp"
+            android:singleLine="true"
+            android:text="Track Your Order"
+            android:textColor="@color/dark_blue_color"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
+    <ScrollView
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_below="@+id/track_heading"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
-
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/relmap"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <fragment
-                    android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:context=".ui.activity.TrackingActivity" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relanimation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <pl.bclogic.pulsator4droid.library.PulsatorLayout
-                    android:id="@+id/pulsator"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    app:pulse_color="@color/background2"
-                    app:pulse_count="4"
-                    app:pulse_duration="4000"
-                    app:pulse_interpolator="Linear"
-                    app:pulse_repeat="0"
-                    app:pulse_startFromScratch="false">
-
-                </pl.bclogic.pulsator4droid.library.PulsatorLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relcancel"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:visibility="gone">
+                android:orientation="vertical">
 
-                <com.kamaii.customer.utils.CustomTextViewBold
+
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="150dp"
-                    android:layout_marginEnd="30dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/Cancel_msg"
-                    android:textColor="@color/red"
-                    android:textSize="20sp" />
+                    android:layout_height="match_parent">
 
-            </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/relmap"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone">
 
-            <RelativeLayout
-                android:id="@+id/rel_sos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_10dp"
-                android:visibility="gone">
+                        <fragment
+                            android:id="@+id/map"
+                            android:name="com.google.android.gms.maps.SupportMapFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            tools:context=".ui.activity.TrackingActivity" />
+                    </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/img_sos"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:contentDescription="@string/webknight_infosystem"
-                    android:src="@drawable/sos"
-                    android:visibility="gone">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                </ImageView>
-            </RelativeLayout>
-            <!-- Adding bottom sheet after main content -->
 
-            <!-- &lt;!&ndash; Bottom Sheet Content &ndash;&gt;
-             <include layout="@layout/layout_tracking_detail_dialog" />-->
-        </FrameLayout>
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="@dimen/dimen_5dp">
 
-    </LinearLayout>
 
-    <include layout="@layout/layout_tracking_detail_dialog" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/text_size_20"
+                                android:paddingTop="10dp"
+                                android:paddingRight="@dimen/text_size_20"
+                                android:paddingBottom="@dimen/text_size_20">
+
+                                <ImageView
+                                    android:id="@+id/first_point"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_track_step_start_green"
+                                    app:layout_constraintBottom_toBottomOf="@+id/first_relative"
+                                    app:layout_constraintEnd_toStartOf="@+id/first_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/first_relative" />
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/first_verticle_line"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_inactive_grey_line"
+                                    app:layout_constraintBottom_toTopOf="@+id/second_point"
+                                    app:layout_constraintEnd_toStartOf="@+id/first_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+
+                                    app:layout_constraintTop_toBottomOf="@+id/first_point" />
+
+                                <ImageView
+                                    android:id="@+id/second_point"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_track_step_start_grey"
+                                    app:layout_constraintBottom_toBottomOf="@+id/second_relative"
+                                    app:layout_constraintEnd_toStartOf="@+id/second_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/second_relative" />
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/second_verticle_line"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_inactive_grey_line"
+                                    app:layout_constraintBottom_toTopOf="@+id/third_point"
+                                    app:layout_constraintEnd_toStartOf="@+id/first_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/second_point" />
+
+                                <ImageView
+                                    android:id="@+id/third_point"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_track_step_start_grey"
+                                    app:layout_constraintBottom_toBottomOf="@+id/third_relative"
+                                    app:layout_constraintEnd_toStartOf="@+id/third_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/third_relative" />
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/third_verticle_line"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_inactive_grey_line"
+                                    app:layout_constraintBottom_toTopOf="@+id/forth_point"
+                                    app:layout_constraintEnd_toStartOf="@+id/first_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/third_point" />
+
+                                <ImageView
+                                    android:id="@+id/forth_point"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_track_step_start_grey"
+                                    app:layout_constraintBottom_toBottomOf="@+id/forth_relative"
+                                    app:layout_constraintEnd_toStartOf="@+id/forth_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/forth_relative" />
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/forth_verticle_line"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_inactive_grey_line"
+                                    app:layout_constraintBottom_toTopOf="@+id/fifth_point"
+                                    app:layout_constraintEnd_toStartOf="@+id/first_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/forth_point" />
+
+                                <ImageView
+                                    android:id="@+id/fifth_point"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_track_step_start_grey"
+                                    app:layout_constraintBottom_toBottomOf="@+id/fifth_relative"
+                                    app:layout_constraintEnd_toStartOf="@+id/fifth_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/fifth_relative" />
+
+                                <com.kamaii.customer.utils.CustomTextViewBold
+                                    android:id="@+id/fifth_verticle_line"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_inactive_grey_line"
+                                    android:visibility="gone"
+                                    app:layout_constraintBottom_toTopOf="@+id/sixth_point"
+                                    app:layout_constraintEnd_toStartOf="@+id/first_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/fifth_point" />
+
+                                <ImageView
+                                    android:id="@+id/sixth_point"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_track_step_start_grey"
+                                    android:visibility="gone"
+                                    app:layout_constraintBottom_toBottomOf="@+id/sixth_relative"
+                                    app:layout_constraintEnd_toStartOf="@+id/sixth_relative"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/sixth_relative" />
+
+
+                                <RelativeLayout
+                                    android:id="@+id/first_relative"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/dimen_30dp"
+                                    android:background="@drawable/stepview_step_box_bg"
+                                    android:padding="@dimen/dimen_10dp"
+                                    app:layout_constraintBottom_toTopOf="@+id/second_relative"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="@id/first_point">
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/lrder_status_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Order Placed"
+                                        android:textColor="@color/dark_blue_color"
+                                        android:textSize="@dimen/text_size_16" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/first_step_subtext"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/lrder_status_txt"
+                                        android:ellipsize="end"
+                                        android:singleLine="true"
+                                        android:textSize="12dp" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/status_note"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginTop="-5dp"
+                                        android:text="01:29 PM,22 April, 2021"
+                                        android:textColor="@color/yellow_color"
+                                        android:textSize="12dp"
+                                        android:visibility="gone" />
+
+                                    <ImageView
+                                        android:id="@+id/first_step_done_img"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/ic_dark_green_check_svg"
+                                        android:visibility="gone" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/second_relative"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/first_relative"
+                                    android:layout_marginLeft="30dp"
+
+                                    android:layout_marginTop="20dp"
+                                    android:background="@drawable/stepview_step_box_bg"
+                                    android:padding="@dimen/dimen_10dp"
+                                    app:layout_constraintBottom_toTopOf="@+id/third_relative"
+                                    app:layout_constraintEnd_toEndOf="parent"
+
+                                    app:layout_constraintStart_toStartOf="@id/second_point"
+                                    app:layout_constraintTop_toBottomOf="@+id/first_relative">
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/order_status_2_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Order Accepted"
+                                        android:textColor="@color/dark_blue_color"
+                                        android:textSize="@dimen/text_size_16" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/second_step_subtext"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/order_status_2_txt"
+                                        android:ellipsize="end"
+                                        android:singleLine="true"
+                                        android:textSize="12dp" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/status_2_note"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginTop="-5dp"
+                                        android:text="01:29 PM,22 April, 2021"
+                                        android:textColor="@color/yellow_color"
+                                        android:textSize="12dp"
+                                        android:visibility="gone" />
+
+                                    <ImageView
+                                        android:id="@+id/second_step_done_img"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/ic_dark_green_check_svg"
+                                        android:visibility="gone" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/third_relative"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/second_relative"
+                                    android:layout_marginLeft="@dimen/dimen_30dp"
+
+                                    android:layout_marginTop="20dp"
+                                    android:background="@drawable/stepview_step_box_bg"
+                                    android:padding="@dimen/dimen_10dp"
+                                    app:layout_constraintBottom_toTopOf="@+id/forth_relative"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="@id/third_point"
+                                    app:layout_constraintTop_toBottomOf="@+id/second_relative">
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/order_status_3_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Preparation Order"
+                                        android:textColor="@color/dark_blue_color"
+                                        android:textSize="@dimen/text_size_16" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/third_step_subtext"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/order_status_3_txt"
+                                        android:ellipsize="end"
+                                        android:singleLine="true"
+                                        android:textSize="12dp" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/status_3_note"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginTop="-5dp"
+                                        android:text="01:29 PM,22 April, 2021"
+                                        android:textColor="@color/yellow_color"
+                                        android:textSize="12dp"
+                                        android:visibility="gone" />
+
+                                    <ImageView
+                                        android:id="@+id/third_step_done_img"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/ic_dark_green_check_svg"
+                                        android:visibility="gone" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/forth_relative"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/third_relative"
+                                    android:layout_marginLeft="@dimen/dimen_30dp"
+                                    android:layout_marginTop="20dp"
+
+                                    android:background="@drawable/stepview_step_box_bg"
+                                    android:padding="@dimen/dimen_10dp"
+                                    app:layout_constraintBottom_toTopOf="@+id/fifth_relative"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="@id/forth_point"
+                                    app:layout_constraintTop_toBottomOf="@+id/third_relative">
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/order_status_4_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Accepted Rider"
+                                        android:textColor="@color/dark_blue_color"
+                                        android:textSize="@dimen/text_size_16" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/forth_step_subtext"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/order_status_4_txt"
+                                        android:ellipsize="end"
+                                        android:singleLine="true"
+                                        android:textSize="12dp" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/status_4_note"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginTop="-5dp"
+                                        android:text="01:29 PM,22 April, 2021"
+                                        android:textColor="@color/yellow_color"
+                                        android:textSize="12dp"
+                                        android:visibility="gone" />
+
+                                    <ImageView
+                                        android:id="@+id/forth_step_done_img"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/ic_dark_green_check_svg"
+                                        android:visibility="gone" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/fifth_relative"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/forth_relative"
+                                    android:layout_marginLeft="@dimen/dimen_30dp"
+                                    android:layout_marginTop="20dp"
+
+                                    android:background="@drawable/stepview_step_box_bg"
+                                    android:padding="@dimen/dimen_10dp"
+                                    app:layout_constraintBottom_toTopOf="@+id/sixth_relative"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="@id/fifth_point"
+                                    app:layout_constraintTop_toBottomOf="@+id/forth_relative">
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/order_status_5_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Rider On The Way"
+                                        android:textColor="@color/dark_blue_color"
+                                        android:textSize="@dimen/text_size_16" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/fifth_step_subtext"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/order_status_5_txt"
+                                        android:ellipsize="end"
+                                        android:singleLine="true"
+                                        android:textSize="12dp" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/status_5_note"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginTop="-5dp"
+                                        android:text="01:29 PM,22 April, 2021"
+                                        android:textColor="@color/yellow_color"
+                                        android:textSize="12dp"
+                                        android:visibility="gone" />
+
+                                    <ImageView
+                                        android:id="@+id/fifth_step_done_img"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/ic_dark_green_check_svg"
+                                        android:visibility="gone" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/sixth_relative"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/fifth_relative"
+                                    android:layout_marginLeft="@dimen/dimen_30dp"
+                                    android:layout_marginTop="20dp"
+                                    android:visibility="gone"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="@id/sixth_point"
+                                    app:layout_constraintTop_toBottomOf="@+id/fifth_relative">
+
+                                    <SeekBar
+                                        android:id="@+id/progressbar_vespa"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_toLeftOf="@+id/progress_end"
+                                        android:progressDrawable="@color/white"
+                                        android:thumb="@drawable/ic_track_bike"
+                                        android:layout_marginLeft="@dimen/size_24"/>
+
+                                    <ImageView
+                                        android:id="@+id/progress_end"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:src="@drawable/black_marker"
+                                        app:tint="@color/black" />
+
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/progressbar_vespa">
+
+                                        <ImageView
+                                            android:id="@+id/vespa_start_point"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:background="@drawable/ic_order_track_bike_green" />
+
+                                        <com.kamaii.customer.utils.CustomTextViewBold
+                                            android:id="@+id/vespa_track"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="2dp"
+                                            android:layout_centerVertical="true"
+                                            android:layout_toLeftOf="@+id/vespa_end_point"
+                                            android:layout_toRightOf="@+id/vespa_start_point"
+                                            android:background="@color/gray_wallet" />
+
+
+                                        <ImageView
+                                            android:id="@+id/vespa_end_point"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentRight="true"
+                                            android:background="@drawable/ic_order_track_bike_black" />
+
+                                    </RelativeLayout>
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/seven_relative"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/fifth_relative"
+                                    android:layout_marginLeft="@dimen/dimen_30dp"
+                                    android:background="@drawable/stepview_step_box_bg"
+                                    android:padding="@dimen/dimen_10dp"
+                                    android:visibility="gone"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="@id/sixth_point"
+                                    app:layout_constraintTop_toBottomOf="@+id/fifth_relative">
+
+                                    <com.kamaii.customer.utils.CustomTextViewBold
+                                        android:id="@+id/order_status_6_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Order Complete"
+                                        android:textColor="@color/dark_blue_color"
+                                        android:textSize="@dimen/text_size_16" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/sixth_step_subtext"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/order_status_6_txt"
+                                        android:ellipsize="end"
+                                        android:singleLine="true"
+                                        android:textSize="12dp" />
+
+                                    <com.kamaii.customer.utils.CustomTextView
+                                        android:id="@+id/status_6_note"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginTop="-5dp"
+                                        android:text="01:29 PM,22 April, 2021"
+                                        android:textColor="@color/yellow_color"
+                                        android:textSize="12dp"
+                                        android:visibility="gone" />
+
+                                    <ImageView
+                                        android:id="@+id/sixth_step_done_img"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/ic_dark_green_check_svg"
+                                        android:visibility="gone" />
+                                </RelativeLayout>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relanimation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <pl.bclogic.pulsator4droid.library.PulsatorLayout
+                            android:id="@+id/pulsator"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            app:pulse_color="@color/background2"
+                            app:pulse_count="4"
+                            app:pulse_duration="4000"
+                            app:pulse_interpolator="Linear"
+                            app:pulse_repeat="0"
+                            app:pulse_startFromScratch="false">
+
+                        </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relcancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:visibility="gone">
+
+                        <com.kamaii.customer.utils.CustomTextViewBold
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="150dp"
+                            android:layout_marginEnd="30dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/Cancel_msg"
+                            android:textColor="@color/red"
+                            android:textSize="20sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rel_sos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_10dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/img_sos"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:contentDescription="@string/webknight_infosystem"
+                            android:src="@drawable/sos"
+                            android:visibility="gone">
+
+                        </ImageView>
+                    </RelativeLayout>
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <include
+                android:id="@+id/included_layout"
+                layout="@layout/layout_tracking_detail_dialog"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sixth_relative" />
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

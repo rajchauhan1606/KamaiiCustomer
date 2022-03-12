@@ -1,5 +1,6 @@
 package com.kamaii.customer.ui.activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -36,6 +37,8 @@ import com.paykun.sdk.PaykunApiCall;
 import com.paykun.sdk.eventbus.Events;
 import com.paykun.sdk.eventbus.GlobalBus;
 import com.paykun.sdk.helper.PaykunHelper;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -45,7 +48,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
-public class AddMoney extends AppCompatActivity implements View.OnClickListener {
+public class AddMoney extends AppCompatActivity implements View.OnClickListener, PaymentResultListener {
 
     private String TAG = AddMoney.class.getSimpleName();
     private Context mContext;
@@ -57,6 +60,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
     private UserDTO userDTO;
     private String amt = "";
     private String currency = "";
+    private String wallet_rate = "";
     private HashMap<String, String> parmsGetWallet = new HashMap<>();
 
     private Dialog dialog;
@@ -102,8 +106,9 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
         if (getIntent().hasExtra(Consts.AMOUNT)) {
             amt = getIntent().getStringExtra(Consts.AMOUNT);
             currency = getIntent().getStringExtra(Consts.CURRENCY);
-
+            wallet_rate = getIntent().getStringExtra("wallet_rate");
             binding.tvWallet.setText(currency + " " + amt);
+            binding.txtptypemsssg.setText(wallet_rate + " Add Money Extra Charges");
         }
 
         binding.cbAdd.setOnClickListener(this);
@@ -177,15 +182,45 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
                     if (NetworkManager.isConnectToInternet(mContext)) {
                         parmas.put(Consts.AMOUNT, ProjectUtils.getEditTextValue(binding.etAddMoney));
 
-                        double extraadd = (Double.parseDouble(ProjectUtils.getEditTextValue(binding.etAddMoney)) * 2) / 100;
+                        double extraadd = (Double.parseDouble(ProjectUtils.getEditTextValue(binding.etAddMoney)) * Double.parseDouble(wallet_rate)) / 100;
                         double total = Double.parseDouble(ProjectUtils.getEditTextValue(binding.etAddMoney)) + extraadd;
 
 
                         DecimalFormat newFormat = new DecimalFormat("####");
                         int mainprice = Integer.valueOf(newFormat.format(total));
 
+                        Checkout checkout = new Checkout();
+                        // with testing_key  checkout.setKeyID("rzp_test_cN1FC6C2mOYSwF");
+                        checkout.setKeyID("rzp_live_WxwhNFQFzmlsOU");
+                        checkout.setImage(R.drawable.logo);
+                        final Activity activity = this;
+                        try {
+                            JSONObject options = new JSONObject();
 
-                        JSONObject object = new JSONObject();
+                            options.put("name", "Kamaii Services Pvt Ltd");
+/*
+                            options.put("description", "Reference No. #123456");
+*/
+                            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
+                       //     options.put("order_id", "order_DBJOWzybf0sJbb");//from response of step 3.
+                            options.put("theme.color", "#3399cc");
+                            options.put("currency", "INR");
+                            options.put("amount", String.valueOf(mainprice * 100));//pass amount in currency subunits
+                            options.put("prefill.email", userDTO.getEmail_id());
+                            options.put("prefill.contact", userDTO.getMobile());
+                            JSONObject retryObj = new JSONObject();
+                            retryObj.put("enabled", true);
+                            retryObj.put("max_count", 4);
+                            options.put("retry", retryObj);
+
+                            checkout.open(activity, options);
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error in starting Razorpay Checkout", e);
+                        }
+
+
+                       /* JSONObject object = new JSONObject();
                         try {
                             object.put("merchant_id", Consts.merchantIdLIVE);
                             object.put("access_token", Consts.accessTokenLIVE);
@@ -199,7 +234,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        new PaykunApiCall.Builder(AddMoney.this).sendJsonObject(object);
+                        new PaykunApiCall.Builder(AddMoney.this).sendJsonObject(object);*/
                         getWallet();
 
                     } else {
@@ -356,4 +391,16 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
     }
 
 
+    @Override
+    public void onPaymentSuccess(String s) {
+        addMoney();
+        Log.e("RAZORPAY", " SUCCESS " + s);
+
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        Log.e("RAZORPAY", " FAILURE " + s);
+
+    }
 }

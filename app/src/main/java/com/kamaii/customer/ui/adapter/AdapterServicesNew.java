@@ -292,6 +292,7 @@ public class AdapterServicesNew extends BaseAdapter {
                 });
             }
         });
+
         img_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -7,14 +7,18 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,10 +30,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -40,7 +46,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -86,6 +104,8 @@ import com.paykun.sdk.PaykunApiCall;
 import com.paykun.sdk.eventbus.Events;
 import com.paykun.sdk.eventbus.GlobalBus;
 import com.paykun.sdk.helper.PaykunHelper;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -99,6 +119,7 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.security.Permission;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,15 +170,19 @@ import static com.kamaii.customer.interfacess.Consts.TRACK_SUB_LEVEL_ID;
 import static com.kamaii.customer.interfacess.Consts.TRACK_VEHICLE_NUMBER;
 
 
-public class BookingProduct extends AppCompatActivity implements OnAddressSelected {
+public class BookingProduct extends AppCompatActivity implements OnAddressSelected,
+        GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener, PaymentResultListener {
     private ArrayList<ProductDTO> productDTOListtemp;
     private JsonArray arrayprice;
+    private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
 
     String Tag = BookingProduct.class.getSimpleName();
     private ActivityBookingProductBinding binding;
     AddressBottomSheetAdapter dialogadapter;
     private Context mContext;
     private ArrayList<ProductDTO> productDTOList;
+    private GoogleApiClient googleApiClient;
+    boolean map_flag = false;
 
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
@@ -171,7 +196,7 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     private String TAG = BookingProduct.class.getSimpleName();
     private JsonArray array, arrayp, arrayquantitydays, arrayquantityvalue;
     private String artist_id = "", location_status = "1", changes_price = "";
-    private int screen_tag = 0;
+    private int screen_tag = 2;
     private RadioGroup radiogroup;
     List<String> paymentList;
     RadioButton rb;
@@ -188,6 +213,7 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     int radiopos = 1;
     RadioButton radioslocation, radioylocation;
     private HashMap<String, String> parmsshipping = new HashMap<>();
+    private Map<String, String> parmspaymentconfirm = new HashMap<>();
     ShippingDTO shippingDTO;
     private ArrayList<ShippingDTO> shippingDTOArrayList = new ArrayList<>();
     LinearLayout llerrormsg;
@@ -219,10 +245,12 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     HashMap<String, String> cartHashmap;
     AlertDialog.Builder builder;
     AlertDialog dialog;
+    private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
+
     public CustomTextViewBold spinner_txt, order_now_text;
     public RelativeLayout service_charge_relative;
     CustomTextView booking_date, address;
-    CustomTextViewBold tvHeader, order_preparation_note;
+    CustomTextViewBold tvHeader, order_preparation_note, vendor_name_txt;
     CustomTextView order_shipping_note;
     RadioGroup addressradioGroup;
     String address_radio_txt = "Home";
@@ -231,10 +259,10 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     private static final String API_KEY = "AIzaSyCIpO2XuPQr8HDOg92EU0pRkP0G9rKvFoY";
     BottomSheetDialog addressBottomSheet;
     CustomTextView no_rider_found_txt, change_address_btn;
-    CustomTextViewBold address_submit;
-    CustomEditText location_etx, house_no_etx, society_name_etx;
+    CustomTextViewBold address_submit, cooking_instruction_txt;
+    CustomEditText location_etx, house_no_etx, society_name_etx, remark;
     String house_no_str = "", society_name_str = "", street_address_str = "";
-    LinearLayout customAddress;
+    LinearLayout customAddress, laychat123;
     LinearLayout address_lay_dest_location;
     RelativeLayout address_relative;
     int address_adapter_counter = 0;
@@ -244,6 +272,8 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     int current_stage = 0;
     ProgressDialog progressDialog;
     private String address_id = "";
+    private String wallet_rate = "";
+    private String wallet_rate_txt_flag = "";
     private HashMap<String, String> paramsBookingOp4 = new HashMap<>();
     int count = 0;
     //   boolean back_btn_flag = false;
@@ -252,29 +282,43 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     private RecyclerView rvSuggestion;
     CartSuggestionAdapter suggestionAdapter;
     boolean from_repeatorder = false;
+    boolean from_cart = false;
+    LocationManager locationManager;
+    Location mylocation;
+    double live_latitude = 0.0;
+    double live_longitude = 0.0;
+    boolean live_address_str = true;
+    private String cash_rate = "";
+    private String wallet_rate2 = "";
+
+    Date date1;
+    boolean load = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_booking_product);
         mContext = BookingProduct.this;
         firebase = this.getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        Places.initialize(getApplicationContext(), API_KEY);
         slot_note = findViewById(R.id.slot_note);
+        cooking_instruction_txt = findViewById(R.id.cooking_instruction_txt);
         spinner_txt = findViewById(R.id.spinner_txt);
+        remark = findViewById(R.id.remark);
         suggestionLying = findViewById(R.id.suggestionLying);
         prefrence = SharedPrefrence.getInstance(mContext);
         device_token = prefrence.getValue(Consts.DEVICE_TOKEN);
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
         sdf1 = new SimpleDateFormat(Consts.DATE_FORMATE_SERVER, Locale.ENGLISH);
+        Checkout.preload(getApplicationContext());
+
         timeZone = new SimpleDateFormat(Consts.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
-        date = new Date();
+
         service_charge_relative = findViewById(R.id.service_charge_relative);
         parmsGetWallet.put(Consts.USER_ID, userDTO.getUser_id());
-        paramsBookingOp.put(Consts.DATE_STRING, sdf1.format(date).toString().toUpperCase());
-        paramsBookingOp.put(Consts.TIMEZONE, timeZone.format(date));
         order_shipping_note = findViewById(R.id.order_shipping_note);
         order_preparation_note = findViewById(R.id.order_preparation_note);
+        vendor_name_txt = findViewById(R.id.vendor_name_txt);
         radiogroup = findViewById(R.id.radiogroup);
         rv_cart = findViewById(R.id.rv_cart);
         rv_cart2 = findViewById(R.id.rv_cart2);
@@ -301,296 +345,42 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
         Typeface font2 = Typeface.createFromAsset(BookingProduct.this.getAssets(), "Poppins-Regular.otf");
         binding.houseNoEtx.setTypeface(font2);
         binding.societNameEtx.setTypeface(font2);
-        getWallet();
-        order_shipping_note.setVisibility(View.VISIBLE);
+        addressBottomSheet = new BottomSheetDialog(this);
+        //addressBottomSheet.setCancelable(false);
+        //   addressBottomSheet.setCancelable(false);
+        addressBottomSheet.setContentView(R.layout.activity_address_bottom_dialog);
+        change_address_btn = addressBottomSheet.findViewById(R.id.change_address_btn);
+        customAddress = addressBottomSheet.findViewById(R.id.customAddress);
+        address_lay_dest_location = addressBottomSheet.findViewById(R.id.address_lay_dest_location);
+        location_etx = addressBottomSheet.findViewById(R.id.location_etx);
+        house_no_etx = addressBottomSheet.findViewById(R.id.house_no_etx);
+        society_name_etx = addressBottomSheet.findViewById(R.id.society_name_etx);
+        address_submit = addressBottomSheet.findViewById(R.id.address_submit);
 
-        binding.paymentLinear.setOnClickListener(new View.OnClickListener() {
+        cooking_instruction_txt.setText(Html.fromHtml("<u>Add Cooking instructions (Optional)</u>"));
+
+        cooking_instruction_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getPaymentDialog(spinner_txt.getText().toString());
+                binding.cookingInstructionTxt.setVisibility(View.GONE);
+                binding.remark.setHint(Html.fromHtml("Add Cooking instructions"));
+                binding.instructionRelative.setVisibility(View.VISIBLE);
             }
         });
-        if (SubCategoryActivity.categoryid.equalsIgnoreCase("1")) {//Loan
-            order_now_text.setText("Apply Now ");
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("2")) { //Credit Card
-            order_now_text.setText("Apply Now ");
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("82")) { //Grocery-Kirana
-            order_now_text.setText("Order Now ");
 
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("65")) { //Insaunence
-            order_now_text.setText("Buy Now ");
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("79")) { //Furniture
-
-            order_now_text.setText("Order Now ");
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("87")) { // Mobile
-
-            order_now_text.setText("Order Now ");
-
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("95")) { //Tailor
-
-            order_now_text.setText("Order Now ");
-
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("67")) { //Job
-            order_now_text.setText("Apply Now ");
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("91")) { //Dry-Snack
-
-            order_now_text.setText("Order Now ");
-
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("85")) { //Cab
-            order_now_text.setText("Book Now ");
-            booking_date.setText("Booking Date");
-            address.setText("Booking Address");
-            tvHeader.setText("My Booking Summary");
-        } else {
-            order_now_text.setText("Order Now ");
-            booking_date.setText("Order Date");
-            address.setText("Delivery Order");
-            tvHeader.setText("My Order Summary");
-        }
-
-        tverror = findViewById(R.id.tverror);
-        tverror1 = findViewById(R.id.tverror1);
-
-        getpaymenttype();
-
-        gridLayoutManager = new GridLayoutManager(mContext, 1);
-        if (getIntent().hasExtra(Consts.ARTIST_DTO)) {
-            artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Consts.ARTIST_DTO);
-            artist_id = getIntent().getStringExtra(Consts.ARTIST_ID);
-            changes_price = getIntent().getStringExtra(Consts.CHANGE_PRICE);
-            cartHashmap = (HashMap<String, String>) getIntent().getSerializableExtra("cartHashmap");
-            screen_tag = getIntent().getIntExtra(Consts.SCREEN_TAG, 0);
-            if (screen_tag == 2) {
-                Bundle b = getIntent().getExtras();
-                cartarraylist = (ArrayList<ProductDTO>) b.getSerializable(Consts.CARTDATA);
-                if (SubCategoryActivity.categoryid.equalsIgnoreCase("85") || SubCategoryActivity.categoryid.equalsIgnoreCase("74")) {//Loan
-                    rv_cart2.setVisibility(View.GONE);
-                    /*Bundle b = getIntent().getExtras();
-                    cartarraylist = (ArrayList<ProductDTO>) b.getSerializable(Consts.CARTDATA);*/
-                    setdisplay(true);
-                    bookArtist2("1");
-                } else {
-                    rv_cart.setVisibility(View.GONE);
-                    /*Bundle b = getIntent().getExtras();
-                    cartarraylist = (ArrayList<ProductDTO>) b.getSerializable(Consts.CARTDATA);*/
-                    setdisplay(true);
-                    getArtist();
-                }
-            }
-            if (checkarss(ViewAddressActivity.catid)) {
-                if (!ViewAddressActivity.mainkm.equalsIgnoreCase("")) {
-                    if (ViewAddressActivity.sub_category_idd.equalsIgnoreCase("242")) {
-                        binding.tvAddress.setEnabled(false);
-                        laydestination.setVisibility(View.GONE);
-                        getsourceaddress();
-                    } else {
-                        binding.tvAddress.setEnabled(false);
-                        laydestination.setVisibility(View.VISIBLE);
-                        destaddress = ViewAddressActivity.Destiaddress;
-                        Sourceaddress = ViewAddressActivity.Sourceaddress;
-                        km = ViewAddressActivity.mainkm;
-                        destitime = ViewAddressActivity.destitime;
-                        txtdestinationaddress.setText(destaddress);
-                        binding.tvAddress.setText(Sourceaddress);
-
-                    }
-
-
-                }
-            } else {
-                ViewAddressActivity.startLati = Double.parseDouble(prefrence.getValue(LATITUDE));
-                ViewAddressActivity.startLongi = Double.parseDouble(prefrence.getValue(LONGITUDE));
-                binding.tvAddress.setEnabled(true);
-                binding.tvAddress.setTextColor(getResources().getColor(R.color.pink_text_color));
-                binding.tvAddress.setText(getResources().getString(R.string.tap_to_select_address));
-                getsourceaddress();
-            }
-            totalservicecharge();
-            setUiAction();
-
-        }
-
-        else {
-            Log.e("GET_ARTIST", "123");
-            binding.tvAddress.setText(Html.fromHtml("<font color='#e0215a'>" + getResources().getString(R.string.tap_to_select_address) + "</font>"));
-            from_repeatorder = getIntent().getBooleanExtra("booking_flag",false);
-
-            if (from_repeatorder){
-                screen_tag = 2;
-            }
-            getArtist();
-            setUiAction();
-
-        }
-        getAddress();
-
-        getshipping();
-
-
-        radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @SuppressLint("ResourceType")
+        binding.instructionclose.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                rb = (RadioButton) group.findViewById(checkedId);
-                if (null != rb && checkedId > -1) {
-                    if (rb.getText().toString().equalsIgnoreCase("Takeway")) {
-                        order_shipping_note.setVisibility(View.GONE);
-                        error = 0;
-                        llerrormsg.setVisibility(View.GONE);
-                        binding.llTime.setVisibility(View.VISIBLE);
-                        binding.llDate.setVisibility(View.VISIBLE);
-                        binding.serviceChargeRelative.setVisibility(View.GONE);
-                        binding.subtotalRelative.setVisibility(View.GONE);
-                        for (int i = 0; i < shippingDTOArrayList.size(); i++) {
-                            if (shippingDTOArrayList.get(i).getSub_cat_id().equalsIgnoreCase(ViewAddressActivity.sub_category_idd)) {
+            public void onClick(View v) {
 
-                                if (shippingDTOArrayList.get(i).getMy_location().equalsIgnoreCase("0")) {
-                                    error = 0;
-                                    llerrormsg.setVisibility(View.VISIBLE);
-                                    binding.llTime.setVisibility(View.GONE);
-                                    binding.laydestination.setVisibility(View.GONE);
-                                    binding.llDate.setVisibility(View.GONE);
-                                    tverror.setText("Service Provider Location this time not available so please choose My Location");
-                                }
-                            }
-                        }
-
-                        radioslocation.setBackground(getResources().getDrawable(R.drawable.radio_btn_selected));
-                        radioylocation.setBackground(getResources().getDrawable(R.drawable.linear_background_gray));
-                        radiopos = 0;
-
-                        if (SubCategoryActivity.categoryid.equalsIgnoreCase("85") || SubCategoryActivity.categoryid.equalsIgnoreCase("74")) {//Loan
-                            total();
-                        } else {
-                            binding.tvPrice.setText(String.valueOf(sub_totaln));
-                            binding.totalBtnTxt.setText(Html.fromHtml("&#x20B9;" + sub_totaln));
-                            findViewById(R.id.service_charge_relative).setVisibility(View.GONE);
-                        }
-                        location_status = "0";
-
-                        setdisplay(false);
-
-                        binding.tvAddress.setEnabled(false);
-
-                        binding.tvAddress.setText(Html.fromHtml("<font color='#e0215a'>" + getResources().getString(R.string.tap_to_select_address) + "</font>"));
-                        getsourceaddress();
-
-                    } else {
-                        error = 0;
-                        order_shipping_note.setVisibility(View.VISIBLE);
-                        llerrormsg.setVisibility(View.GONE);
-                        binding.llTime.setVisibility(View.VISIBLE);
-                        binding.llDate.setVisibility(View.VISIBLE);
-
-                        if (SubCategoryActivity.categoryid.equalsIgnoreCase("85") || SubCategoryActivity.categoryid.equalsIgnoreCase("74")) {//Loan
-                            bookArtist2("1");
-                        } else {
-                            getArtist();
-                        }
-
-                        binding.serviceChargeRelative.setVisibility(View.VISIBLE);
-
-                        binding.totalDiscountRelative.setVisibility(View.VISIBLE);
-                        binding.subtotalRelative.setVisibility(View.VISIBLE);
-                        for (int i = 0; i < shippingDTOArrayList.size(); i++) {
-                            if (shippingDTOArrayList.get(i).getSub_cat_id().equalsIgnoreCase(ViewAddressActivity.sub_category_idd)) {
-
-                                if (shippingDTOArrayList.get(i).getMy_location().equalsIgnoreCase("0")) {
-                                    error = 0;
-                                }
-                            }
-                        }
-
-                        radioslocation.setBackground(getResources().getDrawable(R.drawable.linear_background_gray));
-                        radioylocation.setBackground(getResources().getDrawable(R.drawable.radio_btn_selected));
-                        location_status = "1";
-                        radiopos = 1;
-
-                        totalservicecharge();
-                        setdisplay(true);
-
-                        if (ViewAddressActivity.sub_category_idd.equals("242") || ViewAddressActivity.sub_category_idd.equals("434")) {
-                            Log.e("rickshaw1", "rickshaw1 called");
-                            binding.serviceTxt.setText("Driver Allowance");
-                        } else if (ViewAddressActivity.sub_category_idd.equals("44") || ViewAddressActivity.sub_category_idd.equals("45")) {
-                            Log.e("rickshaw1", "rickshaw1 called");
-                            binding.serviceTxt.setVisibility(View.GONE);
-                            binding.serviceDigitTxt.setVisibility(View.GONE);
-                        } else if (ViewAddressActivity.sub_category_idd.equals("453")) {
-                            Log.e("rickshaw1", "rickshaw1 called");
-                            binding.serviceTxt.setVisibility(View.GONE);
-                        }
-
-                        if (checkarss(ViewAddressActivity.catid)) {
-                            binding.laydestination.setVisibility(View.VISIBLE);
-                            if (ViewAddressActivity.sub_category_idd.equalsIgnoreCase("242")) {
-                                binding.tvAddress.setEnabled(false);
-                                getsourceaddress();
-                            } else {
-                                binding.tvAddress.setEnabled(false);
-                                binding.tvAddress.setText(Sourceaddress);
-                            }
-
-                        } else {
-                            binding.laydestination.setVisibility(View.GONE);
-                            binding.tvAddress.setEnabled(true);
-                            getsourceaddress();
-                        }
-
-
-                    }
-
-                }
-
+                binding.remark.setText("");
             }
         });
-
-        for (int i = 0; i < cartarraylist.size(); i++) {
-
-            paramsBookingOp2.put("ARTIST_ID" + i, cartarraylist.get(i).getUser_id());
-            paramsBookingOp2.put("PRICE" + i, cartarraylist.get(i).getPrice());
-            paramsBookingOp2.put("SERVICE_ID" + i, cartarraylist.get(i).getId());
-            paramsBookingOp2.put("UID" + i, userDTO.getUser_id());
-            paramsBookingOp2.put("QUANTITYDAYS" + i, cartarraylist.get(i).getQuantitydays());
-
-            if (cartHashmap != null) {
-
-                paramsBookingOp2.put("QUANTITYDAYS" + i, cartHashmap.get(cartarraylist.get(i).getId()));
-                Log.e(TAG, "onCreate: " + cartHashmap.toString() + cartHashmap.get(cartarraylist.get(i).getId()));
-            }
-        }
 
     }
 
     public void suggestionsecond(String subcat) {
 
+        artist_id = artistDetailsDTO.getArtist_id();
         updateList();
         for (ProductDTO productDTO : cartarraylist) {
             if (!productDTOListtemp.contains(productDTO))
@@ -608,6 +398,8 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
         Log.e("SHIVAMO7", b.toString());
         in.putExtra(Consts.ARTIST_DTO, artistDetailsDTO);
         in.putExtra(Consts.ARTIST_ID, artist_id);
+        Log.e("SHIVAMO7_artist_id", artist_id);
+
         in.putExtra(Consts.SCREEN_TAG, 2);
         in.putExtra("cartHashmap", cartHashmap);
         in.putExtra(Consts.CHANGE_PRICE, arrayprice.toString());
@@ -633,15 +425,17 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
         }
     }
 
-
     public void showSuggestionData() {
-        Log.e("Khakhra_tHIRD", "showSuggestionData" + "0");
+        //  Log.e("Khakhra_tHIRD", "showSuggestionData" + "0");
         subcategoryDTOList = new ArrayList<>();
         subcategoryDTOList = artistDetailsDTO.getSubcategory();
+        Log.e("SUGGESTION_RECYCLE", "" + subcategoryDTOList.toString() + " \n" + " onItemListener " + onItemListener.toString() + " " + " artist_id " + artist_id + " " + " artistDetailsDTO.getName() :-" + artistDetailsDTO.getName());
+
         if (subcategoryDTOList.size() > 0) {
             more_items_txt_title.setText("Add below items from " + artistDetailsDTO.getName());
             suggestionLying.setVisibility(View.VISIBLE);
             rvSuggestion.setLayoutManager(new GridLayoutManager(this, 1, RecyclerView.HORIZONTAL, false));
+
             suggestionAdapter = new CartSuggestionAdapter(BookingProduct.this, subcategoryDTOList, onItemListener, artist_id, artistDetailsDTO.getName());
             rvSuggestion.setAdapter(suggestionAdapter);
         } else {
@@ -672,7 +466,7 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
         LinearLayout lll = bottomSheetDialog.findViewById(R.id.lll);
         RecyclerView recyclerView = bottomSheetDialog.findViewById(R.id.payment_dialog_recyclerview);
 
-        PaymentBottomDialogadapter dialogadapter = new PaymentBottomDialogadapter(this, paymentList, amt, paymentselectedtype, paystatus);
+        PaymentBottomDialogadapter dialogadapter = new PaymentBottomDialogadapter(this, paymentList, amt, paymentselectedtype, paystatus, wallet_rate, wallet_rate2, cash_rate, wallet_rate_txt_flag);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(dialogadapter);
 
@@ -680,41 +474,66 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
             @Override
             public void onClick(View v) {
 
-                ptype = dialogadapter.item;
+                artist_id = artistDetailsDTO.getArtist_id();
+                parmspaymentconfirm.put(Consts.USER_ID, userDTO.getUser_id());
+                parmspaymentconfirm.put(Consts.ADDRESS_ID, address_id);
+                parmspaymentconfirm.put(Consts.ARTIST_ID, artist_id);
+                Log.e("ORDER_TIMEBREAK", "" + parmspaymentconfirm.toString());
+                new HttpsRequest(Consts.ORDER_TIMEBREAK_API, parmspaymentconfirm, BookingProduct.this).stringPost(Tag, new Helper() {
+                    @Override
+                    public void backResponse(boolean flag, String msg, JSONObject response) {
+                        //              ProjectUtils.pauseProgressDialog();
+                        //  Log.e("ORDER_TIMEBREAK",""+response.toString());
 
-                if (ptype.equalsIgnoreCase("cash")) {
-                    paystatus = "0";
-                } else if (ptype.equalsIgnoreCase("Kamaii Wallet")) {
-                    paystatus = "1";
-                } else if (ptype.equalsIgnoreCase("Online Payment")) {
-                    paystatus = "2";
-                }
+                        if (flag) {
 
-                if (ptype.equalsIgnoreCase("Kamaii Wallet")) {
-                    if (cab_total > Double.parseDouble(amt)) {
+                            Log.e("ORDER_TIMEBREAK", "" + response.toString());
 
-                        double p = Double.parseDouble(amt);
-                        double total = cab_total - p;
-                        Intent intent = new Intent(BookingProduct.this, AddMoney.class);
-                        intent.putExtra("from_booking", true);
-                        intent.putExtra("diff_amt", total);
-                        startActivity(intent);
-                    } else {
-                        binding.spinnerTxt.setText(ptype);
+                            ptype = dialogadapter.item;
+
+                            if (ptype.equalsIgnoreCase("cash")) {
+                                paystatus = "0";
+                            } else if (ptype.equalsIgnoreCase("Kamaii Wallet")) {
+                                paystatus = "1";
+                            } else if (ptype.equalsIgnoreCase("Online Payment")) {
+                                paystatus = "2";
+                            }
+
+                            if (ptype.equalsIgnoreCase("Kamaii Wallet")) {
+                                if (cab_total > Double.parseDouble(amt)) {
+
+                                    double p = Double.parseDouble(amt);
+                                    double total = cab_total - p;
+                                    Intent intent = new Intent(BookingProduct.this, AddMoney.class);
+                                    intent.putExtra("from_booking", true);
+                                    intent.putExtra("diff_amt", total);
+                                    startActivity(intent);
+                                } else {
+                                    binding.spinnerTxt.setText(ptype);
+                                }
+                            } else {
+                                binding.spinnerTxt.setText(ptype);
+                            }
+
+                            if (current_stage != 0) {
+                                order_now_text.setText("Order Now ");
+                                current_stage = 2;
+                                binding.btnConfirm.setEnabled(true);
+                                binding.btnConfirm.setClickable(true);
+                            }
+
+
+                            bottomSheetDialog.dismiss();
+                        } else {
+
+                            //   Toast.makeText(BookingProduct.this, "else ma gayu", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BookingProduct.this, msg, Toast.LENGTH_SHORT).show();
+                            bottomSheetDialog.dismiss();
+
+                        }
                     }
-                } else {
-                    binding.spinnerTxt.setText(ptype);
-                }
+                });
 
-                if (current_stage != 0) {
-                    order_now_text.setText("Order Now ");
-                    current_stage = 2;
-                    binding.btnConfirm.setEnabled(true);
-                    binding.btnConfirm.setClickable(true);
-                }
-
-
-                bottomSheetDialog.dismiss();
             }
         });
         bottomSheetDialog.show();
@@ -746,8 +565,18 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
                                 artistDetailsDTO = new Gson().fromJson(object.getJSONObject("data").toString(), ArtistDetailsDTO.class);
                                 AdapterServicesNew adapterServices = new AdapterServicesNew(BookingProduct.this, artistDetailsDTO.getProducts(), artistDetailsDTO, setonItemPlusListener);
 
+                                artist_id = artistDetailsDTO.getId();
                                 rv_cart2.setAdapter(adapterServices);
+                                //   rv_cart2.smoothScrollToPosition(artistDetailsDTO.getProducts().size()-1);
                                 rv_cart2.setExpanded(true);
+
+                                //   date = new Date("05/10/2021 08:01 PM");
+                                date = new Date(artistDetailsDTO.getDelivery_date());
+
+                                paramsBookingOp.put(Consts.DATE_STRING, sdf1.format(date).toString().toUpperCase());
+                                paramsBookingOp.put(Consts.TIMEZONE, timeZone.format(date));
+
+                                binding.tvBookingDate.setText(sdf1.format(date).toString().toUpperCase());
 
                                 sub_totaln = artistDetailsDTO.getSubtotal();
                                 maxprice = artistDetailsDTO.getMaxprice();
@@ -767,12 +596,6 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
                                     order_shipping_note.setVisibility(View.GONE);
                                 }
 
-                                if (artistDetailsDTO.getSlotnote().equals("0")) {
-                                    slot_note.setVisibility(View.GONE);
-                                } else {
-                                    slot_note.setVisibility(View.VISIBLE);
-                                    slot_note.setText(Html.fromHtml(artistDetailsDTO.getSlotnote()));
-                                }
 //                                slot_note.setText("Open ⋅ Closes 10:45PM");
 
                                 if (artistDetailsDTO.getSlotnote().equals("0")) {
@@ -781,7 +604,7 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
                                     slot_note.setVisibility(View.VISIBLE);
                                     slot_note.setText(Html.fromHtml(artistDetailsDTO.getSlotnote()));
                                 }
-
+                                vendor_name_txt.setText(artistDetailsDTO.getName());
                                 order_preparation_note.setText(Html.fromHtml(artistDetailsDTO.getPreparationNote()));
                                 if (artistDetailsDTO.getCan_do_order().equalsIgnoreCase("0")) {
                                     binding.btnConfirm.setBackground(getResources().getDrawable(R.drawable.btn_disable_drawable));
@@ -978,7 +801,7 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
 
                                 if (shippingDTOArrayList.get(i).getMy_location().equalsIgnoreCase("0")) {
                                     error = 0;
-                                    tverror.setText("Your location not available so please select Service Provider Location");
+                                    tverror.setText("Your location not available so please select Partner Location");
                                 }
                             }
                             maxprice = shippingDTOArrayList.get(i).getMaxprice();
@@ -1136,7 +959,14 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
             order_now_text.setText("Select Address");
         }
 
-        binding.tvBookingDate.setText(sdf1.format(date).toString().toUpperCase());
+        String sDate1 = "31/12/1998";
+
+        try {
+            date1 = new SimpleDateFormat("EEE, MMM dd, yyyy hh:mm a").parse(sDate1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         if (artistDetailsDTO != null) {
 
@@ -1168,15 +998,49 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
         binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show();
-                binding.btnConfirm.setEnabled(false);
-                binding.btnConfirm.setClickable(false);
-                Log.e("error", " abc 1");
-                paramsBookingOp4.put(Consts.USER_ID, userDTO.getUser_id());
 
-                check_minimum_price();
+                if (Double.parseDouble(binding.subTotalDigits.getText().toString()) < Double.parseDouble(artistDetailsDTO.getMinimum_amount_price())) {
+
+                    Toast.makeText(mContext, "Please order amount minimum " + artistDetailsDTO.getMinimum_amount_price() + " rs", Toast.LENGTH_SHORT).show();
+                    binding.btnConfirm.setEnabled(true);
+                    binding.btnConfirm.setClickable(true);
+                } else {
+
+
+                    //  Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show();
+                    /*binding.btnConfirm.setEnabled(false);
+                    binding.btnConfirm.setClickable(false);
+                    */
+                    Log.e("error", " abc 1");
+                    paramsBookingOp4.put(Consts.USER_ID, userDTO.getUser_id());
+
+                    check_minimum_price();
+                }
             }
         });
+        binding.laychat123.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (NetworkManager.isConnectToInternet(mContext)) {
+                    /*Intent in = new Intent(ViewServices.this, OneTwoOneChat.class);
+                    in.putExtra(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
+                    in.putExtra(Consts.ARTIST_NAME, artistDetailsDTO.getName());
+                    in.putExtra(Consts.ARTIST_IMAGE, artistDetailsDTO.getImage());
+                    mContext.startActivity(in);*/
+
+                    Log.e("MOBILE_NO", "" + artistDetailsDTO.getDefualt_whatsappno());
+                    String phoneNumberWithCountryCode = "+91" + artistDetailsDTO.getDefualt_whatsappno();
+
+                    Log.e("JOINING_DATE", "" + userDTO.getCreated_at());
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(
+                                    String.format("https://api.whatsapp.com/send?phone=%s&text=%s",
+                                            phoneNumberWithCountryCode, ""))));
+                } else {
+                }
+            }
+        });
+
     }
 
     public void finalClick() {
@@ -1236,7 +1100,41 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
                                 DecimalFormat newFormat = new DecimalFormat("####");
                                 double mainprice = Double.parseDouble(newFormat.format(total));
                                 final_amount = String.valueOf(mainprice);
-                                JSONObject object = new JSONObject();
+
+                                Checkout checkout = new Checkout();
+                                // with testing_key
+                                checkout.setKeyID("rzp_test_cN1FC6C2mOYSwF");
+                                //checkout.setKeyID("rzp_live_WxwhNFQFzmlsOU");
+                                checkout.setImage(R.drawable.logo);
+                                final Activity activity = this;
+                                try {
+                                    JSONObject options = new JSONObject();
+
+                                    options.put("name", "Kamaii Services Pvt Ltd");
+/*
+                                    options.put("description", "Reference No. #123456");
+*/
+                                    options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
+                                    options.put("order_id", "order_DBJOWzybf0sJbb");//from response of step 3.
+                                    options.put("theme.color", "#3399cc");
+                                    options.put("currency", "INR");
+                                    options.put("amount", String.valueOf(mainprice * 100));//pass amount in currency subunits
+                                    options.put("prefill.email", userDTO.getEmail_id());
+                                    options.put("prefill.contact", userDTO.getMobile());
+                                    JSONObject retryObj = new JSONObject();
+                                    retryObj.put("enabled", true);
+                                    retryObj.put("max_count", 4);
+                                    options.put("retry", retryObj);
+
+                                    checkout.open(activity, options);
+
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error in starting Razorpay Checkout", e);
+                                }
+
+
+                                //Paykun Code
+                               /* JSONObject object = new JSONObject();
                                 try {
                                     object.put("merchant_id", Consts.merchantIdLIVE);
                                     object.put("access_token", Consts.accessTokenLIVE);
@@ -1250,8 +1148,7 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                new PaykunApiCall.Builder(BookingProduct.this).sendJsonObject(object);
-
+                                new PaykunApiCall.Builder(BookingProduct.this).sendJsonObject(object);*/
                             }
                         }
 
@@ -1293,19 +1190,24 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
                                         daddress = "Destination Location:" + " " + txtdestinationaddress.getText().toString();
                                     }
 
+                                    if (from_cart) {
+                                        Log.e("GET_ARTIST", "from_cart 2 value :- " + from_cart);
+
+                                        screen_tag = 2;
+                                    }
                                     if (binding.spinnerTxt.getText().toString().equalsIgnoreCase("Cash")) {
 
                                         final_amount = binding.tvPrice.getText().toString();
-                                        Log.e("error", "409 " + final_amount + "screen-tag:- "+screen_tag);
+                                        Log.e("error", "409 " + final_amount + "screen-tag:- " + screen_tag);
 
                                         if (screen_tag == 1) {
 
                                             paramsBookingOp.put(Consts.PRICE, artistDetailsDTO.getPrice());
 
-                                            Log.e("error","505");
+                                            Log.e("error", "505");
                                             submit();
                                         } else if ((screen_tag == 2)) {
-                                            Log.e("error","506");
+                                            Log.e("error", "506");
 
                                             bookForService();
                                         }
@@ -1334,27 +1236,85 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
 
                                     } else {
 
-                                        double extraadd = (Double.parseDouble(binding.tvPrice.getText().toString()) * 2) / 100;
-                                        double total = totalprice + extraadd;
-                                        DecimalFormat newFormat = new DecimalFormat("####");
-                                        double mainprice = Double.parseDouble(newFormat.format(total));
-                                        final_amount = String.valueOf(mainprice);
-                                        JSONObject object = new JSONObject();
-                                        try {
-                                            object.put("merchant_id", Consts.merchantIdLIVE);
-                                            object.put("access_token", Consts.accessTokenLIVE);
-                                            object.put("customer_name", userDTO.getName());
-                                            object.put("customer_email", userDTO.getEmail_id());
-                                            object.put("customer_phone", userDTO.getMobile());
-                                            object.put("product_name", "booking");
-                                            object.put("order_no", System.currentTimeMillis()); // order no. should have 10 to 30 character in numeric format
-                                            object.put("amount", String.valueOf(mainprice));  // minimum amount should be 10
-                                            object.put("isLive", true); // need to send false if you are in sandbox mode
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
+                                        if (Double.parseDouble(binding.subTotalDigits.getText().toString()) < Double.parseDouble(artistDetailsDTO.getMinimum_amount_price())) {
+
+                                            Toast.makeText(mContext, "You cat't order below " + artistDetailsDTO.getMinimum_amount_price(), Toast.LENGTH_SHORT).show();
+                                            binding.btnConfirm.setEnabled(true);
+                                            binding.btnConfirm.setClickable(true);
+                                        } else {
+
+                                            double extraadd;
+                                            if (artistDetailsDTO.getWallet_hide_status().equalsIgnoreCase("1")) {
+
+                                                extraadd = (Double.parseDouble(binding.tvPrice.getText().toString()) * Double.parseDouble(artistDetailsDTO.getWallet_rate())) / 100;
+
+                                            } else {
+                                                extraadd = 0;
+                                            }
+                                            double total = totalprice + extraadd;
+                                            DecimalFormat newFormat = new DecimalFormat("####");
+                                            double mainprice = Double.parseDouble(newFormat.format(total));
+                                            final_amount = String.valueOf(mainprice);
+
+
+                                            Checkout checkout = new Checkout();
+                                        //    checkout.setKeyID("rzp_test_cN1FC6C2mOYSwF");
+                                            checkout.setKeyID("rzp_live_WxwhNFQFzmlsOU");
+                                            checkout.setImage(R.drawable.logo);
+                                            final Activity activity = this;
+                                            try {
+                                                JSONObject options = new JSONObject();
+
+                                                options.put("name", "Kamaii Services Pvt Ltd");
+
+                                                Log.e("RAZORPAY", "1");
+/*
+                                                options.put("description", "Reference No. #123456");
+*/
+                                                Log.e("RAZORPAY", "2");
+                                                options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
+                                                Log.e("RAZORPAY", "3");
+                                                //    options.put("order_id", System.currentTimeMillis());//from response of step 3.
+                                                Log.e("RAZORPAY", "4");
+                                                options.put("theme.color", "#3399cc");
+                                                Log.e("RAZORPAY", "5");
+                                                options.put("currency", "INR");
+                                                Log.e("RAZORPAY", "6");
+                                                options.put("amount", String.valueOf(mainprice * 100));//pass amount in currency subunits
+                                                Log.e("RAZORPAY", "7");
+                                                options.put("prefill.email", userDTO.getEmail_id());
+                                                Log.e("RAZORPAY", "8");
+                                                options.put("prefill.contact", userDTO.getMobile());
+                                                Log.e("RAZORPAY", "9");
+                                                JSONObject retryObj = new JSONObject();
+                                                retryObj.put("enabled", true);
+                                                retryObj.put("max_count", 4);
+                                                options.put("retry", retryObj);
+
+                                                checkout.open(activity, options);
+
+                                            } catch (Exception e) {
+                                                Log.e("jkbmjnmbmnmbmb", "Error in starting Razorpay Checkout", e);
+                                            }
+
+
+                                            /*JSONObject object = new JSONObject();
+                                            try {
+                                                object.put("merchant_id", Consts.merchantIdLIVE);
+                                                object.put("access_token", Consts.accessTokenLIVE);
+                                                object.put("customer_name", userDTO.getName());
+                                                object.put("customer_email", userDTO.getEmail_id());
+                                                object.put("customer_phone", userDTO.getMobile());
+                                                object.put("product_name", "booking");
+                                                object.put("order_no", System.currentTimeMillis()); // order no. should have 10 to 30 character in numeric format
+                                                object.put("amount", String.valueOf(mainprice));  // minimum amount should be 10
+                                                object.put("isLive", true); // need to send false if you are in sandbox mode
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            new PaykunApiCall.Builder(BookingProduct.this).sendJsonObject(object);*/
+                                            //   dialog.dismiss();
                                         }
-                                        new PaykunApiCall.Builder(BookingProduct.this).sendJsonObject(object);
-                                        //   dialog.dismiss();
                                     }
                                 }
 
@@ -1381,12 +1341,11 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
 
     private void showAddressDialog() {
 
-        addressBottomSheet = new BottomSheetDialog(this);
-        //addressBottomSheet.setCancelable(false);
-        //   addressBottomSheet.setCancelable(false);
-        addressBottomSheet.setContentView(R.layout.activity_address_bottom_dialog);
-        change_address_btn = addressBottomSheet.findViewById(R.id.change_address_btn);
         RadioGroup add_addressradioGroup;
+        add_addressradioGroup = addressBottomSheet.findViewById(R.id.add_addressradioGroup);
+
+        house_no_etx.setText("");
+        society_name_etx.setText("");
         ImageView back = addressBottomSheet.findViewById(R.id.address_dialog_close_img);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1398,24 +1357,22 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
         Typeface font2 = Typeface.createFromAsset(BookingProduct.this.getAssets(), "Poppins-Regular.otf");
 
 
-        location_etx = addressBottomSheet.findViewById(R.id.location_etx);
-        house_no_etx = addressBottomSheet.findViewById(R.id.house_no_etx);
-        society_name_etx = addressBottomSheet.findViewById(R.id.society_name_etx);
-        customAddress = addressBottomSheet.findViewById(R.id.customAddress);
-        add_addressradioGroup = addressBottomSheet.findViewById(R.id.add_addressradioGroup);
-        address_submit = addressBottomSheet.findViewById(R.id.address_submit);
-
         location_etx.setTypeface(font2);
         house_no_etx.setTypeface(font2);
         society_name_etx.setTypeface(font2);
 
         addAddressHashmap.put(Consts.USER_ID, userDTO.getUser_id());
         address_relative = addressBottomSheet.findViewById(R.id.address_relative);
-        address_lay_dest_location = addressBottomSheet.findViewById(R.id.address_lay_dest_location);
         RecyclerView recyclerView = addressBottomSheet.findViewById(R.id.address_recycler);
+
+        address_lay_dest_location.setVisibility(View.VISIBLE);
+        customAddress.setVisibility(View.GONE);
 
         if (typeAddressList.size() == 0) {
             address_relative.setVisibility(View.GONE);
+        }else {
+            address_relative.setVisibility(View.VISIBLE);
+
         }
 
         dialogadapter = new AddressBottomSheetAdapter(this, typeAddressList, this);
@@ -1463,56 +1420,78 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
                 binding.btnConfirm.setEnabled(true);
                 binding.btnConfirm.setClickable(true);
 
-                house_no_str = house_no_etx.getText().toString();
-                society_name_str = society_name_etx.getText().toString();
+                house_no_str = house_no_etx.getText().toString().trim();
+                Log.e("HOUSENO12345",""+house_no_str);
+                society_name_str = society_name_etx.getText().toString().trim();
+                Log.e("HOUSENO12345",""+society_name_str);
+
                 street_address_str = location_etx.getText().toString();
 
-                addAddressHashmap.put("house_no", house_no_str);
-                addAddressHashmap.put("society_name", society_name_str);
-                addAddress();
-                binding.tvAddress.setTextColor(getResources().getColor(R.color.dark_blue_color));
-
-                if (house_no_str.isEmpty() && society_name_str.isEmpty()) {
-                    Log.e("ADDRESS_ADAPTER", " 101");
-
-                    binding.tvAddress.setText(street_address_str);
-                } else if (house_no_str.isEmpty()) {
-                    Log.e("ADDRESS_ADAPTER", " 102");
-
-                    binding.tvAddress.setText(society_name_str + ", " + street_address_str);
-                } else if (society_name_str.isEmpty()) {
-                    Log.e("ADDRESS_ADAPTER", " 103");
-
-                    binding.tvAddress.setText(house_no_str + ", " + street_address_str);
-                } else {
-                    Log.e("ADDRESS_ADAPTER", " 104");
-
-                    binding.tvAddress.setText(house_no_str + ", " + society_name_str + ", " + street_address_str);
+                if (house_no_str.isEmpty() || house_no_str.equals("&nbsp;")) {
+                    Toast.makeText(BookingProduct.this, "Please enter House no. / Flat no. / Floor / Building", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                if (society_name_str.equalsIgnoreCase("&nbsp;")) {
+                    Toast.makeText(BookingProduct.this, "Please enter valid Landmark", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (street_address_str.isEmpty()) {
+                    Toast.makeText(BookingProduct.this, "Please enter valid Location", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
 
-                customAddress.setVisibility(View.GONE);
-                address_relative.setVisibility(View.VISIBLE);
-                address_lay_dest_location.setVisibility(View.VISIBLE);
+
+                    addAddressHashmap.put("house_no", house_no_str);
+                    addAddressHashmap.put("society_name", society_name_str);
+                    addAddress();
+                    binding.tvAddress.setTextColor(getResources().getColor(R.color.dark_blue_color));
+
+                    if (house_no_str.isEmpty() && society_name_str.isEmpty()) {
+                        Log.e("ADDRESS_ADAPTER", " 101");
+
+                        binding.tvAddress.setText(street_address_str);
+                    } else if (house_no_str.isEmpty()) {
+                        Log.e("ADDRESS_ADAPTER", " 102");
+
+                        binding.tvAddress.setText(society_name_str + ", " + street_address_str);
+                    } else if (society_name_str.isEmpty()) {
+                        Log.e("ADDRESS_ADAPTER", " 103");
+
+                        binding.tvAddress.setText(house_no_str + ", " + street_address_str);
+                    } else {
+                        Log.e("ADDRESS_ADAPTER", " 104");
+
+                        binding.tvAddress.setText(house_no_str + ", " + society_name_str + ", " + street_address_str);
+                    }
+
+                    customAddress.setVisibility(View.GONE);
+                    address_relative.setVisibility(View.VISIBLE);
+                    address_lay_dest_location.setVisibility(View.VISIBLE);
 
 
-                addressBottomSheet.dismiss();
+                    addressBottomSheet.dismiss();
+                }
             }
         });
         address_lay_dest_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                address_lay_dest_location.setVisibility(View.GONE);
+                address_relative.setVisibility(View.GONE);
+                customAddress.setVisibility(View.VISIBLE);
+                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 109);
                     } else {
                         findPlace();
                     }
-                }
+                }*/
 
             }
         });
+
         addressBottomSheet.show();
     }
 
@@ -1544,7 +1523,10 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
             public void backResponse(boolean flag, String msg, JSONObject response) {
                 if (flag) {
                     if (msg.equals("0")) {
-                        address_relative.setVisibility(View.GONE);
+                        //address_relative.setVisibility(View.GONE);
+
+                        getAddress();
+
                     }
                 } else {
 
@@ -1591,17 +1573,21 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
                     }.getType();
                     try {
                         typeAddressList = (ArrayList<TypeAddressModel>) new Gson().fromJson(response.getJSONArray("data").toString(), getaddDTO);
-                       if(typeAddressList.size()!=0){
+                        if (typeAddressList.size() != 0) {
 
-                           address_id = typeAddressList.get(typeAddressList.size() - 1).getAddress_id();
-                       }
+                            address_id = typeAddressList.get(typeAddressList.size() - 1).getAddress_id();
+                        } else {
+                            address_lay_dest_location.setVisibility(View.GONE);
+                            customAddress.setVisibility(View.VISIBLE);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                 } else {
-                    Log.e("ADBVC","12231");
-
+                    Log.e("ADBVC", "12231");
+                    address_lay_dest_location.setVisibility(View.GONE);
+                    customAddress.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -1724,6 +1710,7 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
         paramsBookingOp.put(Consts.TOTAL_AMOUNT, final_amount);
         paramsBookingOp.put(Consts.PAY_STATUS, paystatus);
         paramsBookingOp.put("addresstype", address_radio_txt);
+        paramsBookingOp.put("remark", remark.getText().toString());
         paramsBookingOp.put("house_no", house_no_str);
         paramsBookingOp.put("street_address", street_address_str);
         paramsBookingOp.put("society_name", society_name_str);
@@ -1808,6 +1795,328 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!load) {
+
+            setUpGClient();
+
+            getWallet();
+            order_shipping_note.setVisibility(View.VISIBLE);
+
+
+            binding.paymentLinear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Log.e("BTN_CLICKED", "1");
+                    if (order_now_text.getText().toString().equalsIgnoreCase("Select Address")) {
+                        Toast.makeText(mContext, "Please, Select The Delivery Address", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        getPaymentDialog(spinner_txt.getText().toString());
+                    }
+                }
+            });
+            if (SubCategoryActivity.categoryid.equalsIgnoreCase("1")) {//Loan
+                order_now_text.setText("Apply Now ");
+                //     booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("2")) { //Credit Card
+                order_now_text.setText("Apply Now ");
+                //     booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("82")) { //Grocery-Kirana
+                order_now_text.setText("Order Now ");
+
+                //    booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("65")) { //Insaunence
+                order_now_text.setText("Buy Now ");
+                //    booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("79")) { //Furniture
+
+                order_now_text.setText("Order Now ");
+                //    booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("87")) { // Mobile
+
+                order_now_text.setText("Order Now ");
+
+                //    booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("95")) { //Tailor
+
+                order_now_text.setText("Order Now ");
+
+                //    booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("67")) { //Job
+                order_now_text.setText("Apply Now ");
+                //     booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("91")) { //Dry-Snack
+
+                order_now_text.setText("Order Now ");
+
+                //      booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            } else if (SubCategoryActivity.categoryid.equalsIgnoreCase("85")) { //Cab
+                order_now_text.setText("Book Now ");
+                booking_date.setText("Booking Date");
+                address.setText("Booking Address");
+                tvHeader.setText("My Booking Summary");
+            } else {
+                order_now_text.setText("Order Now ");
+                //     booking_date.setText("Order Date");
+                address.setText("Delivery Order");
+                tvHeader.setText("My Order Summary");
+            }
+
+            tverror = findViewById(R.id.tverror);
+            tverror1 = findViewById(R.id.tverror1);
+
+            getpaymenttype();
+
+            gridLayoutManager = new GridLayoutManager(mContext, 1);
+            if (getIntent().hasExtra(Consts.ARTIST_DTO)) {
+                artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Consts.ARTIST_DTO);
+                artist_id = getIntent().getStringExtra(Consts.ARTIST_ID);
+                changes_price = getIntent().getStringExtra(Consts.CHANGE_PRICE);
+                cartHashmap = (HashMap<String, String>) getIntent().getSerializableExtra("cartHashmap");
+                screen_tag = getIntent().getIntExtra(Consts.SCREEN_TAG, 0);
+                if (screen_tag == 2) {
+                    Bundle b = getIntent().getExtras();
+                    cartarraylist = (ArrayList<ProductDTO>) b.getSerializable(Consts.CARTDATA);
+                    if (SubCategoryActivity.categoryid.equalsIgnoreCase("85") || SubCategoryActivity.categoryid.equalsIgnoreCase("74")) {//Loan
+                        rv_cart2.setVisibility(View.GONE);
+                    /*Bundle b = getIntent().getExtras();
+                    cartarraylist = (ArrayList<ProductDTO>) b.getSerializable(Consts.CARTDATA);*/
+                        setdisplay(true);
+                        bookArtist2("1");
+                    } else {
+                        rv_cart.setVisibility(View.GONE);
+                    /*Bundle b = getIntent().getExtras();
+                    cartarraylist = (ArrayList<ProductDTO>) b.getSerializable(Consts.CARTDATA);*/
+                        setdisplay(true);
+                        getArtist();
+                    }
+                }
+                if (checkarss(ViewAddressActivity.catid)) {
+                    if (!ViewAddressActivity.mainkm.equalsIgnoreCase("")) {
+                        if (ViewAddressActivity.sub_category_idd.equalsIgnoreCase("242")) {
+                            binding.tvAddress.setEnabled(false);
+                            laydestination.setVisibility(View.GONE);
+                            getsourceaddress();
+                        } else {
+                            binding.tvAddress.setEnabled(false);
+                            laydestination.setVisibility(View.VISIBLE);
+                            destaddress = ViewAddressActivity.Destiaddress;
+                            Sourceaddress = ViewAddressActivity.Sourceaddress;
+                            km = ViewAddressActivity.mainkm;
+                            destitime = ViewAddressActivity.destitime;
+                            txtdestinationaddress.setText(destaddress);
+                            binding.tvAddress.setText(Sourceaddress);
+
+                        }
+
+
+                    }
+                } else {
+                    ViewAddressActivity.startLati = Double.parseDouble(prefrence.getValue(LATITUDE));
+                    ViewAddressActivity.startLongi = Double.parseDouble(prefrence.getValue(LONGITUDE));
+                    binding.tvAddress.setEnabled(true);
+                    binding.tvAddress.setTextColor(getResources().getColor(R.color.pink_text_color));
+                    binding.tvAddress.setText(getResources().getString(R.string.tap_to_select_address));
+                    getsourceaddress();
+                }
+                totalservicecharge();
+                setUiAction();
+
+            } else {
+                Log.e("GET_ARTIST", "123");
+
+                binding.tvAddress.setText(Html.fromHtml("<font color='#e0215a'>" + getResources().getString(R.string.tap_to_select_address) + "</font>"));
+                from_repeatorder = getIntent().getBooleanExtra("booking_flag", false);
+                from_cart = getIntent().getBooleanExtra("from_cart", false);
+
+                if (from_repeatorder) {
+                    screen_tag = 2;
+                }
+                if (from_cart) {
+                    Log.e("GET_ARTIST", "from_cart value :- " + from_cart);
+
+                    screen_tag = 2;
+                }
+                getArtist();
+                setUiAction();
+
+            }
+            //    showAddressDialog();
+            getAddress();
+
+            getshipping();
+
+            radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @SuppressLint("ResourceType")
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    rb = (RadioButton) group.findViewById(checkedId);
+                    if (null != rb && checkedId > -1) {
+                        if (rb.getText().toString().equalsIgnoreCase("Takeway")) {
+                            order_shipping_note.setVisibility(View.GONE);
+                            error = 0;
+                            llerrormsg.setVisibility(View.GONE);
+                            binding.llTime.setVisibility(View.VISIBLE);
+                            binding.llDate.setVisibility(View.VISIBLE);
+                            binding.serviceChargeRelative.setVisibility(View.GONE);
+                            binding.subtotalRelative.setVisibility(View.GONE);
+                            for (int i = 0; i < shippingDTOArrayList.size(); i++) {
+                                if (shippingDTOArrayList.get(i).getSub_cat_id().equalsIgnoreCase(ViewAddressActivity.sub_category_idd)) {
+
+                                    if (shippingDTOArrayList.get(i).getMy_location().equalsIgnoreCase("0")) {
+                                        error = 0;
+                                        llerrormsg.setVisibility(View.VISIBLE);
+                                        binding.llTime.setVisibility(View.GONE);
+                                        binding.laydestination.setVisibility(View.GONE);
+                                        binding.llDate.setVisibility(View.GONE);
+                                        tverror.setText("Partner location this time not available so please choose My Location              ");
+                                    }
+                                }
+                            }
+
+                            radioslocation.setBackground(getResources().getDrawable(R.drawable.radio_btn_selected));
+                            radioylocation.setBackground(getResources().getDrawable(R.drawable.linear_background_gray));
+                            radiopos = 0;
+
+                            if (SubCategoryActivity.categoryid.equalsIgnoreCase("85") || SubCategoryActivity.categoryid.equalsIgnoreCase("74")) {//Loan
+                                total();
+                            } else {
+                                binding.tvPrice.setText(String.valueOf(sub_totaln));
+                                binding.totalBtnTxt.setText(Html.fromHtml("&#x20B9;" + sub_totaln));
+                                findViewById(R.id.service_charge_relative).setVisibility(View.GONE);
+                            }
+                            location_status = "0";
+
+                            setdisplay(false);
+
+                            binding.tvAddress.setEnabled(false);
+
+                            binding.tvAddress.setText(Html.fromHtml("<font color='#e0215a'>" + getResources().getString(R.string.tap_to_select_address) + "</font>"));
+                            getsourceaddress();
+
+                        } else {
+                            error = 0;
+                            order_shipping_note.setVisibility(View.VISIBLE);
+                            llerrormsg.setVisibility(View.GONE);
+                            binding.llTime.setVisibility(View.VISIBLE);
+                            binding.llDate.setVisibility(View.VISIBLE);
+
+                            if (SubCategoryActivity.categoryid.equalsIgnoreCase("85") || SubCategoryActivity.categoryid.equalsIgnoreCase("74")) {//Loan
+                                bookArtist2("1");
+                            } else {
+                                getArtist();
+                            }
+
+                            binding.serviceChargeRelative.setVisibility(View.VISIBLE);
+
+                            binding.totalDiscountRelative.setVisibility(View.VISIBLE);
+                            binding.subtotalRelative.setVisibility(View.VISIBLE);
+                            for (int i = 0; i < shippingDTOArrayList.size(); i++) {
+                                if (shippingDTOArrayList.get(i).getSub_cat_id().equalsIgnoreCase(ViewAddressActivity.sub_category_idd)) {
+
+                                    if (shippingDTOArrayList.get(i).getMy_location().equalsIgnoreCase("0")) {
+                                        error = 0;
+                                    }
+                                }
+                            }
+
+                            radioslocation.setBackground(getResources().getDrawable(R.drawable.linear_background_gray));
+                            radioylocation.setBackground(getResources().getDrawable(R.drawable.radio_btn_selected));
+                            location_status = "1";
+                            radiopos = 1;
+
+                            totalservicecharge();
+                            setdisplay(true);
+
+                            if (ViewAddressActivity.sub_category_idd.equals("242") || ViewAddressActivity.sub_category_idd.equals("434")) {
+                                Log.e("rickshaw1", "rickshaw1 called");
+                                binding.serviceTxt.setText("Driver Allowance");
+                            } else if (ViewAddressActivity.sub_category_idd.equals("44") || ViewAddressActivity.sub_category_idd.equals("45")) {
+                                Log.e("rickshaw1", "rickshaw1 called");
+                                binding.serviceTxt.setVisibility(View.GONE);
+                                binding.serviceDigitTxt.setVisibility(View.GONE);
+                            } else if (ViewAddressActivity.sub_category_idd.equals("453")) {
+                                Log.e("rickshaw1", "rickshaw1 called");
+                                binding.serviceTxt.setVisibility(View.GONE);
+                            }
+
+                            if (checkarss(ViewAddressActivity.catid)) {
+                                binding.laydestination.setVisibility(View.VISIBLE);
+                                if (ViewAddressActivity.sub_category_idd.equalsIgnoreCase("242")) {
+                                    binding.tvAddress.setEnabled(false);
+                                    getsourceaddress();
+                                } else {
+                                    binding.tvAddress.setEnabled(false);
+                                    binding.tvAddress.setText(Sourceaddress);
+                                }
+
+                            } else {
+                                binding.laydestination.setVisibility(View.GONE);
+                                binding.tvAddress.setEnabled(true);
+                                getsourceaddress();
+                            }
+
+
+                        }
+
+                    }
+
+                }
+            });
+
+            for (int i = 0; i < cartarraylist.size(); i++) {
+
+                paramsBookingOp2.put("ARTIST_ID" + i, cartarraylist.get(i).getUser_id());
+                paramsBookingOp2.put("PRICE" + i, cartarraylist.get(i).getPrice());
+                paramsBookingOp2.put("SERVICE_ID" + i, cartarraylist.get(i).getId());
+                paramsBookingOp2.put("UID" + i, userDTO.getUser_id());
+                paramsBookingOp2.put("QUANTITYDAYS" + i, cartarraylist.get(i).getQuantitydays());
+
+                if (cartHashmap != null) {
+
+                    paramsBookingOp2.put("QUANTITYDAYS" + i, cartHashmap.get(cartarraylist.get(i).getId()));
+                    Log.e(TAG, "onCreate: " + cartHashmap.toString() + cartHashmap.get(cartarraylist.get(i).getId()));
+                }
+            }
+            binding.bookingProductScroll.fullScroll(View.FOCUS_DOWN);
+
+       /* final ScrollView scrollview = ((ScrollView) findViewById(R.id.booking_product_scroll));
+        scrollview.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollview.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+*/
+            binding.laypayment1.setFocusable(true);
+            load = true;
+        }
+
+    }
+
     public void getsourceaddress() {
         Geocoder geocoder = new Geocoder(BookingProduct.this, Locale.getDefault());
         List<Address> addresses = null;
@@ -1869,11 +2178,21 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     }
 
     public void clickScheduleDateTime() {
+
+        Log.e("DELIVERY_D", "" + date);
         new SingleDateAndTimePickerDialog.Builder(this)
                 .bottomSheet()
                 .curved()
+                .minDateRange(date)
                 .mustBeOnFuture()
-                .defaultDate(new Date())
+                .defaultDate(date)
+                .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
+                    @Override
+                    public void onDisplayed(SingleDateAndTimePicker picker) {
+                        //        picker.setMinDate(date);
+
+                    }
+                })
                 .listener(new SingleDateAndTimePickerDialog.Listener() {
                     @Override
                     public void onDateSelected(Date date) {
@@ -1976,6 +2295,7 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     }*/
 
     public void getWallet() {
+
         new HttpsRequest(Consts.GET_WALLET_API, parmsGetWallet, BookingProduct.this).stringPost(TAG, new Helper() {
             @Override
             public void backResponse(boolean flag, String msg, JSONObject response) {
@@ -2011,14 +2331,21 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
 
-                Log.e("RES", response.message());
+                Log.e("pay_type_RES", response.message());
                 try {
                     if (response.isSuccessful()) {
+
+
                         ResponseBody responseBody = response.body();
 
                         String s = responseBody.string();
                         JSONObject object = new JSONObject(s);
                         Log.e("PAY_PARAMETERS", "" + s);
+
+                        wallet_rate = object.getString("wallet_rate");
+                        wallet_rate2 = object.getString("wallet_rate2");
+                        cash_rate = object.getString("cash_rate");
+                        wallet_rate_txt_flag = object.getString("wallet_hide_status");
 
                         String[] separated = null;
 
@@ -2243,32 +2570,261 @@ public class BookingProduct extends AppCompatActivity implements OnAddressSelect
     @Override
     public void setAddress(int position, String id, String house_no, String street_add, String soc_name, double lati, double longi) {
 
-        binding.tvAddress.setTextColor(getResources().getColor(R.color.dark_blue_color));
 
-        final_user_address = street_add;
-        address_id = id;
+        artist_id = artistDetailsDTO.getArtist_id();
+        parmspaymentconfirm.put(Consts.USER_ID, userDTO.getUser_id());
+        parmspaymentconfirm.put(Consts.ADDRESS_ID, id);
+        parmspaymentconfirm.put(Consts.ARTIST_ID, artist_id);
+        Log.e("ORDER_TIMEBREAK123", "" + parmspaymentconfirm.toString());
+        new HttpsRequest(Consts.ORDER_TIMEBREAK_API, parmspaymentconfirm, BookingProduct.this).stringPost(Tag, new Helper() {
+            @Override
+            public void backResponse(boolean flag, String msg, JSONObject response) {
+                //              ProjectUtils.pauseProgressDialog();
+                //  Log.e("ORDER_TIMEBREAK",""+response.toString());
 
-        ViewAddressActivity.startLati = lati;
-        ViewAddressActivity.startLongi = longi;
+                if (flag) {
+                    binding.tvAddress.setTextColor(getResources().getColor(R.color.dark_blue_color));
+                    Log.e("ORDER_TIMEBREAK123", "" + response.toString());
 
-        Log.e("ADDRESS_ADAPTER", " adapter " + house_no + " " + soc_name + " " + street_add);
-        if (house_no.isEmpty() && soc_name.isEmpty()) {
-            Log.e("ADDRESS_ADAPTER", "1");
-            binding.tvAddress.setText(street_add);
-        } else if (house_no.isEmpty()) {
-            Log.e("ADDRESS_ADAPTER", "2");
+                    final_user_address = street_add;
+                    address_id = id;
 
-            binding.tvAddress.setText(soc_name + ", " + street_add);
-        } else if (soc_name.isEmpty()) {
-            Log.e("ADDRESS_ADAPTER", "3");
+                    ViewAddressActivity.startLati = lati;
+                    ViewAddressActivity.startLongi = longi;
 
-            binding.tvAddress.setText(house_no + ", " + street_add);
-        } else {
-            Log.e("ADDRESS_ADAPTER", " 4 " + "house no:-" + house_no + "society:-" + soc_name);
+                    Log.e("ADDRESS_ADAPTER", " adapter " + house_no + " " + soc_name + " " + street_add);
+                    if (house_no.isEmpty() && soc_name.isEmpty()) {
+                        Log.e("ADDRESS_ADAPTER", "1");
+                        binding.tvAddress.setText(street_add);
+                    } else if (house_no.isEmpty()) {
+                        Log.e("ADDRESS_ADAPTER", "2");
 
-            binding.tvAddress.setText(house_no + ", " + soc_name + ", " + street_add);
-        }
-        addressBottomSheet.dismiss();
+                        binding.tvAddress.setText(soc_name + ", " + street_add);
+                    } else if (soc_name.isEmpty()) {
+                        Log.e("ADDRESS_ADAPTER", "3");
+
+                        binding.tvAddress.setText(house_no + ", " + street_add);
+                    } else {
+                        Log.e("ADDRESS_ADAPTER", " 4 " + "house no:-" + house_no + "society:-" + soc_name);
+
+                        binding.tvAddress.setText(house_no + ", " + soc_name + ", " + street_add);
+                    }
+                    changingtext();
+                    addressBottomSheet.dismiss();
+                } else {
+
+                    Toast.makeText(BookingProduct.this, msg, Toast.LENGTH_SHORT).show();
+                    addressBottomSheet.dismiss();
+
+                }
+            }
+        });
+
     }
 
+    private void checkPermissions() {
+        int permissionLocation = ContextCompat.checkSelfPermission(BookingProduct.this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (!listPermissionsNeeded.isEmpty()) {
+                ActivityCompat.requestPermissions(BookingProduct.this,
+                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+            }
+        } else {
+            getMyLocation();
+        }
+
+    }
+
+    private synchronized void setUpGClient() {
+        googleApiClient = new GoogleApiClient.Builder(BookingProduct.this)
+                .enableAutoManage(BookingProduct.this, 0, this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+
+    private void getMyLocation() {
+        if (googleApiClient != null) {
+            if (googleApiClient.isConnected()) {
+                int permissionLocation = ContextCompat.checkSelfPermission(BookingProduct.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+                if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+
+                    mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                    LocationRequest locationRequest = new LocationRequest();
+                    locationRequest.setInterval(1000);
+                    locationRequest.setFastestInterval(1000);
+                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                            .addLocationRequest(locationRequest);
+                    builder.setAlwaysShow(true);
+                    LocationServices.FusedLocationApi
+                            .requestLocationUpdates(googleApiClient, locationRequest, (com.google.android.gms.location.LocationListener) this);
+                    PendingResult result =
+                            LocationServices.SettingsApi
+                                    .checkLocationSettings(googleApiClient, builder.build());
+                    result.setResultCallback(new ResultCallback() {
+
+                        @Override
+                        public void onResult(@NonNull Result result) {
+                            final Status status = result.getStatus();
+                            switch (status.getStatusCode()) {
+                                case LocationSettingsStatusCodes.SUCCESS:
+                                    // All location settings are satisfied.
+                                    // You can initialize location requests here.
+                                    int permissionLocation = ContextCompat
+                                            .checkSelfPermission(BookingProduct.this,
+                                                    Manifest.permission.ACCESS_FINE_LOCATION);
+                                    if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+                                        mylocation = LocationServices.FusedLocationApi
+                                                .getLastLocation(googleApiClient);
+
+
+                                    }
+                                    break;
+                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                    // Location settings are not satisfied.
+                                    // But could be fixed by showing the user a dialog.
+                                    try {
+                                        // Show the dialog by calling startResolutionForResult(),
+                                        // and check the result in onActivityResult().
+                                        // Ask to turn on GPS automatically
+                                        status.startResolutionForResult(BookingProduct.this,
+                                                REQUEST_CHECK_SETTINGS_GPS);
+                                    } catch (IntentSender.SendIntentException e) {
+                                        // Ignore the error.
+                                    }
+                                    break;
+                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                    // Location settings are not satisfied. However, we have no way to fix the
+                                    // settings so we won't show the dialog.
+                                    //finish();
+                                    break;
+                            }
+                        }
+
+
+                    });
+
+
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        googleApiClient.stopAutoManage(BookingProduct.this);
+        googleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        checkPermissions();
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.e("RAZORPAY", " Suspend " + i);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        if (!map_flag) {
+
+
+            mylocation = location;
+            // Toast.makeText(mContext, "1", Toast.LENGTH_LONG).show();
+
+            if (mylocation != null) {
+                //Toast.makeText(mContext, "2", Toast.LENGTH_LONG).show();
+
+                live_latitude = mylocation.getLatitude();
+                //  Log.e("lat", "" + latitude.toString());
+                live_longitude = mylocation.getLongitude();
+                //   Log.e("lang", "" + longitude.toString());
+
+                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                try {
+                    // Toast.makeText(mContext, "8", Toast.LENGTH_LONG).show();
+
+                    List<Address> addresses = geocoder.getFromLocation(live_latitude, live_longitude, 1);
+                    Address obj = addresses.get(0);
+                    String add = obj.getAddressLine(0);
+                    add = add + "\n" + obj.getCountryName();
+                    add = add + "\n" + obj.getCountryCode();
+                    add = add + "\n" + obj.getAdminArea();
+                    add = add + "\n" + obj.getPostalCode();
+                    add = add + "\n" + obj.getSubAdminArea();
+                    add = add + "\n" + obj.getLocality();
+                    add = add + "\n" + obj.getSubThoroughfare();
+
+                    if (live_address_str) {
+
+                        Log.e("Live_ADDRESS", "AAAAAAA:---- " + obj.getAddressLine(0));
+
+                        live_address_str = false;
+                        location_etx.setText(obj.getAddressLine(0));
+                        addAddressHashmap.put("street_address", obj.getAddressLine(0));
+                        addAddressHashmap.put(Consts.LATITUDE, String.valueOf(live_latitude));
+                        addAddressHashmap.put(Consts.LONGITUDE, String.valueOf(live_longitude));
+                    }
+                    //   Log.e("IGA123214", "Address" + add);
+                    // Toast.makeText(this, "Address=>" + add,
+                    // Toast.LENGTH_SHORT).show();
+
+                    // TennisAppActivity.showDialog(add);
+
+                    //  etLocationD.setText(obj.getAddressLine(0));
+                    //  drag_location_etx.setText(obj.getAddressLine(0));
+                    // parms.put(Consts.LOCATION, obj.getAddressLine(0));
+
+
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        /*double latitude=location.getLatitude();
+        double longitude=location.getLongitude();
+        String msg="New Latitude: "+latitude + "New Longitude: "+longitude;
+        Toast.makeText(BookingProduct.this,msg,Toast.LENGTH_LONG).show();*/
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e("RAZORPAY", " PConnectio " + connectionResult);
+    }
+
+    @Override
+    public void onPaymentSuccess(String s) {
+
+        if (screen_tag == 1) {
+            paramsBookingOp.put(Consts.PRICE, artistDetailsDTO.getPrice());
+            submit();
+        } else if ((screen_tag == 2)) {
+            bookForService();
+        }
+
+        Log.e("RAZORPAY", " SUCCESS " + s);
+
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+
+        Log.e("RAZORPAY", " FAILURE " + s);
+
+    }
 }
